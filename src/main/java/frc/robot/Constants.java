@@ -63,6 +63,13 @@ public final class Constants {
     public static final int kRearRightTurningCanId = 14;
 
     public static final boolean kGyroReversed = false;
+
+    // speeds
+    public static final double kNormalSpeed = 0.8;
+    public static final double kTurboSpeed = 1.0;
+    public static final double kCrawlSpeed = 0.3;
+    public static final double kODriveSpeed = 0.5;
+    public static final double kOSlowSpeed = 0.25;
   }
 
   public static final class ModuleConstants {
@@ -118,7 +125,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double kDriveDeadband = 0.05;
+    public static final double kDriveDeadband = 0.1;
     public static int kOpperatorControllerPort = 1;
   }
 
@@ -154,10 +161,13 @@ public final class Constants {
     public static final class DriverConstants {
       public static final int X_MODE = 3;
       public static final int TURBO = 2;
+      public static final int ZERO_HEADING = 6;
+      public static final int CRAWL = 1;
 
     }
     public static final class OpperatorConstants {
       public static final int PRIORITY_LEFT = 3;
+      public static int kOSlow = 4;
     }
   }
 }

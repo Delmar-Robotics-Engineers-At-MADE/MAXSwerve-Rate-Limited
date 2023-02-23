@@ -17,6 +17,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.ControllerConstants.DriverConstants;
+import frc.robot.Constants.ControllerConstants.OpperatorConstants;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -42,11 +45,13 @@ public class RobotContainer {
 
   // The driver's controller
   Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
-  JoystickButton m_turoButton = new JoystickButton(m_driverController, 2);
+  JoystickButton m_turoButton = new JoystickButton(m_driverController, DriverConstants.TURBO);
+  JoystickButton m_crawlButton = new JoystickButton(m_driverController, DriverConstants.CRAWL);
 
   //The opperator's controller
   Joystick m_opperator = new Joystick(OIConstants.kOpperatorControllerPort);
-  JoystickButton m_ODrive = new JoystickButton(m_opperator, 3);
+  JoystickButton m_ODrive = new JoystickButton(m_opperator, OpperatorConstants.PRIORITY_LEFT);
+  JoystickButton m_OSlow = new JoystickButton(m_opperator, OpperatorConstants.kOSlow);
   
    /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -58,10 +63,13 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, 3)
+    new JoystickButton(m_driverController, DriverConstants.X_MODE)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+    
+    new JoystickButton(m_driverController, DriverConstants.ZERO_HEADING)
+        .whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
   }
 
   /**
@@ -77,19 +85,43 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                -MathUtil.applyDeadband(m_driverController.getRawAxis(1), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getRawAxis(0), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getRawAxis(2), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband((DriveConstants.kNormalSpeed * m_driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband((DriveConstants.kNormalSpeed * m_driverController.getRawAxis(0)), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband((DriveConstants.kNormalSpeed * Math.pow(m_driverController.getRawAxis(2), 2)), OIConstants.kDriveDeadband),
                 true, true),
             m_robotDrive));
     
     m_ODrive.whileTrue(new RunCommand(
         () -> m_robotDrive.drive(
-        -MathUtil.applyDeadband(m_opperator.getRawAxis(1), OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(m_opperator.getRawAxis(0), OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(m_opperator.getRawAxis(2), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband((DriveConstants.kODriveSpeed * m_opperator.getRawAxis(1)), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband((DriveConstants.kODriveSpeed * m_opperator.getRawAxis(0)), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(DriveConstants.kODriveSpeed * Math.pow(m_opperator.getRawAxis(2), 2), OIConstants.kDriveDeadband),
         false, true),
     m_robotDrive));
+
+    m_turoButton.whileTrue(new RunCommand(
+        () -> m_robotDrive.drive(
+        -MathUtil.applyDeadband((DriveConstants.kTurboSpeed * m_opperator.getRawAxis(1)), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband((DriveConstants.kTurboSpeed * m_opperator.getRawAxis(0)), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(DriveConstants.kTurboSpeed * Math.pow(m_opperator.getRawAxis(2), 2), OIConstants.kDriveDeadband),
+        false, true),
+    m_robotDrive));
+
+    m_crawlButton.whileTrue(new RunCommand(
+        () -> m_robotDrive.drive(
+        -MathUtil.applyDeadband((DriveConstants.kCrawlSpeed * m_opperator.getRawAxis(1)), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband((DriveConstants.kCrawlSpeed * m_opperator.getRawAxis(0)), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(DriveConstants.kCrawlSpeed * Math.pow(m_opperator.getRawAxis(2), 2), OIConstants.kDriveDeadband),
+        false, true),
+    m_robotDrive));
+
+    m_OSlow.whileTrue(new RunCommand(
+      () -> m_robotDrive.drive(
+      -MathUtil.applyDeadband((DriveConstants.kOSlowSpeed * m_opperator.getRawAxis(1)), OIConstants.kDriveDeadband),
+      -MathUtil.applyDeadband((DriveConstants.kOSlowSpeed * m_opperator.getRawAxis(0)), OIConstants.kDriveDeadband),
+      -MathUtil.applyDeadband(DriveConstants.kOSlowSpeed * Math.pow(m_opperator.getRawAxis(2), 2), OIConstants.kDriveDeadband),
+      false, true),
+  m_robotDrive));
   }
 
  
