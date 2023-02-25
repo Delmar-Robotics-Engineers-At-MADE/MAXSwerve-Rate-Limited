@@ -14,6 +14,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
+import java.util.concurrent.TransferQueue;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -52,6 +54,9 @@ public class RobotContainer {
   Joystick m_opperator = new Joystick(OIConstants.kOpperatorControllerPort);
   JoystickButton m_ODrive = new JoystickButton(m_opperator, OpperatorConstants.PRIORITY_LEFT);
   JoystickButton m_OSlow = new JoystickButton(m_opperator, OpperatorConstants.kOSlow);
+
+  //Sendable Chooser
+
   
    /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -87,31 +92,31 @@ public class RobotContainer {
             () -> m_robotDrive.drive(
                 -MathUtil.applyDeadband((DriveConstants.kNormalSpeed * m_driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband((DriveConstants.kNormalSpeed * m_driverController.getRawAxis(0)), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband((DriveConstants.kNormalSpeed * Math.pow(m_driverController.getRawAxis(2), 2)), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(DriveConstants.kNormalSpeed * m_driverController.getRawAxis(2), OIConstants.kDriveDeadband),
                 true, true),
             m_robotDrive));
+
+    m_turoButton.whileTrue(new RunCommand(
+        () -> m_robotDrive.drive(
+        -MathUtil.applyDeadband((DriveConstants.kTurboSpeed * m_driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband((DriveConstants.kTurboSpeed * m_driverController.getRawAxis(0)), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(DriveConstants.kTurboSpeed * m_driverController.getRawAxis(2), OIConstants.kDriveDeadband),
+        true, true),
+    m_robotDrive));
+
+    m_crawlButton.whileTrue(new RunCommand(
+        () -> m_robotDrive.drive(
+        -MathUtil.applyDeadband((DriveConstants.kCrawlSpeed * m_driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband((DriveConstants.kCrawlSpeed * m_driverController.getRawAxis(0)), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(DriveConstants.kCrawlSpeed * (m_driverController.getRawAxis(2)), OIConstants.kDriveDeadband),
+        true, true),
+    m_robotDrive));
     
     m_ODrive.whileTrue(new RunCommand(
         () -> m_robotDrive.drive(
         -MathUtil.applyDeadband((DriveConstants.kODriveSpeed * m_opperator.getRawAxis(1)), OIConstants.kDriveDeadband),
         -MathUtil.applyDeadband((DriveConstants.kODriveSpeed * m_opperator.getRawAxis(0)), OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(DriveConstants.kODriveSpeed * Math.pow(m_opperator.getRawAxis(2), 2), OIConstants.kDriveDeadband),
-        false, true),
-    m_robotDrive));
-
-    m_turoButton.whileTrue(new RunCommand(
-        () -> m_robotDrive.drive(
-        -MathUtil.applyDeadband((DriveConstants.kTurboSpeed * m_opperator.getRawAxis(1)), OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband((DriveConstants.kTurboSpeed * m_opperator.getRawAxis(0)), OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(DriveConstants.kTurboSpeed * Math.pow(m_opperator.getRawAxis(2), 2), OIConstants.kDriveDeadband),
-        false, true),
-    m_robotDrive));
-
-    m_crawlButton.whileTrue(new RunCommand(
-        () -> m_robotDrive.drive(
-        -MathUtil.applyDeadband((DriveConstants.kCrawlSpeed * m_opperator.getRawAxis(1)), OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband((DriveConstants.kCrawlSpeed * m_opperator.getRawAxis(0)), OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(DriveConstants.kCrawlSpeed * Math.pow(m_opperator.getRawAxis(2), 2), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(DriveConstants.kODriveSpeed * (m_opperator.getRawAxis(2)), OIConstants.kDriveDeadband),
         false, true),
     m_robotDrive));
 
@@ -119,7 +124,7 @@ public class RobotContainer {
       () -> m_robotDrive.drive(
       -MathUtil.applyDeadband((DriveConstants.kOSlowSpeed * m_opperator.getRawAxis(1)), OIConstants.kDriveDeadband),
       -MathUtil.applyDeadband((DriveConstants.kOSlowSpeed * m_opperator.getRawAxis(0)), OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(DriveConstants.kOSlowSpeed * Math.pow(m_opperator.getRawAxis(2), 2), OIConstants.kDriveDeadband),
+      -MathUtil.applyDeadband(DriveConstants.kOSlowSpeed * (m_opperator.getRawAxis(2)), OIConstants.kDriveDeadband),
       false, true),
   m_robotDrive));
   }
@@ -133,7 +138,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Create config for trajectory
-    PathPlannerTrajectory path = PathPlanner.loadPath("Simple", new PathConstraints(4, 3));
+    PathPlannerTrajectory path = PathPlanner.loadPath("OneLink", new PathConstraints(4, 3));
 
     var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
