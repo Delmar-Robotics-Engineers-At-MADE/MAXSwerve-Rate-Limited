@@ -1,4 +1,3 @@
-lines (20 sloc) 478 Bytes
 /**
  *  Class that organizes gains used when assigning values to slots
  */
