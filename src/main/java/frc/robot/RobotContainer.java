@@ -43,7 +43,8 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems
+  public static DriveSubsystem m_drobotDrive;
+// The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Claw m_claw = new Claw();
 
