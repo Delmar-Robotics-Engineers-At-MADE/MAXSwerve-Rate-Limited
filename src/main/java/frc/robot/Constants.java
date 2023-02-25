@@ -149,7 +149,17 @@ public final class Constants {
   }
   public static final class CLAW_CONSTANTS {
     public static final int CLAW_ID = 6;
-    public static final double HOLD_ROTATIONS = 0.2;
+    public static final long kInVelocity = 4096;
+    public static final long kConeOutVelocity = 2048;
+    public static final long kCubeOutVelocity = 1228;
+    public static final long kShootVelocity = 4096;
+    public static final long kStopVelocity = 0;
+    public static final long kHoldVelocity = 300;
+
+    public static int kTimeoutMs;
+    public static int kPIDLoopIdx;
+    //                                                    kP     kI    kD  kF             Iz     PeakOut 
+    public final static Gains kGains_Velocit = new Gains( 0.25, 0.001, 20, 1023.0/7200.0,  300,  1.00);
   }
   public static final class UpperArmConstants {
 
@@ -168,6 +178,9 @@ public final class Constants {
     public static final class OpperatorConstants {
       public static final int PRIORITY_LEFT = 3;
       public static int kOSlow = 4;
+      public static int kClawTest = 11;
     }
   }
+
+
 }

@@ -21,6 +21,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ControllerConstants.DriverConstants;
 import frc.robot.Constants.ControllerConstants.OpperatorConstants;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -44,6 +45,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final Claw m_claw = new Claw();
 
   // The driver's controller
   Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -54,6 +56,7 @@ public class RobotContainer {
   Joystick m_opperator = new Joystick(OIConstants.kOpperatorControllerPort);
   JoystickButton m_ODrive = new JoystickButton(m_opperator, OpperatorConstants.PRIORITY_LEFT);
   JoystickButton m_OSlow = new JoystickButton(m_opperator, OpperatorConstants.kOSlow);
+  JoystickButton m_clawTest = new JoystickButton(m_opperator, OpperatorConstants.kClawTest);
 
   //Sendable Chooser
 
@@ -127,6 +130,10 @@ public class RobotContainer {
       -MathUtil.applyDeadband(DriveConstants.kOSlowSpeed * (m_opperator.getRawAxis(2)), OIConstants.kDriveDeadband),
       false, true),
   m_robotDrive));
+
+    m_clawTest.toggleOnTrue(new RunCommand(
+        () -> m_claw.in(), 
+        m_claw));
   }
 
  
