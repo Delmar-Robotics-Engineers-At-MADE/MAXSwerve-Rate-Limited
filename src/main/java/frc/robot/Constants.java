@@ -165,6 +165,21 @@ public final class Constants {
 
     public static final int UPPER_ARM_MOTOR_ID = 0;
 
+    public static final int kRevEncoderLimitLow = -20;
+    public static final int kRevEncoderLimitHigh = -200;
+    public static final double kRevEncoderP = 0.02;
+    public static final double kRevEncoderI = 0;
+    public static final double kRevEncoderD = 0;
+    public static final double kRevEncoderTolerance = 1;  
+
+    public static final double kPotmeterP = 250;
+    public static final double kPotmeterI = 0;
+    public static final double kPotmeterD = 0;
+    public static final double kPotmeterTolerance = 0.001;  
+
+    public static final double kHomePotmeterValue = 0.050;
+    public static final double kHomeEncoderValue = 0.0;
+
   }
 
   public static final class ControllerConstants {
