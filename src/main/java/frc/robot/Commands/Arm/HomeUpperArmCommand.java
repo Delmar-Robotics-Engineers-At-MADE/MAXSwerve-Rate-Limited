@@ -15,12 +15,6 @@ public class HomeUpperArmCommand extends PIDCommand {
 
     private static boolean m_shuffleboardLoaded = false;
 
-  /**
-   * Raises hood to a specified distance.
-   *
-   * @param targetDistance The encoder distance to go to
-   * @param hood The subsystem to use
-   */
   public HomeUpperArmCommand(UpperArmSubsystem upperArm) {
     super(
       m_PID,  
