@@ -188,10 +188,6 @@ public final class Constants {
 
   }
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
   public static final class ControllerConstants {
     public static final class DriverConstants {
       public static final int X_MODE = 3;
