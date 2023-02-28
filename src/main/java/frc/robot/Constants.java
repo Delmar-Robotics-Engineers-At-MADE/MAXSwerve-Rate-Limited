@@ -192,6 +192,13 @@ public final class Constants {
     public static double kMinOutput = -1;
     public static double kMaxOutput = 1;
 
+    public static final double kHomePosition = 0;
+    public static final double kFloorPosition = 0;
+    public static final double kHighPosition = 0;
+    public static final double kShootPosition = 0;
+    public static final double kMidPosition = 0;
+    public static final double kSSsPosition = 0;
+    public static final double kManualSpeed = 0.7;
   }
 
   public static final class ControllerConstants {

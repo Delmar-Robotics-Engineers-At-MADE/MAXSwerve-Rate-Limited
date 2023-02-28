@@ -22,11 +22,14 @@ import frc.robot.Constants.ControllerConstants.DriverConstants;
 import frc.robot.Constants.ControllerConstants.OpperatorConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.Arm.Claw;
+import frc.robot.subsystems.Arm.LowerArm;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+
 import java.util.List;
 import java.util.concurrent.TransferQueue;
 
@@ -47,6 +50,7 @@ public class RobotContainer {
 // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Claw m_claw = new Claw();
+  private final LowerArm m_LowerArm = new LowerArm();
 
   // The driver's controller
   Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -58,6 +62,8 @@ public class RobotContainer {
   JoystickButton m_ODrive = new JoystickButton(m_opperator, OpperatorConstants.PRIORITY_LEFT);
   JoystickButton m_OSlow = new JoystickButton(m_opperator, OpperatorConstants.kOSlow);
   JoystickButton m_clawTest = new JoystickButton(m_opperator, OpperatorConstants.kClawTest);
+  POVButton m_lowerArmUp = new POVButton(m_opperator, 0);
+  POVButton m_lowerArmDown = new POVButton(m_opperator, 180);
 
   //Sendable Chooser
 
@@ -130,11 +136,16 @@ public class RobotContainer {
       -MathUtil.applyDeadband((DriveConstants.kOSlowSpeed * m_opperator.getRawAxis(0)), OIConstants.kDriveDeadband),
       -MathUtil.applyDeadband(DriveConstants.kOSlowSpeed * (m_opperator.getRawAxis(2)), OIConstants.kDriveDeadband),
       false, true),
-  m_robotDrive));
+    m_robotDrive));
 
     m_clawTest.toggleOnTrue(new RunCommand(
-        () -> m_claw.in(), 
-        m_claw));
+      () -> m_claw.in(), 
+      m_claw));
+
+    m_LowerArm.setDefaultCommand(
+      new RunCommand(() -> m_LowerArm.lowerArmHoldPosition(), m_LowerArm)
+    );
+
   }
 
  
