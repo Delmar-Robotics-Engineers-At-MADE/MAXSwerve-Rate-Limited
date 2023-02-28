@@ -182,6 +182,13 @@ public final class Constants {
 
   }
 
+  public static final class LowerArmConstants {
+
+    public static final int LOWER_ARM_MOTOR_ID = 6;
+
+  }
+
+
   public static final class ControllerConstants {
     public static final class DriverConstants {
       public static final int X_MODE = 3;
