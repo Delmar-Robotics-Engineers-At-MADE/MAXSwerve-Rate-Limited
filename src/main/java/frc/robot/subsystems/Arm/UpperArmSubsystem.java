@@ -50,6 +50,7 @@ public class UpperArmSubsystem extends SubsystemBase {
 
     public void moveOpenLoop (double powerPercent) {
         m_upperArmMotor.set(ControlMode.PercentOutput, powerPercent);
+        System.out.println("Falcon 0 is at" + powerPercent);
     }
 
 }

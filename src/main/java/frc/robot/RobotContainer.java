@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.Commands.Arm.MoveUpperArmCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -22,7 +23,8 @@ import frc.robot.Constants.ControllerConstants.DriverConstants;
 import frc.robot.Constants.ControllerConstants.OpperatorConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.Arm.Claw;
-import frc.robot.subsystems.Arm.LowerArm;
+// import frc.robot.subsystems.Arm.LowerArm;
+import frc.robot.subsystems.Arm.UpperArmSubsystem;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -38,6 +40,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import frc.robot.Commands.Arm.MoveUpperArmCommand;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -50,7 +53,10 @@ public class RobotContainer {
 // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Claw m_claw = new Claw();
-  private final LowerArm m_LowerArm = new LowerArm();
+  private final UpperArmSubsystem m_upperArm = new UpperArmSubsystem();
+  // private final LowerArm m_lowerArm = new LowerArm();
+  // private final LowerArm m_LowerArm = new LowerArm();
+  
 
   // The driver's controller
   Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -64,6 +70,7 @@ public class RobotContainer {
   JoystickButton m_clawTest = new JoystickButton(m_opperator, OpperatorConstants.kClawTest);
   POVButton m_lowerArmUp = new POVButton(m_opperator, 0);
   POVButton m_lowerArmDown = new POVButton(m_opperator, 180);
+  JoystickButton m_upperArmTest = new JoystickButton(m_opperator, 12);
 
   //Sendable Chooser
 
@@ -142,9 +149,13 @@ public class RobotContainer {
       () -> m_claw.in(), 
       m_claw));
 
-    m_LowerArm.setDefaultCommand(
-      new RunCommand(() -> m_LowerArm.lowerArmHoldPosition(), m_LowerArm)
-    );
+    // m_lowerArm.setDefaultCommand(
+    //   new RunCommand(() -> m_lowerArm.lowerArmHoldPosition(), m_lowerArm)
+    // );
+
+    m_upperArmTest.toggleOnTrue(new RunCommand(() -> m_upperArm.moveOpenLoop(m_opperator.getRawAxis(1)), m_upperArm));
+      
+    
 
   }
 
