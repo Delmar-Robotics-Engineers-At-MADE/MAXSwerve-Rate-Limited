@@ -41,6 +41,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
+import frc.robot.Commands.Balance;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -55,7 +56,7 @@ public class RobotContainer {
   private final Claw m_claw = new Claw();
   private final UpperArmSubsystem m_upperArm = new UpperArmSubsystem();
   // private final LowerArm m_lowerArm = new LowerArm();
-  // private final LowerArm m_LowerArm = new LowerArm();
+  private final Balance m_balance = new Balance();
   
 
   // The driver's controller
@@ -70,7 +71,8 @@ public class RobotContainer {
   JoystickButton m_clawTest = new JoystickButton(m_opperator, OpperatorConstants.kClawTest);
   POVButton m_lowerArmUp = new POVButton(m_opperator, 0);
   POVButton m_lowerArmDown = new POVButton(m_opperator, 180);
-  JoystickButton m_upperArmTest = new JoystickButton(m_opperator, 12);
+  JoystickButton m_upperArmManual = new JoystickButton(m_opperator, OpperatorConstants.kUpperArmManual);
+  JoystickButton m_autoBalance = new JoystickButton(m_opperator, OpperatorConstants.kAutoBalance);
 
   //Sendable Chooser
 
@@ -145,6 +147,8 @@ public class RobotContainer {
       false, true),
     m_robotDrive));
 
+    m_autoBalance.toggleOnTrue(new Balance());
+
     m_clawTest.toggleOnTrue(new RunCommand(
       () -> m_claw.in(), 
       m_claw));
@@ -153,7 +157,7 @@ public class RobotContainer {
     //   new RunCommand(() -> m_lowerArm.lowerArmHoldPosition(), m_lowerArm)
     // );
 
-    m_upperArmTest.toggleOnTrue(new RunCommand(() -> m_upperArm.moveOpenLoop(m_opperator.getRawAxis(1)), m_upperArm));
+    m_upperArmManual.whileTrue(new RunCommand(() -> m_upperArm.moveOpenLoop(m_opperator.getRawAxis(1)), m_upperArm));
       
     
 

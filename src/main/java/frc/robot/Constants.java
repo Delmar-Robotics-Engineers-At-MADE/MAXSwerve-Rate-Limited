@@ -144,6 +144,15 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
+  public static final class BalanceConstants {
+
+    public static final double BEAM_BALANCED_GOAL_DEGREES = 0;
+    public static final double BEAM_BALANACED_DRIVE_KP = 0.015;
+    public static final double BACKWARDS_BALANCING_EXTRA_POWER_MULTIPLIER = 1.3;
+    public static final double BEAM_BALANCED_ANGLE_TRESHOLD_DEGREES = 1;
+
+  }
+
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
@@ -211,6 +220,8 @@ public final class Constants {
     }
     public static final class OpperatorConstants {
       public static final int PRIORITY_LEFT = 3;
+      public static final int kUpperArmManual = 12;
+      public static final int kAutoBalance = 8;
       public static int kOSlow = 4;
       public static int kClawTest = 11;
     }
