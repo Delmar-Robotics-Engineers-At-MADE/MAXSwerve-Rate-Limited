@@ -23,7 +23,7 @@ import frc.robot.Constants.ControllerConstants.DriverConstants;
 import frc.robot.Constants.ControllerConstants.OpperatorConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.Arm.Claw;
-// import frc.robot.subsystems.Arm.LowerArm;
+import frc.robot.subsystems.Arm.LowerArm;
 import frc.robot.subsystems.Arm.UpperArmSubsystem;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,7 +41,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
-//import frc.robot.Commands.Balance;
+import frc.robot.Commands.Balance;
 import frc.robot.Commands.Arm.HomeUpperArmCommand;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
 
@@ -52,13 +52,13 @@ import frc.robot.Commands.Arm.MoveUpperArmCommand;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  public static DriveSubsystem m_drobotDrive;
 // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final Claw m_claw = new Claw();
-  private final UpperArmSubsystem m_upperArm = new UpperArmSubsystem();
-  // private final LowerArm m_lowerArm = new LowerArm();
-  //private final Balance m_balance = new Balance();
+  public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private static final Claw m_claw = new Claw();
+  private static final UpperArmSubsystem m_upperArm = new UpperArmSubsystem();
+  private static final LowerArm m_lowerArm = new LowerArm();
+  private static final Balance m_balance = new Balance();
+
   
 
   // The driver's controller
@@ -78,7 +78,7 @@ public class RobotContainer {
   JoystickButton m_homeUpperArm = new JoystickButton(m_opperator, OpperatorConstants.kHomeUpperArm);
 
   //Sendable Chooser
-
+  
   
    /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -150,15 +150,15 @@ public class RobotContainer {
       false, true),
     m_robotDrive));
 
-    //m_autoBalance.toggleOnTrue(new Balance());
+    m_autoBalance.toggleOnTrue(new Balance());
 
     m_clawTest.toggleOnTrue(new RunCommand(
       () -> m_claw.in(), 
       m_claw));
 
-    // m_lowerArm.setDefaultCommand(
-    //   new RunCommand(() -> m_lowerArm.lowerArmHoldPosition(), m_lowerArm)
-    // );
+    m_lowerArm.setDefaultCommand(
+      new RunCommand(() -> m_lowerArm.lowerArmHoldPosition(), m_lowerArm)
+    );
 
     //m_upperArmManual.whileTrue(new RunCommand(() -> m_upperArm.moveOpenLoop(m_opperator.getRawAxis(1)), m_upperArm));
     
