@@ -27,11 +27,13 @@ import frc.robot.subsystems.Arm.LowerArm;
 import frc.robot.subsystems.Arm.UpperArmSubsystem;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TransferQueue;
 
@@ -58,6 +60,7 @@ public class RobotContainer {
   private static final UpperArmSubsystem m_upperArm = new UpperArmSubsystem();
   private static final LowerArm m_lowerArm = new LowerArm();
   private static final Balance m_balance = new Balance();
+
 
   
 
@@ -166,11 +169,8 @@ public class RobotContainer {
     
     m_lowerArmDown.whileTrue(new RunCommand(() -> m_lowerArm.runLowerArmDown()));
     m_lowerArmUp.whileTrue(new RunCommand(() -> m_lowerArm.runLowerArmUp()));
-    
-
   }
 
- 
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -179,8 +179,13 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Create config for trajectory
-    PathPlannerTrajectory path = PathPlanner.loadPath("Simple", new PathConstraints(4, 3));
+    PathPlannerTrajectory path = PathPlanner.loadPath("Dock", new PathConstraints(4, 3));
 
+    // This is just an example event map. It would be better to have a constant, global event map
+    // in your code that will be used by all path following commands.
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+    eventMap.put("intakeDown", new Balance());
     var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);

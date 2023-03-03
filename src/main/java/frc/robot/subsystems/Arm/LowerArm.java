@@ -23,6 +23,7 @@ public class LowerArm extends SubsystemBase {
     public ShuffleboardTab m_dashboardTab;
 
     public GenericEntry m_positionSettingEntry;
+    public boolean m_lowerArmHomed;
     
 
     public LowerArm() {
@@ -41,9 +42,12 @@ public class LowerArm extends SubsystemBase {
         m_elbowPIDController.setOutputRange(LowerArmConstants.kMinOutput, LowerArmConstants.kMaxOutput);
         m_elbow.burnFlash();
 
+        m_lowerArmHomed = false;
+
         m_dashboardTab = Shuffleboard.getTab("Arm");
         m_positionSettingEntry = m_dashboardTab.add("Set Lower Arm", m_position).getEntry();
         m_positionSettingEntry.getDouble(m_position);
+        m_dashboardTab.addBoolean("LowerArm Homed", () -> m_lowerArmHomed);
     // m_defaultSettingEntry = m_dashboardTab.add("Default", m_defaultSetting).getEntry();
     // m_conesSettingEntry = m_dashboardTab.add("Cubes", m_signalCubes).getEntry();
     }
@@ -86,6 +90,14 @@ public class LowerArm extends SubsystemBase {
 
     public CommandBase runLowerArmDown() {
         return this.run(() -> m_elbow.set(-1 * LowerArmConstants.kManualSpeed));
+    }
+
+    public double getElbowPos() {
+        return m_elbowEncoder.getPosition();
+    }
+
+    public boolean setElbowHomed(){
+        return m_lowerArmHomed = true;
     }
 
 }
