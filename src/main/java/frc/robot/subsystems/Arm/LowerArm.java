@@ -87,6 +87,7 @@ public class LowerArm extends SubsystemBase {
     public CommandBase runLowerArmDown() {
         return this.run(() -> m_elbow.set(-1 * LowerArmConstants.kManualSpeed));
     }
+
 }
 
 

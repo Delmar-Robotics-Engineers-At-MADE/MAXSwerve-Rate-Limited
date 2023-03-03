@@ -71,8 +71,8 @@ public class RobotContainer {
   JoystickButton m_ODrive = new JoystickButton(m_opperator, OpperatorConstants.PRIORITY_LEFT);
   JoystickButton m_OSlow = new JoystickButton(m_opperator, OpperatorConstants.kOSlow);
   JoystickButton m_clawTest = new JoystickButton(m_opperator, OpperatorConstants.kClawTest);
-  POVButton m_lowerArmUp = new POVButton(m_opperator, 0);
-  POVButton m_lowerArmDown = new POVButton(m_opperator, 180);
+  JoystickButton m_lowerArmUp = new JoystickButton(m_opperator, OpperatorConstants.up);
+  JoystickButton m_lowerArmDown = new JoystickButton(m_opperator, OpperatorConstants.down);
   JoystickButton m_upperArmManual = new JoystickButton(m_opperator, OpperatorConstants.kUpperArmManual);
   JoystickButton m_autoBalance = new JoystickButton(m_opperator, OpperatorConstants.kAutoBalance);
   JoystickButton m_homeUpperArm = new JoystickButton(m_opperator, OpperatorConstants.kHomeUpperArm);
@@ -164,7 +164,8 @@ public class RobotContainer {
     
     m_homeUpperArm.whileTrue(new HomeUpperArmCommand(m_upperArm));
     
-      
+    m_lowerArmDown.whileTrue(new RunCommand(() -> m_lowerArm.runLowerArmDown()));
+    m_lowerArmUp.whileTrue(new RunCommand(() -> m_lowerArm.runLowerArmUp()));
     
 
   }
@@ -178,7 +179,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Create config for trajectory
-    PathPlannerTrajectory path = PathPlanner.loadPath("OneLink", new PathConstraints(4, 3));
+    PathPlannerTrajectory path = PathPlanner.loadPath("Simple", new PathConstraints(4, 3));
 
     var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
