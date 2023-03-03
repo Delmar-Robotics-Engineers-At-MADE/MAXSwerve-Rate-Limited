@@ -14,14 +14,16 @@ public class HomeUpperArmCommand extends PIDCommand {
     UpperArmConstants.kPotmeterP,  UpperArmConstants.kPotmeterI, UpperArmConstants.kPotmeterD);
 
     private static boolean m_shuffleboardLoaded = false;
+    private static UpperArmSubsystem m_upperArm;
 
   public HomeUpperArmCommand(UpperArmSubsystem upperArm) {
     super(
       m_PID,  
         upperArm::potPosition, // Close loop on position
         UpperArmConstants.kHomePotmeterValue,  // Set setpoint to target distance
-        output -> upperArm.moveOpenLoop(output), // Pipe output to hood to elevate
+        output -> upperArm.moveOpenLoop(-output), // Pipe output to hood to elevate
         upperArm);  // Require the subsystem
+        m_upperArm = upperArm;
 
     PIDController pid = getController();
     if (upperArm.m_encoderHomed) {
@@ -43,6 +45,13 @@ public class HomeUpperArmCommand extends PIDCommand {
     }
   }
 
+  // @Override
+  // public void execute() {
+  //   // TODO Auto-generated method stub
+  //   super.execute();
+  //   if ()
+  // }
+
   @Override
   public boolean isFinished() {
     // End when the controller is at the reference.
@@ -50,6 +59,11 @@ public class HomeUpperArmCommand extends PIDCommand {
     // boolean result = Math.abs(getController().getPositionError()) 
     //   <= DriveConstants.kTurnToleranceDeg;
     // return result;
-    return getController().atSetpoint();
+    boolean result = getController().atSetpoint();
+    if (result) {
+      m_upperArm.setEncoderHomed();
+    }
+    return result;
+
   }
 }

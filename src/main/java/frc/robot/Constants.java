@@ -186,7 +186,7 @@ public final class Constants {
     public static final double kPotmeterD = 0;
     public static final double kPotmeterTolerance = 0.001;  
 
-    public static final double kHomePotmeterValue = 0.050;
+    public static final double kHomePotmeterValue = 0.50;
     public static final double kHomeEncoderValue = 0.0;
 
   }
@@ -224,6 +224,7 @@ public final class Constants {
       public static final int kAutoBalance = 8;
       public static int kOSlow = 4;
       public static int kClawTest = 11;
+      public static int kHomeUpperArm = 9;
     }
   }
 

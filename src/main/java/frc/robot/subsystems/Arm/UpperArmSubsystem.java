@@ -53,4 +53,8 @@ public class UpperArmSubsystem extends SubsystemBase {
         System.out.println("Falcon 0 is at" + powerPercent);
     }
 
+    public void setEncoderHomed() {
+        m_encoderHomed = true;
+    }
+
 }
