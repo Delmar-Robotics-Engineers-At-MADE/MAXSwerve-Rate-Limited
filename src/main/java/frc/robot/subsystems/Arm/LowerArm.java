@@ -34,6 +34,10 @@ public class LowerArm extends SubsystemBase {
         m_elbow.setIdleMode(IdleMode.kBrake);
         m_elbowEncoder.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
         m_elbowPIDController = m_elbow.getPIDController();
+        m_elbowPIDController.setSmartMotionMinOutputVelocity(LowerArmConstants.minVelocity, 0);
+        m_elbowPIDController.setSmartMotionMaxAccel(LowerArmConstants.maxAccel, 0);
+        m_elbowPIDController.setSmartMotionMaxVelocity(LowerArmConstants.maxVelocity, 0);
+        m_elbowPIDController.setSmartMotionAllowedClosedLoopError(LowerArmConstants.allowedErr, 0);
         
         m_elbowPIDController.setP(LowerArmConstants.kP);
         m_elbowPIDController.setI(LowerArmConstants.kI);

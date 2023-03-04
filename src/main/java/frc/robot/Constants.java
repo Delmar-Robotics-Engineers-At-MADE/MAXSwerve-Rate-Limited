@@ -208,6 +208,10 @@ public final class Constants {
     public static final double kMidPosition = 0;
     public static final double kSSsPosition = 0;
     public static final double kManualSpeed = 0.7;
+    public static final double minVelocity = 0;
+    public static final double maxAccel = 1500;
+    public static final double maxVelocity = 4000;
+    public static final double allowedErr = 0;
   }
 
   public static final class ControllerConstants {
