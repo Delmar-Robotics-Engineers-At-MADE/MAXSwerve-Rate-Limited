@@ -12,11 +12,21 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
+
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
@@ -52,6 +62,13 @@ public class DriveSubsystem extends SubsystemBase {
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
+  private PhotonCamera m_photonCamera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
+  private PhotonPipelineResult m_latestPhotonResult;
+  private double m_bestAprilTagYaw = 0.0;
+  private int m_bestAprilTagID = 0;
+  private double m_bestAprilTagPitch =0.0;
+  private double  m_bestAprilTagDistance = 0.0;
+
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
@@ -65,6 +82,17 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    ShuffleboardTab driveBaseTab = Shuffleboard.getTab("Drivebase");
+    // Add the gyro
+    driveBaseTab.add("Gyro", m_gyro);
+    // Put both encoders in a list layout
+    // ShuffleboardLayout encoders =
+    //     driveBaseTab.getLayout("List Layout", "Encoders").withPosition(0, 0).withSize(2, 2);
+    // encoders.add("Left Encoder", m_leftEncoder);
+    // encoders.add("Right Encoder", m_rightEncoder);
+    driveBaseTab.addDouble("Tag Yaw", () -> m_bestAprilTagYaw);
+    driveBaseTab.addDouble("Tag ID", () -> m_bestAprilTagID);
+    driveBaseTab.addDouble("Tag Distance", () -> m_bestAprilTagDistance);
   }
 
   @Override
@@ -242,4 +270,40 @@ public class DriveSubsystem extends SubsystemBase {
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
+
+      // call this from PID command to turn robot to best target
+      public double getBestAprilTagYaw() {
+        updateBestAprilTag();
+        return m_bestAprilTagYaw;
+      }
+    
+      public double getBestAprilTagPitch() {
+        updateBestAprilTag();
+        return DriveConstants.kBbestAprilTagPitch;
+      }
+  
+      public double getBestAprilTagDistance() {
+        updateBestAprilTag();
+        return m_bestAprilTagDistance;
+      }
+  
+      public void updateBestAprilTag() {
+        m_latestPhotonResult = m_photonCamera.getLatestResult();
+        if (m_latestPhotonResult.hasTargets()) {
+          m_bestAprilTagYaw = m_latestPhotonResult.getBestTarget().getYaw();
+          m_bestAprilTagPitch = m_latestPhotonResult.getBestTarget().getPitch();
+          m_bestAprilTagID = m_latestPhotonResult.getBestTarget().getFiducialId();
+          m_bestAprilTagDistance = PhotonUtils.calculateDistanceToTargetMeters(
+              DriveConstants.CAMERA_HEIGHT_METERS,
+              DriveConstants.TARGET_HEIGHT_METERS,
+              DriveConstants.CAMERA_PITCH_RADIANS,
+              Units.degreesToRadians(m_latestPhotonResult.getBestTarget().getPitch()));
+        } else {
+          m_bestAprilTagYaw = 0.0;
+          m_bestAprilTagPitch = 0.0;
+          m_bestAprilTagID = 0;
+          m_bestAprilTagDistance =0;
+        }
+      }
+  
 }

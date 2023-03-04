@@ -70,6 +70,15 @@ public final class Constants {
     public static final double kCrawlSpeed = 0.3;
     public static final double kODriveSpeed = 0.5;
     public static final double kOSlowSpeed = 0.25;
+    public static final double CAMERA_HEIGHT_METERS = 1.3;
+    public static final double TARGET_HEIGHT_METERS = 0.2;
+    public static final double CAMERA_PITCH_RADIANS = 0;
+
+    // AprilTag 
+    public static double kBestAprilTagYaw = 0.0;
+    public static int kBestAprilTagID = 0;
+    public static double kBbestAprilTagPitch=0.0;
+    public static double  kbestAprilTagDistance = 0.0;
   }
 
   public static final class ModuleConstants {
