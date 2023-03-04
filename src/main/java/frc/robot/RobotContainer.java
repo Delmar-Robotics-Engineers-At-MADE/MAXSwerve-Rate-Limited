@@ -16,6 +16,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
+import frc.robot.Commands.DriveCommands.TurnToAprilTagProfiled;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -121,6 +122,9 @@ public class RobotContainer {
     
     new JoystickButton(m_opperator, OpperatorConstants.kMoveUpperArmToTarget)
     .toggleOnTrue(new MoveUpperArmCommand(200, m_upperArm));
+
+    new JoystickButton(m_driverController, DriverConstants.kTurnToTag)
+    .whileTrue(new TurnToAprilTagProfiled(0, m_robotDrive));
   }
 
   /**
@@ -173,6 +177,8 @@ public class RobotContainer {
       -MathUtil.applyDeadband(DriveConstants.kOSlowSpeed * (m_opperator.getRawAxis(2)), OIConstants.kDriveDeadband),
       false, true),
     m_robotDrive));
+
+    
 
     m_autoBalance.toggleOnTrue(new Balance());
 

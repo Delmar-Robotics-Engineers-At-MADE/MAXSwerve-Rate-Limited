@@ -73,12 +73,22 @@ public final class Constants {
     public static final double CAMERA_HEIGHT_METERS = 1.3;
     public static final double TARGET_HEIGHT_METERS = 0.2;
     public static final double CAMERA_PITCH_RADIANS = 0;
+    
 
     // AprilTag 
     public static double kBestAprilTagYaw = 0.0;
     public static int kBestAprilTagID = 0;
     public static double kBbestAprilTagPitch=0.0;
     public static double  kbestAprilTagDistance = 0.0;
+
+    // TurnToAprilTagProfiled
+    public static final double kYawP = 0.06;
+    public static final double kYawI = 0.0;
+    public static final double kYawD = 0.0;
+    public static final double kMaxYawRateDegPerS = 25;
+    public static final double kMaxYawAccelerationDegPerSSquared = 300;
+    public static final double kYawToleranceDeg = 1;
+    public static final double kYawRateToleranceDegPerS = 10;
   }
 
   public static final class ModuleConstants {
