@@ -27,11 +27,13 @@ import frc.robot.subsystems.Arm.LowerArm;
 import frc.robot.subsystems.Arm.UpperArmSubsystem;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -74,11 +76,13 @@ public class RobotContainer {
   JoystickButton m_ODrive = new JoystickButton(m_opperator, OpperatorConstants.PRIORITY_LEFT);
   JoystickButton m_OSlow = new JoystickButton(m_opperator, OpperatorConstants.kOSlow);
   JoystickButton m_clawTest = new JoystickButton(m_opperator, OpperatorConstants.kClawTest);
-  JoystickButton m_lowerArmUp = new JoystickButton(m_opperator, OpperatorConstants.up);
-  JoystickButton m_lowerArmDown = new JoystickButton(m_opperator, OpperatorConstants.down);
-  JoystickButton m_upperArmManual = new JoystickButton(m_opperator, OpperatorConstants.kUpperArmManual);
+  // JoystickButton m_lowerArmUp = new JoystickButton(m_opperator, OpperatorConstants.up);
+  // JoystickButton m_lowerArmDown = new JoystickButton(m_opperator, OpperatorConstants.down);
+  //JoystickButton m_upperArmManual = new JoystickButton(m_opperator, OpperatorConstants.kUpperArmManual);
   JoystickButton m_autoBalance = new JoystickButton(m_opperator, OpperatorConstants.kAutoBalance);
   JoystickButton m_homeUpperArm = new JoystickButton(m_opperator, OpperatorConstants.kHomeUpperArm);
+  Trigger m_lowerArmUp = new Trigger(m_opperator.pov(0, null));
+  Trigger m_lowerArmDown = new Trigger(m_opperator.pov(180, null));
 
   //Sendable Chooser
   
@@ -100,6 +104,23 @@ public class RobotContainer {
     
     new JoystickButton(m_driverController, DriverConstants.ZERO_HEADING)
         .whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+    
+    new JoystickButton(m_opperator, OpperatorConstants.kAutoBalance)
+        .toggleOnTrue(m_balance);
+
+    new JoystickButton(m_opperator, OpperatorConstants.kNudgeUp)
+    .toggleOnTrue(new InstantCommand(
+        () -> m_upperArm.nudgeClosedLoopByFalconEnc(true), m_upperArm ));
+
+    new JoystickButton(m_opperator, OpperatorConstants.kNudgeDown)
+    .toggleOnTrue(new InstantCommand(
+        () -> m_upperArm.nudgeClosedLoopByFalconEnc(false), m_upperArm ));
+
+    new JoystickButton(m_opperator, OpperatorConstants.kHomeUpperArm)
+    .toggleOnTrue(new HomeUpperArmCommand(m_upperArm));
+    
+    new JoystickButton(m_opperator, OpperatorConstants.kMoveUpperArmToTarget)
+    .toggleOnTrue(new MoveUpperArmCommand(200, m_upperArm));
   }
 
   /**
