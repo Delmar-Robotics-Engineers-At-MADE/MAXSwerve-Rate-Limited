@@ -176,18 +176,28 @@ public final class Constants {
 
     public static final int kRevEncoderLimitLow = -20;
     public static final int kRevEncoderLimitHigh = -200;
-    public static final double kRevEncoderP = 0.02;
+    public static final double kRevEncoderP = 0.003;
     public static final double kRevEncoderI = 0;
-    public static final double kRevEncoderD = 0;
-    public static final double kRevEncoderTolerance = 1;  
+    public static final double kRevEncoderD = 0.002;
+    public static final double kRevEncoderTolerance = 20; 
+    public static final double kRevEncoderMaxCountsPerS = 750;
+    public static final double kRevEncoderMaxCountsPerSSquared = 1000;
+    public static final double kRevEncoderMaxCountsPerSTolerance = 100;
 
-    public static final double kPotmeterP = 250;
-    public static final double kPotmeterI = 0;
+    public static final double kPotmeterP = 20;
+    public static final double kPotmeterI = 2;
     public static final double kPotmeterD = 0;
     public static final double kPotmeterTolerance = 0.001;  
 
-    public static final double kHomePotmeterValue = 0.50;
+    public static final double kHomePotmeterValue = 0.54;
     public static final double kHomeEncoderValue = 0.0;
+
+    public static final double kMaxFalconPower = 0.20;
+
+    // for testing only
+    public static final double kFalconClosedLoopTolerance = 100;
+    public static final double kFalconTestNudgeAmount = 2000;
+    public static final double kFalconP = 0.1;
 
   }
 

@@ -26,16 +26,7 @@ public class HomeUpperArmCommand extends PIDCommand {
         m_upperArm = upperArm;
 
     PIDController pid = getController();
-    if (upperArm.m_encoderHomed) {
-      // if already homed by potentiometer, then can return to home using encoder
-      pid.setP(UpperArmConstants.kRevEncoderP);
-      pid.setI(UpperArmConstants.kRevEncoderI);
-      pid.setD(UpperArmConstants.kRevEncoderD);
-      pid.setTolerance(UpperArmConstants.kPotmeterTolerance);
-      pid.setSetpoint(UpperArmConstants.kHomeEncoderValue);
-    } else { // continue with potentiometer homing
-      pid.setTolerance(UpperArmConstants.kPotmeterTolerance);
-    }
+    pid.setTolerance(UpperArmConstants.kPotmeterTolerance);
       
     // Add the PID to dashboard
     if (!m_shuffleboardLoaded) {
@@ -54,16 +45,10 @@ public class HomeUpperArmCommand extends PIDCommand {
 
   @Override
   public boolean isFinished() {
-    // End when the controller is at the reference.
-    // System.out.println(getController().getPositionError());
-    // boolean result = Math.abs(getController().getPositionError()) 
-    //   <= DriveConstants.kTurnToleranceDeg;
-    // return result;
     boolean result = getController().atSetpoint();
     if (result) {
       m_upperArm.setEncoderHomed();
     }
     return result;
-
   }
 }
