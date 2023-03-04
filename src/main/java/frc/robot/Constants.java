@@ -244,11 +244,14 @@ public final class Constants {
   }
 
   public static final class ControllerConstants {
+
     public static final class DriverConstants {
       public static final int X_MODE = 3;
       public static final int TURBO = 2;
       public static final int ZERO_HEADING = 6;
       public static final int CRAWL = 1;
+      public static final int kTurnToTag = 7;
+      public static final int kDriveToTag = 8;
 
     }
     public static final class OpperatorConstants {

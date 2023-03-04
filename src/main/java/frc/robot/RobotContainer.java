@@ -16,6 +16,8 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
+import frc.robot.Commands.DriveCommands.Balance;
+import frc.robot.Commands.DriveCommands.DriveToAprilTagProfiled;
 import frc.robot.Commands.DriveCommands.TurnToAprilTagProfiled;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -46,7 +48,6 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
-import frc.robot.Commands.Balance;
 import frc.robot.Commands.Arm.HomeUpperArmCommand;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
 
@@ -124,7 +125,10 @@ public class RobotContainer {
     .toggleOnTrue(new MoveUpperArmCommand(200, m_upperArm));
 
     new JoystickButton(m_driverController, DriverConstants.kTurnToTag)
-    .whileTrue(new TurnToAprilTagProfiled(0, m_robotDrive));
+    .toggleOnTrue(new TurnToAprilTagProfiled(0, m_robotDrive));
+
+    new JoystickButton(m_driverController, DriverConstants.kDriveToTag)
+    .toggleOnTrue(new DriveToAprilTagProfiled(0.5, m_robotDrive));
   }
 
   /**

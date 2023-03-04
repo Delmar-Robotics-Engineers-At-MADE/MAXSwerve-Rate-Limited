@@ -1,7 +1,7 @@
 // Author: UMN Robotics Ri3d
 // Last Updated : January 2023
 
-package frc.robot.Commands;
+package frc.robot.Commands.DriveCommands;
 
 import frc.robot.Constants.BalanceConstants;
 import frc.robot.RobotContainer;
