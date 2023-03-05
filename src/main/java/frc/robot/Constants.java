@@ -74,13 +74,6 @@ public final class Constants {
     public static final double TARGET_HEIGHT_METERS = 0.2;
     public static final double CAMERA_PITCH_RADIANS = 0;
     
-
-    // AprilTag 
-    public static double kBestAprilTagYaw = 0.0;
-    public static int kBestAprilTagID = 0;
-    public static double kBbestAprilTagPitch=0.0;
-    public static double  kbestAprilTagDistance = 0.0;
-
     // TurnToAprilTagProfiled
     public static final double kYawP = 0.06;
     public static final double kYawI = 0.0;
@@ -96,6 +89,13 @@ public final class Constants {
     public static final double kDriveD = 0;
     public static final double kMaxTurnRateDegPerS = 0;
     public static final double kMaxTurnAccelerationDegPerSSquared = 0;
+
+    public static final double kTurnAprilTagP = 0.06;
+    public static final double kTurnAprilTagI = 0;
+    public static final double kTurnAprilTagD = 0;
+    public static final double kTurnAprilTagToleranceDeg = 1;
+    public static final double kTurnAprilTagToleranceDegPerS = 10; // degrees per second
+
   }
 
   public static final class ModuleConstants {
@@ -196,7 +196,7 @@ public final class Constants {
     //                                                    kP     kI    kD  kF             Iz     PeakOut 
     public final static Gains kGains_Velocity = new Gains( 0.25, 0.0, 0.0, 0.08,  300,  1.00);
   }
-  
+
   public static final class UpperArmConstants {
 
     public static final int UPPER_ARM_MOTOR_ID = 0;

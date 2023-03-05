@@ -279,7 +279,7 @@ public class DriveSubsystem extends SubsystemBase {
     
       public double getBestAprilTagPitch() {
         updateBestAprilTag();
-        return DriveConstants.kBbestAprilTagPitch;
+        return m_bestAprilTagPitch;
       }
   
       public double getBestAprilTagDistance() {
