@@ -3,6 +3,9 @@ package frc.robot.subsystems.Arm;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CLAW_CONSTANTS;
@@ -28,30 +31,44 @@ public class Claw extends SubsystemBase {
         m_clawMotor.configPeakOutputReverse(-1, CLAW_CONSTANTS.kTimeoutMs);
 
         /* Config the Velocity closed loop gains in slot0 */
-        m_clawMotor.config_kF(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocit.kF, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.config_kP(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocit.kP, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.config_kI(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocit.kI, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.config_kD(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocit.kD, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.config_kF(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocity.kF, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.config_kP(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocity.kP, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.config_kI(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocity.kI, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.config_kD(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocity.kD, CLAW_CONSTANTS.kTimeoutMs);
+
+        m_clawMotor.setSensorPhase(false); // invert encoder to match motor
+
+        ShuffleboardTab shuffTab = Shuffleboard.getTab("Claw");
+        shuffTab.addDouble("Motor V", () -> m_clawMotor.getSelectedSensorVelocity());
 
     }
+
+    private void runClawClosedLoop (double velocity) {
+        m_clawMotor.set(ControlMode.Velocity, velocity);
+        // System.out.println("Claw motor velocity: " + velocity);
+    }
+
+    // Run these from RobotContainer like this:
+    //      new JoystickButton(m_driverController, Button.kA.value)
+    //          .whileTrue(m_claw.in());
 
     public CommandBase in() {
-       return this.run(()-> m_clawMotor.set(ControlMode.Velocity, CLAW_CONSTANTS.kInVelocity));
+       return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kInVelocity)); // testing on celestial was with 10000 to 30000
     }
     public CommandBase coneOut() {
-        return this.run(()-> m_clawMotor.set(ControlMode.Velocity, CLAW_CONSTANTS.kConeOutVelocity));
+        return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kConeOutVelocity));
     }
     public CommandBase cubeOut() {
-        return this.run(()-> m_clawMotor.set(ControlMode.Velocity, CLAW_CONSTANTS.kCubeOutVelocity));
+        return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity));
     }
     public CommandBase shoot() {
-        return this.run(()-> m_clawMotor.set(ControlMode.Velocity, CLAW_CONSTANTS.kShootVelocity));
+        return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kShootVelocity));
     }
     public CommandBase stop() {
-        return this.run(()-> m_clawMotor.set(ControlMode.Velocity, CLAW_CONSTANTS.kStopVelocity));
+        return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kStopVelocity));
     }
     public CommandBase hold() {
-        return this.run(()-> m_clawMotor.set(ControlMode.Velocity, CLAW_CONSTANTS.kHoldVelocity));
+        return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kHoldVelocity));
     }
 
 }

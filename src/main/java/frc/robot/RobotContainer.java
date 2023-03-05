@@ -31,6 +31,7 @@ import frc.robot.subsystems.Arm.UpperArmSubsystem;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -139,6 +140,9 @@ public class RobotContainer {
     configureButtonBindings();
 
     // Configure default commands
+
+    CommandScheduler.getInstance().setDefaultCommand(m_claw, m_claw.stop());
+
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
@@ -186,9 +190,8 @@ public class RobotContainer {
 
     m_autoBalance.toggleOnTrue(new Balance());
 
-    m_clawTest.toggleOnTrue(new RunCommand(
-      () -> m_claw.in(), 
-      m_claw));
+    // Why can't we specify dependency on subsystem here???
+    m_clawTest.whileTrue(m_claw.in());
 
     m_lowerArm.setDefaultCommand(
       new RunCommand(() -> m_lowerArm.lowerArmHoldPosition(), m_lowerArm)
