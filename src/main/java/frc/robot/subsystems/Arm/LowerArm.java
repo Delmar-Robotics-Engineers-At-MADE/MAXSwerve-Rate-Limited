@@ -56,36 +56,44 @@ public class LowerArm extends SubsystemBase {
     // m_conesSettingEntry = m_dashboardTab.add("Cubes", m_signalCubes).getEntry();
     }
 
+    /**
+     * 
+     * @param position target lower arm position
+     */
+    private void runLowerArmClosedLoop(double position) {
+        m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kDutyCycle);
+    }
+
     public CommandBase move() {
-        return this.runOnce(() -> m_elbowPIDController.setReference(m_position, CANSparkMax.ControlType.kDutyCycle));
+        return this.runOnce(() -> runLowerArmClosedLoop(m_position));
     }
 
     public CommandBase homeLowerArm() {
-        return this.runOnce(() -> m_elbowPIDController.setReference(LowerArmConstants.kHomePosition, CANSparkMax.ControlType.kDutyCycle));
+        return this.runOnce(() -> runLowerArmClosedLoop(LowerArmConstants.kHomePosition));
     }
 
     public CommandBase lowerArmFloorPosition() {
-        return this.runOnce(() -> m_elbowPIDController.setReference(LowerArmConstants.kFloorPosition, CANSparkMax.ControlType.kDutyCycle));
+        return this.runOnce(() -> runLowerArmClosedLoop(LowerArmConstants.kFloorPosition));
     }
 
     public CommandBase lowerArmHighPosition() {
-        return this.runOnce(() -> m_elbowPIDController.setReference(LowerArmConstants.kHighPosition, CANSparkMax.ControlType.kDutyCycle));
+        return this.runOnce(() -> runLowerArmClosedLoop(LowerArmConstants.kHighPosition));
     }
 
     public CommandBase lowerArmShootPosition() {
-        return this.runOnce(() -> m_elbowPIDController.setReference(LowerArmConstants.kShootPosition, CANSparkMax.ControlType.kDutyCycle));
+        return this.runOnce(() -> runLowerArmClosedLoop(LowerArmConstants.kShootPosition));
     }
 
     public CommandBase lowerArmMidPosition() {
-        return this.runOnce(() -> m_elbowPIDController.setReference(LowerArmConstants.kMidPosition, CANSparkMax.ControlType.kDutyCycle));
+        return this.runOnce(() -> runLowerArmClosedLoop(LowerArmConstants.kMidPosition));
     }
 
     public CommandBase lowerArmSSsPosition() {
-        return this.runOnce(() -> m_elbowPIDController.setReference(LowerArmConstants.kSSsPosition, CANSparkMax.ControlType.kDutyCycle));
+        return this.runOnce(() -> runLowerArmClosedLoop(LowerArmConstants.kSSsPosition));
     }
 
     public CommandBase lowerArmHoldPosition() {
-        return this.runOnce(() -> m_elbowPIDController.setReference(m_elbowEncoder.getPosition(), CANSparkMax.ControlType.kDutyCycle));
+        return this.runOnce(() -> runLowerArmClosedLoop(m_elbowEncoder.getPosition()));
     }
 
     public CommandBase runLowerArmUp() {
