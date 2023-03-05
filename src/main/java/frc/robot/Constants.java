@@ -172,10 +172,10 @@ public final class Constants {
 
   public static final class BalanceConstants {
 
-    public static final double BEAM_BALANCED_GOAL_DEGREES = 0;
-    public static final double BEAM_BALANACED_DRIVE_KP = 0.015;
-    public static final double BACKWARDS_BALANCING_EXTRA_POWER_MULTIPLIER = 1.3;
-    public static final double BEAM_BALANCED_ANGLE_TRESHOLD_DEGREES = 1;
+    public static final double BEAM_BALANCED_GOAL_DEGREES = 0.0;
+    public static final double BEAM_BALANACED_DRIVE_KP = 0.007;
+    public static final double BACKWARDS_BALANCING_EXTRA_POWER_MULTIPLIER = 1.2;
+    public static final double BEAM_BALANCED_ANGLE_TRESHOLD_DEGREES = 2.5;
 
   }
 
@@ -260,21 +260,26 @@ public final class Constants {
       public static final int CRAWL = 1;
       public static final int kTurnToTag = 7;
       public static final int kDriveToTag = 8;
+      public static final int kAutoBalance = 12;
+      public static final int kSingleSubstation = 9;
 
     }
     public static final class OpperatorConstants {
       public static final int PRIORITY_LEFT = 3;
       //public static final int kUpperArmManual = 12;
-      public static final int kAutoBalance = 8;
-      public static final int up = 6;
+      public static final int kFloorMode = 6;
+
       public static int kOSlow = 4;
       public static int kClawTest = 11;
       public static int kHomeUpperArm = 9;
-      public static int down = 5;
       public static int ksetUpperArm = 7;
       public static int kNudgeUp = 12;
       public static int kNudgeDown = 11;
       public static int kMoveUpperArmToTarget = 5;
+
+      public static final int kShootPosition = 1;
+      public static int kHighPosition = 6;
+      public static int kMidPosition = 8;
     }
   }
 }

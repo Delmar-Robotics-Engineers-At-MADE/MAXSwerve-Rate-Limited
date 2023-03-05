@@ -73,6 +73,7 @@ public class RobotContainer {
   Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
   JoystickButton m_turoButton = new JoystickButton(m_driverController, DriverConstants.TURBO);
   JoystickButton m_crawlButton = new JoystickButton(m_driverController, DriverConstants.CRAWL);
+  JoystickButton m_autoBalance = new JoystickButton(m_driverController, DriverConstants.kAutoBalance);
 
   //The opperator's controller
   Joystick m_opperator = new Joystick(OIConstants.kOpperatorControllerPort);
@@ -82,7 +83,6 @@ public class RobotContainer {
   // JoystickButton m_lowerArmUp = new JoystickButton(m_opperator, OpperatorConstants.up);
   // JoystickButton m_lowerArmDown = new JoystickButton(m_opperator, OpperatorConstants.down);
   //JoystickButton m_upperArmManual = new JoystickButton(m_opperator, OpperatorConstants.kUpperArmManual);
-  JoystickButton m_autoBalance = new JoystickButton(m_opperator, OpperatorConstants.kAutoBalance);
   JoystickButton m_homeUpperArm = new JoystickButton(m_opperator, OpperatorConstants.kHomeUpperArm);
   Trigger m_lowerArmUp = new Trigger(m_opperator.pov(0, null));
   Trigger m_lowerArmDown = new Trigger(m_opperator.pov(180, null));
@@ -108,7 +108,7 @@ public class RobotContainer {
     new JoystickButton(m_driverController, DriverConstants.ZERO_HEADING)
         .whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
     
-    new JoystickButton(m_opperator, OpperatorConstants.kAutoBalance)
+    new JoystickButton(m_opperator, DriverConstants.kAutoBalance)
         .toggleOnTrue(m_balance);
 
     new JoystickButton(m_opperator, OpperatorConstants.kNudgeUp)
@@ -130,6 +130,21 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, DriverConstants.kDriveToTag)
     .toggleOnTrue(new DriveToAprilTagProfiled(0.5, m_robotDrive));
+
+    new JoystickButton(m_opperator, OpperatorConstants.kFloorMode)
+    .toggleOnTrue(m_lowerArm.lowerArmFloorPosition());
+
+    new JoystickButton(m_opperator, OpperatorConstants.kHighPosition)
+    .toggleOnTrue(m_lowerArm.lowerArmHighPosition());
+
+    new JoystickButton(m_opperator, OpperatorConstants.kMidPosition)
+    .toggleOnTrue(m_lowerArm.lowerArmMidPosition());
+
+    new JoystickButton(m_opperator, OpperatorConstants.kShootPosition)
+    .toggleOnTrue(m_lowerArm.lowerArmShootPosition());
+
+    new JoystickButton(m_opperator, DriverConstants.kSingleSubstation)
+    .toggleOnTrue(m_lowerArm.lowerArmSSsPosition());
   }
 
   /**
@@ -194,8 +209,7 @@ public class RobotContainer {
     m_clawTest.whileTrue(m_claw.in());
 
     m_lowerArm.setDefaultCommand(
-      new RunCommand(() -> m_lowerArm.lowerArmHoldPosition(), m_lowerArm)
-    );
+      m_lowerArm.lowerArmHoldPosition());
 
     //m_upperArmManual.whileTrue(new RunCommand(() -> m_upperArm.moveOpenLoop(m_opperator.getRawAxis(1)), m_upperArm));
     
