@@ -4,7 +4,6 @@
 
 package frc.robot.Commands.DriveCommands;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.DriveConstants;
@@ -17,7 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class TurnToAprilTagProfiled extends ProfiledPIDCommand {
   
   private static ProfiledPIDController m_PID = new ProfiledPIDController(
-    DriveConstants.kYawP, DriveConstants.kYawI, DriveConstants.kYawD,
+    DriveConstants.kTurnAprilTagP, DriveConstants.kTurnAprilTagI, DriveConstants.kTurnAprilTagD,
     new TrapezoidProfile.Constraints(
                 DriveConstants.kMaxYawRateDegPerS,
                 DriveConstants.kMaxYawAccelerationDegPerSSquared));
@@ -46,12 +45,12 @@ public class TurnToAprilTagProfiled extends ProfiledPIDCommand {
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
     getController()
-        .setTolerance(DriveConstants.kYawToleranceDeg, DriveConstants.kYawRateToleranceDegPerS);
+        .setTolerance(DriveConstants.kTurnAprilTagToleranceDeg, DriveConstants.kTurnAprilTagToleranceDegPerS);
       
         // Add the PID to dashboard
       if (!m_shuffleboardLoaded) {
         ShuffleboardTab turnTab = Shuffleboard.getTab("Drivebase");
-        turnTab.add("AprilTag PID2", m_PID);
+        turnTab.add("AprilTag PID", m_PID);
         m_shuffleboardLoaded = true;  // so we do this only once no matter how many instances are created
       }
   
