@@ -196,34 +196,35 @@ public final class Constants {
     //                                                    kP     kI    kD  kF             Iz     PeakOut 
     public final static Gains kGains_Velocity = new Gains( 0.25, 0.0, 0.0, 0.08,  300,  1.00);
   }
+  
   public static final class UpperArmConstants {
 
     public static final int UPPER_ARM_MOTOR_ID = 0;
 
     public static final int kRevEncoderLimitLow = -20;
     public static final int kRevEncoderLimitHigh = -200;
-    public static final double kRevEncoderP = 0.003;
+    public static final double kRevEncoderP = 0.009;  // was 0.003 b4 added versa stage
     public static final double kRevEncoderI = 0;
-    public static final double kRevEncoderD = 0.002;
+    public static final double kRevEncoderD = 0.006;  // was 0.002 b4 added versa stage
     public static final double kRevEncoderTolerance = 20; 
     public static final double kRevEncoderMaxCountsPerS = 750;
     public static final double kRevEncoderMaxCountsPerSSquared = 1000;
     public static final double kRevEncoderMaxCountsPerSTolerance = 100;
 
-    public static final double kPotmeterP = 20;
-    public static final double kPotmeterI = 2;
+    public static final double kPotmeterP = 60; // was 20 b4 added versa stage
+    public static final double kPotmeterI = 6;  // was 2 b4 added versa stage
     public static final double kPotmeterD = 0;
     public static final double kPotmeterTolerance = 0.001;  
 
     public static final double kHomePotmeterValue = 0.54;
     public static final double kHomeEncoderValue = 0.0;
 
-    public static final double kMaxFalconPower = 0.20;
+    public static final double kMaxFalconPower = 0.60;  // was 0.20 b4 added versa stage
 
     // for testing only
     public static final double kFalconClosedLoopTolerance = 100;
-    public static final double kFalconTestNudgeAmount = 2000;
-    public static final double kFalconP = 0.1;
+    public static final double kFalconTestNudgeAmount = 6000;  // was 2000 b4 added versa stage
+    public static final double kFalconP = 0.1;  
 
   }
 
