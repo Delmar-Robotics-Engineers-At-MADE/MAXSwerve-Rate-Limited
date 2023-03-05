@@ -48,7 +48,7 @@ public class Balance extends CommandBase {
       drivePower = Math.copySign(0.4, drivePower);
     }
 
-    m_DriveSubsystem.drive(drivePower, 0, 0, true, true);
+    m_DriveSubsystem.drive(drivePower, 0, 0, false, true);
     
     // Debugging Print Statments
     System.out.println("Current Angle: " + currentAngle);
