@@ -8,51 +8,54 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
+import frc.robot.subsystems.Cameras.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
+
 /** A command that will turn the robot to the specified angle using a motion profile. */
-public class DriveToAprilTagProfiled extends ProfiledPIDCommand {
+public class TurnToLimelightProfiled extends ProfiledPIDCommand {
   
   private static ProfiledPIDController m_PID = new ProfiledPIDController(
-    DriveConstants.kDriveP, DriveConstants.kDriveI, DriveConstants.kDriveD,
+    DriveConstants.kYawP, DriveConstants.kYawI, DriveConstants.kYawD,
     new TrapezoidProfile.Constraints(
-                DriveConstants.kMaxTurnRateDegPerS,
-                DriveConstants.kMaxTurnAccelerationDegPerSSquared));
+                DriveConstants.kMaxYawRateDegPerS,
+                DriveConstants.kMaxYawAccelerationDegPerSSquared));
 
   private static boolean m_shuffleboardLoaded = false;
   /**
    * Turns to robot to the specified angle using a motion profile.
    *
-   * @param targetDistance The angle to turn to
+   * @param targetAngleDegrees The angle to turn to
    * @param drive The drive subsystem to use
    */
-  public DriveToAprilTagProfiled(double targetDistance, DriveSubsystem drive) {
+  public TurnToLimelightProfiled(LimelightSubsystem limelight, DriveSubsystem drive) {
     super(
         m_PID,
         // Close loop on heading
-        drive::getBestAprilTagDistance,
+        limelight::getBestLimelightYaw,
         // Set reference to target
-        targetDistance,
+        0.0,
         // Pipe output to turn robot
-        (output, setpoint) -> drive.drive(0.0, 0.0, -output, false, true),
+        (output, setpoint) -> drive.drive(0, 0, output, true, true),
         // Require the drive
         drive);
 
     // Set the controller to be continuous (because it is an angle controller)
-    // getController().enableContinuousInput(-180, 180);
+    getController().enableContinuousInput(-180, 180);
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
-   // getController()
-       // .setTolerance(DriveConstants.kDriveToleranceDist);
+    getController()
+        .setTolerance(DriveConstants.kMaxYawRateDegPerS, DriveConstants.kMaxYawAccelerationDegPerSSquared);
       
         // Add the PID to dashboard
       if (!m_shuffleboardLoaded) {
         ShuffleboardTab turnTab = Shuffleboard.getTab("Drivebase");
-        turnTab.add("AprilTag PID3", m_PID);
+        turnTab.add("Limelight PID", m_PID);
         m_shuffleboardLoaded = true;  // so we do this only once no matter how many instances are created
       }
+      System.out.println("new turn to limelight command created");
   
   }
 

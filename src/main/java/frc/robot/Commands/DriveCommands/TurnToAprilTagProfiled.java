@@ -7,6 +7,7 @@ package frc.robot.Commands.DriveCommands;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.Cameras.AprilTagSubsystem;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,7 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class TurnToAprilTagProfiled extends ProfiledPIDCommand {
   
   private static ProfiledPIDController m_PID = new ProfiledPIDController(
-    DriveConstants.kTurnAprilTagP, DriveConstants.kTurnAprilTagI, DriveConstants.kTurnAprilTagD,
+    DriveConstants.kYawP, DriveConstants.kYawI, DriveConstants.kYawD,
     new TrapezoidProfile.Constraints(
                 DriveConstants.kMaxYawRateDegPerS,
                 DriveConstants.kMaxYawAccelerationDegPerSSquared));
@@ -28,15 +29,15 @@ public class TurnToAprilTagProfiled extends ProfiledPIDCommand {
    * @param targetAngleDegrees The angle to turn to
    * @param drive The drive subsystem to use
    */
-  public TurnToAprilTagProfiled(double targetAngleDegrees, DriveSubsystem drive) {
+  public TurnToAprilTagProfiled(double targetAngleDegrees, AprilTagSubsystem aprilTags, DriveSubsystem drive) {
     super(
         m_PID,
         // Close loop on heading
-        drive::getBestAprilTagYaw,
+        aprilTags::getBestAprilTagYaw,
         // Set reference to target
         targetAngleDegrees,
         // Pipe output to turn robot
-        (output, setpoint) -> drive.drive(0.0, 0.0, output, false, true),
+        (output, setpoint) -> drive.drive(0, 0, output, true, true),
         // Require the drive
         drive);
 
@@ -45,12 +46,12 @@ public class TurnToAprilTagProfiled extends ProfiledPIDCommand {
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
     getController()
-        .setTolerance(DriveConstants.kTurnAprilTagToleranceDeg, DriveConstants.kTurnAprilTagToleranceDegPerS);
+        .setTolerance(DriveConstants.kYawToleranceDeg, DriveConstants.kYawRateToleranceDegPerS);
       
         // Add the PID to dashboard
       if (!m_shuffleboardLoaded) {
         ShuffleboardTab turnTab = Shuffleboard.getTab("Drivebase");
-        turnTab.add("AprilTag PID", m_PID);
+        turnTab.add("AprilTag PID2", m_PID);
         m_shuffleboardLoaded = true;  // so we do this only once no matter how many instances are created
       }
   
