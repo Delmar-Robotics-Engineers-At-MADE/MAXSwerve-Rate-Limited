@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
 import frc.robot.Commands.DriveCommands.Balance;
 import frc.robot.Commands.DriveCommands.DriveToAprilTag;
@@ -89,6 +90,15 @@ public class RobotContainer {
   Trigger m_lowerArmUp = new Trigger(m_opperator.pov(0, null));
   Trigger m_lowerArmDown = new Trigger(m_opperator.pov(180, null));
 
+  // Autonomous options
+  private static final String kDock = "Dock";
+  private static final String kRightSideDock = "RightSideDock";
+  private static final String kLeftSideDock = "LeftSideDock";
+  private static final String kSimple = "Simple";
+
+  private String m_autoSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
   //Sendable Chooser
   
   
@@ -156,6 +166,15 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+    // config sendable chooser
+    m_chooser.setDefaultOption("Default Auto", kSimple);
+    m_chooser.addOption("Dock Centre", kDock);
+    m_chooser.addOption("Dock Left", kLeftSideDock);
+    m_chooser.addOption("Dock Right", kRightSideDock);
+    SmartDashboard.putData("Auto", m_chooser);
+    m_autoSelected = m_chooser.getSelected();
+    System.out.println("Auto selected: " + m_autoSelected);
 
     // Configure default commands
 
@@ -230,12 +249,13 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Create config for trajectory
-    PathPlannerTrajectory path = PathPlanner.loadPath("Dock", new PathConstraints(4, 3));
+    PathPlannerTrajectory path = PathPlanner.loadPath( m_autoSelected, new PathConstraints(4, 3));
 
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("Balance", new Balance());
+
     var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
