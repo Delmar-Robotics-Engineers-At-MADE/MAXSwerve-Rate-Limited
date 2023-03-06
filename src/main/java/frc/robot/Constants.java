@@ -83,18 +83,11 @@ public final class Constants {
     public static final double kYawToleranceDeg = 1;
     public static final double kYawRateToleranceDegPerS = 10;
 
-    // DriveToAprilTagProfiled
-    public static final double kDriveP = 0;
+    // DriveToAprilTag
+    public static final double kDriveP = 0.2;
     public static final double kDriveI = 0;
     public static final double kDriveD = 0;
-    public static final double kMaxTurnRateDegPerS = 0;
-    public static final double kMaxTurnAccelerationDegPerSSquared = 0;
-
-    public static final double kTurnAprilTagP = 0.06;
-    public static final double kTurnAprilTagI = 0;
-    public static final double kTurnAprilTagD = 0;
-    public static final double kTurnAprilTagToleranceDeg = 1;
-    public static final double kTurnAprilTagToleranceDegPerS = 10; // degrees per second
+    public static final double kDriveToleranceDist = 0;
 
   }
 

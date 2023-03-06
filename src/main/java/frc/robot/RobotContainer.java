@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
 import frc.robot.Commands.DriveCommands.Balance;
-import frc.robot.Commands.DriveCommands.DriveToAprilTagProfiled;
+import frc.robot.Commands.DriveCommands.DriveToAprilTag;
 import frc.robot.Commands.DriveCommands.TurnToAprilTagProfiled;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -28,6 +28,8 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.Arm.Claw;
 import frc.robot.subsystems.Arm.LowerArm;
 import frc.robot.subsystems.Arm.UpperArmSubsystem;
+import frc.robot.subsystems.Cameras.AprilTagSubsystem;
+import frc.robot.subsystems.Cameras.LimelightSubsystem;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -65,6 +67,8 @@ public class RobotContainer {
   private static final UpperArmSubsystem m_upperArm = new UpperArmSubsystem();
   private static final LowerArm m_lowerArm = new LowerArm();
   private static final Balance m_balance = new Balance();
+  private static final LimelightSubsystem m_limelight = new LimelightSubsystem();
+  private static final AprilTagSubsystem m_aprilTags = new AprilTagSubsystem();
 
 
   
@@ -126,10 +130,10 @@ public class RobotContainer {
     .toggleOnTrue(new MoveUpperArmCommand(200, m_upperArm));
 
     new JoystickButton(m_driverController, DriverConstants.kTurnToTag)
-    .toggleOnTrue(new TurnToAprilTagProfiled(0, m_robotDrive));
+    .toggleOnTrue(new TurnToAprilTagProfiled(0, m_aprilTags, m_robotDrive));
 
     new JoystickButton(m_driverController, DriverConstants.kDriveToTag)
-    .toggleOnTrue(new DriveToAprilTagProfiled(0.5, m_robotDrive));
+    .toggleOnTrue(new DriveToAprilTag(0.5, m_aprilTags, m_robotDrive));
 
     new JoystickButton(m_opperator, OpperatorConstants.kFloorMode)
     .toggleOnTrue(m_lowerArm.lowerArmFloorPosition());
@@ -145,6 +149,7 @@ public class RobotContainer {
 
     new JoystickButton(m_opperator, DriverConstants.kSingleSubstation)
     .toggleOnTrue(m_lowerArm.lowerArmSSsPosition());
+    // .toggleOnTrue(new DriveToAprilTag(0.5, m_aprilTags, m_robotDrive));
   }
 
   /**
