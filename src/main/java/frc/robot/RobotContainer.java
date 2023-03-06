@@ -243,7 +243,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Create config for trajectory
-    PathPlannerTrajectory path = PathPlanner.loadPath( m_autoSelected, new PathConstraints(4, 3));
+    PathPlannerTrajectory path = PathPlanner.loadPath( m_autoSelected, new PathConstraints(2, 2));
 
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
