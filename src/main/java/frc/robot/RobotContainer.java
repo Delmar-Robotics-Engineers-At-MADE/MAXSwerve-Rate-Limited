@@ -14,6 +14,8 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
@@ -96,6 +98,7 @@ public class RobotContainer {
   private static final String kLeftSideDock = "LeftSideDock";
   private static final String kSimple = "Simple";
 
+  private ShuffleboardTab m_comp;
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
@@ -167,12 +170,14 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
+    m_comp = Shuffleboard.getTab("Competition");
+
     // config sendable chooser
     m_chooser.setDefaultOption("Default Auto", kSimple);
     m_chooser.addOption("Dock Centre", kDock);
     m_chooser.addOption("Dock Left", kLeftSideDock);
     m_chooser.addOption("Dock Right", kRightSideDock);
-    SmartDashboard.putData("Auto", m_chooser);
+    m_comp.add("Auto", m_chooser);
     m_autoSelected = m_chooser.getSelected();
     System.out.println("Auto selected: " + m_autoSelected);
 
