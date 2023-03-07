@@ -18,6 +18,7 @@ import frc.robot.Commands.DriveCommands.TurnToAprilTagProfiled;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.UpperArmConstants;
 import frc.robot.Constants.ControllerConstants.DriverConstants;
 import frc.robot.Constants.ControllerConstants.OpperatorConstants;
 import frc.robot.subsystems.Arm.Claw;
@@ -73,7 +74,6 @@ public class RobotContainer {
   Joystick m_opperator = new Joystick(OIConstants.kOpperatorControllerPort);
   JoystickButton m_ODrive = new JoystickButton(m_opperator, OpperatorConstants.PRIORITY_LEFT);
   JoystickButton m_OSlow = new JoystickButton(m_opperator, OpperatorConstants.kOSlow);
-  JoystickButton m_clawTest = new JoystickButton(m_opperator, OpperatorConstants.kClawTest);
   // JoystickButton m_lowerArmUp = new JoystickButton(m_opperator, OpperatorConstants.up);
   // JoystickButton m_lowerArmDown = new JoystickButton(m_opperator, OpperatorConstants.down);
   //JoystickButton m_upperArmManual = new JoystickButton(m_opperator, OpperatorConstants.kUpperArmManual);
@@ -105,14 +105,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(m_driverController, DriverConstants.X_MODE)
-        .whileTrue(new RunCommand(
+        .toggleOnTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
     
     new JoystickButton(m_driverController, DriverConstants.ZERO_HEADING)
         .whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
     
-    new JoystickButton(m_opperator, DriverConstants.kAutoBalance)
+    new JoystickButton(m_driverController, DriverConstants.kAutoBalance)
         .toggleOnTrue(m_balance);
 
     new JoystickButton(m_opperator, OpperatorConstants.kNudgeUp)
@@ -126,8 +126,8 @@ public class RobotContainer {
     new JoystickButton(m_opperator, OpperatorConstants.kHomeUpperArm)
     .toggleOnTrue(new HomeUpperArmCommand(m_upperArm));
     
-    new JoystickButton(m_opperator, OpperatorConstants.kMoveUpperArmToTarget)
-    .toggleOnTrue(new MoveUpperArmCommand(200, m_upperArm));
+    // new JoystickButton(m_opperator, OpperatorConstants.kMoveUpperArmToTarget)
+    // .toggleOnTrue(new MoveUpperArmCommand(200, m_upperArm));
 
     new JoystickButton(m_driverController, DriverConstants.kTurnToTag)
     .toggleOnTrue(new TurnToAprilTagProfiled(0, m_aprilTags, m_robotDrive));
@@ -137,21 +137,31 @@ public class RobotContainer {
 
     new JoystickButton(m_opperator, OpperatorConstants.kFloorMode)
     .whileTrue(m_lowerArm.lowerArmFloorPosition());
+    new JoystickButton(m_opperator, OpperatorConstants.kFloorMode)
+    .whileTrue(new HomeUpperArmCommand(m_upperArm));
 
     new JoystickButton(m_opperator, OpperatorConstants.kHighPosition)
     .whileTrue(m_lowerArm.lowerArmHighPosition());
+    new JoystickButton(m_opperator, OpperatorConstants.kHighPosition)
+    .whileTrue(new MoveUpperArmCommand(UpperArmConstants.kHighPosition, m_upperArm));
 
-    new JoystickButton(m_opperator, OpperatorConstants.kMidPosition)
+    new JoystickButton(m_driverController, DriverConstants.kMidPosition)
     .whileTrue(m_lowerArm.lowerArmMidPosition());
+    new JoystickButton(m_driverController, DriverConstants.kMidPosition)
+    .whileTrue(new MoveUpperArmCommand(UpperArmConstants.kMidPosition, m_upperArm));
 
-    new JoystickButton(m_opperator, OpperatorConstants.kShootPosition)
+    new JoystickButton(m_opperator, OpperatorConstants.kShootCubeHigh)
     .whileTrue(m_lowerArm.lowerArmShootPosition());
+    new JoystickButton(m_opperator, OpperatorConstants.kShootCubeHigh)
+    .whileTrue(new HomeUpperArmCommand(m_upperArm));
 
     new JoystickButton(m_opperator, DriverConstants.kSingleSubstation)
     .whileTrue(m_lowerArm.lowerArmSSsPosition());
 
-    new JoystickButton(m_driverController, DriverConstants.kHomeLowerArm)
+    new JoystickButton(m_driverController, OpperatorConstants.kHomeArms)
     .whileTrue(m_lowerArm.homeLowerArm());
+    new JoystickButton(m_driverController, OpperatorConstants.kHomeArms)
+    .whileTrue(new HomeUpperArmCommand(m_upperArm));
 
     new JoystickButton(m_driverController, DriverConstants.kLowerArmUp)
     .whileTrue(m_lowerArm.runLowerArmUp());
@@ -230,7 +240,6 @@ public class RobotContainer {
     m_autoBalance.toggleOnTrue(new Balance());
 
     // Why can't we specify dependency on subsystem here???
-    m_clawTest.whileTrue(m_claw.in());
 
     m_lowerArm.setDefaultCommand(
       m_lowerArm.lowerArmHoldPosition());

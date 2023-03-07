@@ -214,10 +214,13 @@ public final class Constants {
 
     public static final double kMaxFalconPower = 0.60;  // was 0.20 b4 added versa stage
 
+    public static final double kHighPosition = 0.0;
+    public static final double kMidPosition = 0.0;
+
     // for testing only
     public static final double kFalconClosedLoopTolerance = 100;
     public static final double kFalconTestNudgeAmount = 6000;  // was 2000 b4 added versa stage
-    public static final double kFalconP = 0.1;  
+    public static final double kFalconP = 0.1; 
 
   }
 
@@ -256,26 +259,27 @@ public final class Constants {
       public static final int kAutoBalance = 12;
       public static final int kSingleSubstation = 4;
       public static final int kMidPosition = 5;
-      public static final int kHomeLowerArm = 11;
-      public static int kLowerArmUp = 10;
-      public static int kLowerArmDown = 9;
+      public static final int kLowerArmUp = 10;
+      public static final int kLowerArmDown = 9;
     }
     public static final class OpperatorConstants {
       public static final int PRIORITY_LEFT = 3;
       //public static final int kUpperArmManual = 12;
       public static final int kFloorMode = 2;
-
       public static final int kOSlow = 4;
-      public static final int kClawTest = 1;
-      public static final int kHomeUpperArm = 9;
-      public static final int ksetUpperArm = 7;
+      public static final int kShootCubeHigh = 8;
+      public static final int kShootCubeMid = 7;
+      //public static final int kClawTest = 1;
+      public static final int kHomeArms = 10;
+      //public static final int ksetUpperArm = 7;
       public static final int kNudgeUp = 12;
       public static final int kNudgeDown = 11;
-      public static final int kMoveUpperArmToTarget = 5;
-
-      public static final int kShootPosition = 1;
+      //public static final int kMoveUpperArmToTarget = 5;
+      //public static final int kShootPosition = 1;
       public static final int kHighPosition = 6;
-      public static final int kMidPosition = 8;
+      //public static final int kMidPosition = 8;
+      public static final int kClawIn = 5;
+      public static final int kClawOut = 1;
     }
   }
 }
