@@ -62,7 +62,7 @@ public class LowerArm extends SubsystemBase {
      */
     private void runLowerArmClosedLoop(double position) {
         m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kDutyCycle);
-        System.out.println("lower arm:" + getElbowPos() +" " + position);
+        //System.out.println("lower arm:" + getElbowPos() +" " + position);
     
     }
 

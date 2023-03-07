@@ -232,15 +232,15 @@ public final class Constants {
     public static double kMaxOutput = 1;
 
     public static final double kHomePosition = 0;
-    public static final double kFloorPosition = 0;
-    public static final double kHighPosition = 0;
-    public static final double kShootPosition = 0;
-    public static final double kMidPosition = 0;
-    public static final double kSSsPosition = 0;
-    public static final double kManualSpeed = 0.7;
+    public static final double kFloorPosition = 30;
+    public static final double kHighPosition = 50;
+    public static final double kShootPosition = 20;
+    public static final double kMidPosition = 25;
+    public static final double kSSsPosition = 32;
+    public static final double kManualSpeed = 70;
     public static final double minVelocity = 0;
     public static final double maxAccel = 1500;
-    public static final double maxVelocity = 4000;
+    public static final double maxVelocity = 5000;
     public static final double allowedErr = 0;
   }
 
@@ -266,7 +266,7 @@ public final class Constants {
       public static final int kFloorMode = 2;
 
       public static final int kOSlow = 4;
-      public static final int kClawTest = 11;
+      public static final int kClawTest = 1;
       public static final int kHomeUpperArm = 9;
       public static final int ksetUpperArm = 7;
       public static final int kNudgeUp = 12;
