@@ -62,38 +62,40 @@ public class LowerArm extends SubsystemBase {
      */
     private void runLowerArmClosedLoop(double position) {
         m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kDutyCycle);
+        System.out.println("lower arm:" + getElbowPos() +" " + position);
+    
     }
 
     public CommandBase move() {
-        return this.runOnce(() -> runLowerArmClosedLoop(m_position));
+        return this.run(() -> runLowerArmClosedLoop(m_position));
     }
 
     public CommandBase homeLowerArm() {
-        return this.runOnce(() -> runLowerArmClosedLoop(LowerArmConstants.kHomePosition));
+        return this.run(() -> runLowerArmClosedLoop(LowerArmConstants.kHomePosition));
     }
 
     public CommandBase lowerArmFloorPosition() {
-        return this.runOnce(() -> runLowerArmClosedLoop(LowerArmConstants.kFloorPosition));
+        return this.run(() -> runLowerArmClosedLoop(LowerArmConstants.kFloorPosition));
     }
 
     public CommandBase lowerArmHighPosition() {
-        return this.runOnce(() -> runLowerArmClosedLoop(LowerArmConstants.kHighPosition));
+        return this.run(() -> runLowerArmClosedLoop(LowerArmConstants.kHighPosition));
     }
 
     public CommandBase lowerArmShootPosition() {
-        return this.runOnce(() -> runLowerArmClosedLoop(LowerArmConstants.kShootPosition));
+        return this.run(() -> runLowerArmClosedLoop(LowerArmConstants.kShootPosition));
     }
 
     public CommandBase lowerArmMidPosition() {
-        return this.runOnce(() -> runLowerArmClosedLoop(LowerArmConstants.kMidPosition));
+        return this.run(() -> runLowerArmClosedLoop(LowerArmConstants.kMidPosition));
     }
 
     public CommandBase lowerArmSSsPosition() {
-        return this.runOnce(() -> runLowerArmClosedLoop(LowerArmConstants.kSSsPosition));
+        return this.run(() -> runLowerArmClosedLoop(LowerArmConstants.kSSsPosition));
     }
 
     public CommandBase lowerArmHoldPosition() {
-        return this.runOnce(() -> runLowerArmClosedLoop(m_elbowEncoder.getPosition()));
+        return this.run(() -> runLowerArmClosedLoop(m_elbowEncoder.getPosition()));
     }
 
     public CommandBase runLowerArmUp() {

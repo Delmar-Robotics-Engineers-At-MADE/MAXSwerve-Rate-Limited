@@ -223,7 +223,7 @@ public final class Constants {
 
   public static final class LowerArmConstants {
 
-    public static final int LOWER_ARM_MOTOR_ID = 6;
+    public static final int LOWER_ARM_MOTOR_ID = 7;
     public static double kP = 1.0;
     public static double kI = 0.0;
     public static double kD = 0.0;
@@ -256,11 +256,14 @@ public final class Constants {
       public static final int kAutoBalance = 12;
       public static final int kSingleSubstation = 4;
       public static final int kMidPosition = 5;
+      public static final int kHomeLowerArm = 11;
+      public static int kLowerArmUp = 10;
+      public static int kLowerArmDown = 9;
     }
     public static final class OpperatorConstants {
       public static final int PRIORITY_LEFT = 3;
       //public static final int kUpperArmManual = 12;
-      public static final int kFloorMode = 6;
+      public static final int kFloorMode = 2;
 
       public static final int kOSlow = 4;
       public static final int kClawTest = 11;

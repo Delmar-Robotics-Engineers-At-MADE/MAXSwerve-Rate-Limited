@@ -78,8 +78,8 @@ public class RobotContainer {
   // JoystickButton m_lowerArmDown = new JoystickButton(m_opperator, OpperatorConstants.down);
   //JoystickButton m_upperArmManual = new JoystickButton(m_opperator, OpperatorConstants.kUpperArmManual);
   JoystickButton m_homeUpperArm = new JoystickButton(m_opperator, OpperatorConstants.kHomeUpperArm);
-  Trigger m_lowerArmUp = new Trigger(m_opperator.pov(0, null));
-  Trigger m_lowerArmDown = new Trigger(m_opperator.pov(180, null));
+  Trigger m_lowerArmUp = new JoystickButton(m_opperator, 5);
+  Trigger m_lowerArmDown = new JoystickButton(m_opperator, 6);
 
   // Autonomous options
   private static final String kDock = "Dock";
@@ -136,20 +136,28 @@ public class RobotContainer {
     .toggleOnTrue(new DriveToAprilTag(0.5, m_aprilTags, m_robotDrive));
 
     new JoystickButton(m_opperator, OpperatorConstants.kFloorMode)
-    .toggleOnTrue(m_lowerArm.lowerArmFloorPosition());
+    .whileTrue(m_lowerArm.lowerArmFloorPosition());
 
     new JoystickButton(m_opperator, OpperatorConstants.kHighPosition)
-    .toggleOnTrue(m_lowerArm.lowerArmHighPosition());
+    .whileTrue(m_lowerArm.lowerArmHighPosition());
 
     new JoystickButton(m_opperator, OpperatorConstants.kMidPosition)
-    .toggleOnTrue(m_lowerArm.lowerArmMidPosition());
+    .whileTrue(m_lowerArm.lowerArmMidPosition());
 
     new JoystickButton(m_opperator, OpperatorConstants.kShootPosition)
-    .toggleOnTrue(m_lowerArm.lowerArmShootPosition());
+    .whileTrue(m_lowerArm.lowerArmShootPosition());
 
     new JoystickButton(m_opperator, DriverConstants.kSingleSubstation)
-    .toggleOnTrue(m_lowerArm.lowerArmSSsPosition());
+    .whileTrue(m_lowerArm.lowerArmSSsPosition());
 
+    new JoystickButton(m_driverController, DriverConstants.kHomeLowerArm)
+    .whileTrue(m_lowerArm.homeLowerArm());
+
+    new JoystickButton(m_driverController, DriverConstants.kLowerArmUp)
+    .whileTrue(m_lowerArm.runLowerArmUp());
+
+    new JoystickButton(m_driverController, DriverConstants.kLowerArmDown)
+    .whileTrue(m_lowerArm.runLowerArmDown());
   }
 
   /**
@@ -230,9 +238,6 @@ public class RobotContainer {
     //m_upperArmManual.whileTrue(new RunCommand(() -> m_upperArm.moveOpenLoop(m_opperator.getRawAxis(1)), m_upperArm));
     
     m_homeUpperArm.whileTrue(new HomeUpperArmCommand(m_upperArm));
-    
-    m_lowerArmDown.whileTrue(new RunCommand(() -> m_lowerArm.runLowerArmDown()));
-    m_lowerArmUp.whileTrue(new RunCommand(() -> m_lowerArm.runLowerArmUp()));
   }
 
 
