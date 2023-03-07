@@ -74,10 +74,6 @@ public class RobotContainer {
   Joystick m_opperator = new Joystick(OIConstants.kOpperatorControllerPort);
   JoystickButton m_ODrive = new JoystickButton(m_opperator, OpperatorConstants.PRIORITY_LEFT);
   JoystickButton m_OSlow = new JoystickButton(m_opperator, OpperatorConstants.kOSlow);
-  // JoystickButton m_lowerArmUp = new JoystickButton(m_opperator, OpperatorConstants.up);
-  // JoystickButton m_lowerArmDown = new JoystickButton(m_opperator, OpperatorConstants.down);
-  //JoystickButton m_upperArmManual = new JoystickButton(m_opperator, OpperatorConstants.kUpperArmManual);
-  JoystickButton m_homeUpperArm = new JoystickButton(m_opperator, OpperatorConstants.kHomeUpperArm);
   Trigger m_lowerArmUp = new JoystickButton(m_opperator, 5);
   Trigger m_lowerArmDown = new JoystickButton(m_opperator, 6);
 
@@ -122,9 +118,6 @@ public class RobotContainer {
     new JoystickButton(m_opperator, OpperatorConstants.kNudgeDown)
     .toggleOnTrue(new InstantCommand(
         () -> m_upperArm.nudgeClosedLoopByFalconEnc(false), m_upperArm ));
-
-    new JoystickButton(m_opperator, OpperatorConstants.kHomeUpperArm)
-    .toggleOnTrue(new HomeUpperArmCommand(m_upperArm));
     
     // new JoystickButton(m_opperator, OpperatorConstants.kMoveUpperArmToTarget)
     // .toggleOnTrue(new MoveUpperArmCommand(200, m_upperArm));
@@ -244,9 +237,6 @@ public class RobotContainer {
     m_lowerArm.setDefaultCommand(
       m_lowerArm.lowerArmHoldPosition());
 
-    //m_upperArmManual.whileTrue(new RunCommand(() -> m_upperArm.moveOpenLoop(m_opperator.getRawAxis(1)), m_upperArm));
-    
-    m_homeUpperArm.whileTrue(new HomeUpperArmCommand(m_upperArm));
   }
 
 
