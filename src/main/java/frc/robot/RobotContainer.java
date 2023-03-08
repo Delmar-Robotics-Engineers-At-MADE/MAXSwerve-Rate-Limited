@@ -41,12 +41,8 @@ import java.util.HashMap;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import frc.robot.Commands.Arm.MoveUpperArmCommand;
 import frc.robot.Commands.Arm.HomeUpperArmCommand;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
-import frc.robot.Commands.Blinkin.*;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -85,6 +81,7 @@ public class RobotContainer {
   private static final String kRightSideDock = "RightSideDock";
   private static final String kLeftSideDock = "LeftSideDock";
   private static final String kSimple = "Simple";
+  private static final String kDoesItWork = "DoesItWork";
 
   private ShuffleboardTab m_comp;
   private String m_autoSelected;
@@ -176,16 +173,16 @@ public class RobotContainer {
     m_comp = Shuffleboard.getTab("Competition");
 
     // config sendable chooser
-    m_chooser.setDefaultOption("Default Auto", kDock);
+    m_chooser.setDefaultOption("Default Auto", kSimple);
     m_chooser.addOption("Dock Centre", kDock);
     m_chooser.addOption("Dock Left", kLeftSideDock);
     m_chooser.addOption("Dock Right", kRightSideDock);
+    m_chooser.addOption("Does It Work????????????", kDoesItWork);
     m_comp.add("Auto", m_chooser);
     m_autoSelected = m_chooser.getSelected();
     System.out.println("Auto selected: " + m_autoSelected);
 
     // Configure default commands
-
     CommandScheduler.getInstance().setDefaultCommand(m_claw, m_claw.stop());
 
     m_robotDrive.setDefaultCommand(
@@ -258,7 +255,7 @@ public class RobotContainer {
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("Balance", new Balance());
+    //eventMap.put("Balance", new Balance());
 
     var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);

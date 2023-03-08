@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class BlinkinSubsystem extends SubsystemBase{
 
-  private final Spark m_blinkinPort = new Spark(8);
-  private final Spark m_blinkinStar = new Spark(9);
+  private final Spark m_blinkinPort = new Spark(0);
+  private final Spark m_blinkinStar = new Spark(1);
 
   public double m_defaultSetting = 0.91;
   public double m_signalCubes = 0.96;
