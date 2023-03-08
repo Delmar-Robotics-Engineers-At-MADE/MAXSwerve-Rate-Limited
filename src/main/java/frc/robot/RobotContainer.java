@@ -240,7 +240,7 @@ public class RobotContainer {
     m_lowerArm.setDefaultCommand(
       m_lowerArm.lowerArmHoldPosition());
     
-    //m_blinkin.setDefaultCommand(DefaultLighting(m_blinkin));
+    m_blinkin.setDefaultCommand(new DefaultLighting(m_blinkin));
 
   }
 
