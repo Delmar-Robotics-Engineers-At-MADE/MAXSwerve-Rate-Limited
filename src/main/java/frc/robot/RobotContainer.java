@@ -82,6 +82,8 @@ public class RobotContainer {
   private static final String kLeftSideDock = "LeftSideDock";
   private static final String kSimple = "Simple";
   private static final String kDoesItWork = "DoesItWork";
+  private static final String kSimpleScore = "SimpleScore";
+  private static final String kSimpleDock = "SimpleDock";
 
   private ShuffleboardTab m_comp;
   private String m_autoSelected;
@@ -178,6 +180,8 @@ public class RobotContainer {
     m_chooser.addOption("Dock Left", kLeftSideDock);
     m_chooser.addOption("Dock Right", kRightSideDock);
     m_chooser.addOption("Does It Work????????????", kDoesItWork);
+    m_chooser.addOption("SimpleScore", kSimpleScore);
+    m_chooser.addOption("SimpleDock", kSimpleDock);
     m_comp.add("Auto", m_chooser);
     m_autoSelected = m_chooser.getSelected();
     System.out.println("Auto selected: " + m_autoSelected);
@@ -254,7 +258,7 @@ public class RobotContainer {
 
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
-    HashMap<String, Command> eventMap = new HashMap<>();
+    //HashMap<String, Command> eventMap = new HashMap<>();
     //eventMap.put("Balance", new Balance());
 
     var thetaController = new ProfiledPIDController(
