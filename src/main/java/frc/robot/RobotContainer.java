@@ -153,9 +153,9 @@ public class RobotContainer {
     new JoystickButton(m_opperator, DriverConstants.kSingleSubstation)
     .whileTrue(m_lowerArm.lowerArmSSsPosition());
 
-    new JoystickButton(m_driverController, OpperatorConstants.kHomeArms)
+    new JoystickButton(m_opperator, OpperatorConstants.kHomeArms)
     .whileTrue(m_lowerArm.homeLowerArm());
-    new JoystickButton(m_driverController, OpperatorConstants.kHomeArms)
+    new JoystickButton(m_opperator, OpperatorConstants.kHomeArms)
     .whileTrue(new HomeUpperArmCommand(m_upperArm));
 
     new JoystickButton(m_driverController, DriverConstants.kLowerArmUp)
