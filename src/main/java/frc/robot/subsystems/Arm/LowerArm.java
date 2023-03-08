@@ -52,6 +52,7 @@ public class LowerArm extends SubsystemBase {
         m_positionSettingEntry = m_dashboardTab.add("Set Lower Arm", m_position).getEntry();
         m_positionSettingEntry.getDouble(m_position);
         m_dashboardTab.addBoolean("LowerArm Homed", () -> m_lowerArmHomed);
+        m_dashboardTab.add("elbow pos", getElbowPos());
     // m_defaultSettingEntry = m_dashboardTab.add("Default", m_defaultSetting).getEntry();
     // m_conesSettingEntry = m_dashboardTab.add("Cubes", m_signalCubes).getEntry();
     }
@@ -63,6 +64,7 @@ public class LowerArm extends SubsystemBase {
     private void runLowerArmClosedLoop(double position) {
         m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kDutyCycle);
         //System.out.println("lower arm:" + getElbowPos() +" " + position);
+        checkElbowHomed();
     
     }
 
@@ -112,6 +114,12 @@ public class LowerArm extends SubsystemBase {
 
     public boolean setElbowHomed(){
         return m_lowerArmHomed = true;
+    }
+
+    private void checkElbowHomed() {
+        if (getElbowPos() < LowerArmConstants.homeTolerance) {
+            setElbowHomed();
+        }
     }
 
 }

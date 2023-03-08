@@ -211,13 +211,13 @@ public final class Constants {
     public static final double kPotmeterD = 0;
     public static final double kPotmeterTolerance = 0.001;  
 
-    public static final double kHomePotmeterValue = 0.54;
+    public static final double kHomePotmeterValue = 0.570;
     public static final double kHomeEncoderValue = 0.0;
 
     public static final double kMaxFalconPower = 0.60;  // was 0.20 b4 added versa stage
 
-    public static final double kHighPosition = 0.0;
-    public static final double kMidPosition = 0.0;
+    public static final double kHighPosition = 769.50;
+    public static final double kMidPosition = 233.75;
 
     // for testing only
     public static final double kFalconClosedLoopTolerance = 100;
@@ -247,6 +247,7 @@ public final class Constants {
     public static final double maxAccel = 1500;
     public static final double maxVelocity = 5000;
     public static final double allowedErr = 0;
+    public static final double homeTolerance = 0.001;
   }
 
   public static final class ControllerConstants {
