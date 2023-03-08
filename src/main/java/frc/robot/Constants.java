@@ -66,7 +66,9 @@ public final class Constants {
 
     // speeds
     public static final double kNormalSpeed = 0.8;
+    public static final double kNormalYaw = 0.7;
     public static final double kTurboSpeed = 1.0;
+    public static final Double kTurboYaw = 0.8;
     public static final double kCrawlSpeed = 0.3;
     public static final double kODriveSpeed = 0.5;
     public static final double kOSlowSpeed = 0.25;
