@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
+import frc.robot.Commands.Blinkin.DefaultLighting;
 import frc.robot.Commands.DriveCommands.Balance;
 import frc.robot.Commands.DriveCommands.DriveToAprilTag;
 import frc.robot.Commands.DriveCommands.TurnToAprilTagProfiled;
@@ -21,6 +22,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.UpperArmConstants;
 import frc.robot.Constants.ControllerConstants.DriverConstants;
 import frc.robot.Constants.ControllerConstants.OpperatorConstants;
+import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.Arm.Claw;
 import frc.robot.subsystems.Arm.LowerArm;
 import frc.robot.subsystems.Arm.UpperArmSubsystem;
@@ -44,6 +46,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
 import frc.robot.Commands.Arm.HomeUpperArmCommand;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
+import frc.robot.Commands.Blinkin.*;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -60,7 +63,7 @@ public class RobotContainer {
   private static final Balance m_balance = new Balance();
   private static final LimelightSubsystem m_limelight = new LimelightSubsystem();
   private static final AprilTagSubsystem m_aprilTags = new AprilTagSubsystem();
-
+  private static final BlinkinSubsystem m_blinkin = new BlinkinSubsystem();
 
   
 
@@ -173,7 +176,7 @@ public class RobotContainer {
     m_comp = Shuffleboard.getTab("Competition");
 
     // config sendable chooser
-    m_chooser.setDefaultOption("Default Auto", kSimple);
+    m_chooser.setDefaultOption("Default Auto", kDock);
     m_chooser.addOption("Dock Centre", kDock);
     m_chooser.addOption("Dock Left", kLeftSideDock);
     m_chooser.addOption("Dock Right", kRightSideDock);
@@ -236,6 +239,8 @@ public class RobotContainer {
 
     m_lowerArm.setDefaultCommand(
       m_lowerArm.lowerArmHoldPosition());
+    
+    //m_blinkin.setDefaultCommand(DefaultLighting(m_blinkin));
 
   }
 
@@ -247,6 +252,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Create config for trajectory
+    m_autoSelected = m_chooser.getSelected();
     PathPlannerTrajectory path = PathPlanner.loadPath( m_autoSelected, new PathConstraints(2, 2));
 
     // This is just an example event map. It would be better to have a constant, global event map
