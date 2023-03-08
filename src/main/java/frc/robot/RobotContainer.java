@@ -132,8 +132,8 @@ public class RobotContainer {
 
     new JoystickButton(m_opperator, OpperatorConstants.kFloorMode)
     .whileTrue(m_lowerArm.lowerArmFloorPosition());
-    new JoystickButton(m_opperator, OpperatorConstants.kFloorMode)
-    .whileTrue(new HomeUpperArmCommand(m_upperArm));
+    // new JoystickButton(m_opperator, OpperatorConstants.kFloorMode)
+    // .whileTrue(new HomeUpperArmCommand(m_upperArm));
 
     new JoystickButton(m_opperator, OpperatorConstants.kHighPosition)
     .whileTrue(m_lowerArm.lowerArmHighPosition());
@@ -147,8 +147,8 @@ public class RobotContainer {
 
     new JoystickButton(m_opperator, OpperatorConstants.kShootCubeHigh)
     .whileTrue(m_lowerArm.lowerArmShootPosition());
-    new JoystickButton(m_opperator, OpperatorConstants.kShootCubeHigh)
-    .whileTrue(new HomeUpperArmCommand(m_upperArm));
+    // new JoystickButton(m_opperator, OpperatorConstants.kShootCubeHigh)
+    // .whileTrue(new HomeUpperArmCommand(m_upperArm));
 
     new JoystickButton(m_opperator, DriverConstants.kSingleSubstation)
     .whileTrue(m_lowerArm.lowerArmSSsPosition());
@@ -163,6 +163,9 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, DriverConstants.kLowerArmDown)
     .whileTrue(m_lowerArm.runLowerArmDown());
+
+    new JoystickButton(m_driverController, 9)
+    .whileTrue(new HomeUpperArmCommand(m_upperArm));
   }
 
   /**
@@ -196,7 +199,7 @@ public class RobotContainer {
             () -> m_robotDrive.drive(
                 -MathUtil.applyDeadband((DriveConstants.kNormalSpeed * m_driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband((DriveConstants.kNormalSpeed * m_driverController.getRawAxis(0)), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(DriveConstants.kNormalSpeed * m_driverController.getRawAxis(2), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(DriveConstants.kNormalYaw * m_driverController.getRawAxis(2), OIConstants.kDriveDeadband),
                 true, true),
             m_robotDrive));
 
@@ -204,7 +207,7 @@ public class RobotContainer {
         () -> m_robotDrive.drive(
         -MathUtil.applyDeadband((DriveConstants.kTurboSpeed * m_driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
         -MathUtil.applyDeadband((DriveConstants.kTurboSpeed * m_driverController.getRawAxis(0)), OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(DriveConstants.kTurboSpeed * m_driverController.getRawAxis(2), OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(DriveConstants.kTurboYaw * m_driverController.getRawAxis(2), OIConstants.kDriveDeadband),
         true, true),
     m_robotDrive));
 
