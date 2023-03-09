@@ -30,9 +30,10 @@ public class LowerArm extends SubsystemBase {
         m_elbow = new CANSparkMax(LowerArmConstants.LOWER_ARM_MOTOR_ID, MotorType.kBrushless);
         m_elbowEncoder = m_elbow.getAbsoluteEncoder(Type.kDutyCycle);
         m_elbow.restoreFactoryDefaults();
-        m_elbow.setSmartCurrentLimit(20);
+        m_elbow.setSmartCurrentLimit(27);
         m_elbow.setIdleMode(IdleMode.kBrake);
         m_elbowEncoder.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
+        m_elbowEncoder.setInverted(true);
         m_elbowPIDController = m_elbow.getPIDController();
         m_elbowPIDController.setSmartMotionMinOutputVelocity(LowerArmConstants.minVelocity, 0);
         m_elbowPIDController.setSmartMotionMaxAccel(LowerArmConstants.maxAccel, 0);
@@ -52,7 +53,8 @@ public class LowerArm extends SubsystemBase {
         m_positionSettingEntry = m_dashboardTab.add("Set Lower Arm", m_position).getEntry();
         m_positionSettingEntry.getDouble(m_position);
         m_dashboardTab.addBoolean("LowerArm Homed", () -> m_lowerArmHomed);
-        m_dashboardTab.add("elbow pos", getElbowPos());
+        m_dashboardTab.addDouble("elbow pos", () -> getElbowPos());
+        m_dashboardTab.add("elbow encoder",  m_elbowEncoder);
     // m_defaultSettingEntry = m_dashboardTab.add("Default", m_defaultSetting).getEntry();
     // m_conesSettingEntry = m_dashboardTab.add("Cubes", m_signalCubes).getEntry();
     }
@@ -65,6 +67,7 @@ public class LowerArm extends SubsystemBase {
         m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kDutyCycle);
         //System.out.println("lower arm:" + getElbowPos() +" " + position);
         checkElbowHomed();
+
     
     }
 
@@ -101,11 +104,11 @@ public class LowerArm extends SubsystemBase {
     }
 
     public CommandBase runLowerArmUp() {
-        return this.run(() -> m_elbow.set(LowerArmConstants.kManualSpeed));
+        return this.run(() -> runLowerArmClosedLoop(m_elbowEncoder.getPosition() + LowerArmConstants.kNudgeCounts));
     }
 
     public CommandBase runLowerArmDown() {
-        return this.run(() -> m_elbow.set(-1 * LowerArmConstants.kManualSpeed));
+        return this.run(() -> runLowerArmClosedLoop(m_elbowEncoder.getPosition() - LowerArmConstants.kNudgeCounts));
     }
 
     public double getElbowPos() {

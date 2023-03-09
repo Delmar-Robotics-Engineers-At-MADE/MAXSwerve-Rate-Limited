@@ -182,8 +182,7 @@ public class RobotContainer {
     new JoystickButton(m_driverController, DriverConstants.kLowerArmDown)
     .whileTrue(m_lowerArm.runLowerArmDown());
 
-    new JoystickButton(m_driverController, 9)
-    .whileTrue(new HomeUpperArmCommand(m_upperArm));
+
   }
 
   /**
@@ -196,7 +195,7 @@ public class RobotContainer {
     m_comp = Shuffleboard.getTab("Competition");
 
     // config sendable chooser
-    m_chooser.setDefaultOption("Default Auto", kSimple);
+    m_chooser.setDefaultOption("Simple", kSimple);
     m_chooser.addOption("Dock Centre", kDock);
     m_chooser.addOption("Dock Left", kLeftSideDock);
     m_chooser.addOption("Dock Right", kRightSideDock);
