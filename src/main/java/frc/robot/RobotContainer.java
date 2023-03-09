@@ -12,11 +12,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
+import frc.robot.Commands.Arm.PrepareToHold;
 import frc.robot.Commands.Blinkin.DefaultLighting;
 import frc.robot.Commands.DriveCommands.Balance;
 import frc.robot.Commands.DriveCommands.DriveToAprilTag;
 import frc.robot.Commands.DriveCommands.TurnToAprilTagProfiled;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.CLAW_CONSTANTS;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.UpperArmConstants;
@@ -33,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -41,7 +44,10 @@ import java.util.HashMap;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+
+import frc.robot.Commands.Arm.HoldClawGrip;
 import frc.robot.Commands.Arm.HomeUpperArmCommand;
+import frc.robot.Commands.Arm.MoveClawUntilStall;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
 
 /*
@@ -101,6 +107,18 @@ public class RobotContainer {
    * passing it to a
    * {@link JoystickButton}.
    */
+
+  // sequence for running claw to stall and then holding:
+  private final SequentialCommandGroup m_moveAndHoldCommand = new SequentialCommandGroup(
+    new MoveClawUntilStall(CLAW_CONSTANTS.kInVelocity, m_claw), 
+    new PrepareToHold(m_claw),
+    new HoldClawGrip(0.0, m_claw)
+  );
+
+  /* use the claw sequence with a toggle, like this:
+   * new JoystickButton(m_driverController, Button.kA.value).toggleOnTrue(m_moveAndHoldCommand);
+   */
+
   private void configureButtonBindings() {
     new JoystickButton(m_driverController, DriverConstants.X_MODE)
         .toggleOnTrue(new RunCommand(

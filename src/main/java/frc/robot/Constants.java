@@ -185,11 +185,14 @@ public final class Constants {
     public static final long kShootVelocity = 4096;
     public static final long kStopVelocity = 0;
     public static final long kHoldVelocity = 300;
+    public static final double kStallCurrent = 1.0;
 
     public static int kTimeoutMs;
     public static int kPIDLoopIdx;
     //                                                    kP     kI    kD  kF             Iz     PeakOut 
     public final static Gains kGains_Velocity = new Gains( 0.25, 0.0, 0.0, 0.08,  300,  1.00);
+    // versa with encoder next to output shaft: 
+    // public final static Gains kGains_Velocity = new Gains( 0.05, 0.0, 0.0, 0.24,  300,  1.00);
   }
 
   public static final class UpperArmConstants {
