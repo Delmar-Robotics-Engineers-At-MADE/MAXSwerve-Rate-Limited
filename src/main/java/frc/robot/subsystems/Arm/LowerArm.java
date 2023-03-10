@@ -3,6 +3,7 @@ package frc.robot.subsystems.Arm;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
@@ -24,21 +25,23 @@ public class LowerArm extends SubsystemBase {
 
     public GenericEntry m_positionSettingEntry;
     public boolean m_lowerArmHomed;
+    private double m_holdposition;
     
 
     public LowerArm() {
         m_elbow = new CANSparkMax(LowerArmConstants.LOWER_ARM_MOTOR_ID, MotorType.kBrushless);
-        m_elbowEncoder = m_elbow.getAbsoluteEncoder(Type.kDutyCycle);
         m_elbow.restoreFactoryDefaults();
-        m_elbow.setSmartCurrentLimit(27);
+        m_elbow.setSmartCurrentLimit(40);
         m_elbow.setIdleMode(IdleMode.kBrake);
-        m_elbowEncoder.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
+        m_elbow.setInverted(true);
+        m_elbowEncoder = m_elbow.getAbsoluteEncoder(Type.kDutyCycle);
+        //m_elbowEncoder.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
         m_elbowEncoder.setInverted(true);
         m_elbowPIDController = m_elbow.getPIDController();
-        m_elbowPIDController.setSmartMotionMinOutputVelocity(LowerArmConstants.minVelocity, 0);
-        m_elbowPIDController.setSmartMotionMaxAccel(LowerArmConstants.maxAccel, 0);
-        m_elbowPIDController.setSmartMotionMaxVelocity(LowerArmConstants.maxVelocity, 0);
-        m_elbowPIDController.setSmartMotionAllowedClosedLoopError(LowerArmConstants.allowedErr, 0);
+        // m_elbowPIDController.setSmartMotionMinOutputVelocity(LowerArmConstants.minVelocity, 0);
+        // m_elbowPIDController.setSmartMotionMaxAccel(LowerArmConstants.maxAccel, 0);
+        // m_elbowPIDController.setSmartMotionMaxVelocity(LowerArmConstants.maxVelocity, 0);
+        // m_elbowPIDController.setSmartMotionAllowedClosedLoopError(LowerArmConstants.allowedErr, 0);
         
         m_elbowPIDController.setP(LowerArmConstants.kP);
         m_elbowPIDController.setI(LowerArmConstants.kI);
@@ -54,7 +57,8 @@ public class LowerArm extends SubsystemBase {
         m_positionSettingEntry.getDouble(m_position);
         m_dashboardTab.addBoolean("LowerArm Homed", () -> m_lowerArmHomed);
         m_dashboardTab.addDouble("elbow pos", () -> getElbowPos());
-        m_dashboardTab.add("elbow encoder",  m_elbowEncoder);
+        m_dashboardTab.addDouble("elbowHoldPosition", () -> m_holdposition);
+        
     // m_defaultSettingEntry = m_dashboardTab.add("Default", m_defaultSetting).getEntry();
     // m_conesSettingEntry = m_dashboardTab.add("Cubes", m_signalCubes).getEntry();
     }
@@ -63,12 +67,21 @@ public class LowerArm extends SubsystemBase {
      * 
      * @param position target lower arm position
      */
-    private void runLowerArmClosedLoop(double position) {
+    public void runLowerArmClosedLoop(double position) {
         m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kDutyCycle);
         //System.out.println("lower arm:" + getElbowPos() +" " + position);
         checkElbowHomed();
+        m_holdposition = m_elbowEncoder.getPosition();
+    }
 
-    
+    public void holdLowerArm(){
+        m_elbowPIDController.setReference(m_holdposition, CANSparkMax.ControlType.kDutyCycle);
+        System.out.println("holding lower arm  ||  " + m_holdposition);
+    }
+
+    private void runlowerArmOpenLoop(double speed) {
+        m_elbow.set(speed);
+        m_holdposition = m_elbowEncoder.getPosition();
     }
 
     public CommandBase move() {
@@ -100,15 +113,16 @@ public class LowerArm extends SubsystemBase {
     }
 
     public CommandBase lowerArmHoldPosition() {
-        return this.run(() -> runLowerArmClosedLoop(m_elbowEncoder.getPosition()));
+        //return this.run(() -> m_elbowPIDController.setReference(m_holdposition, ControlType.kDutyCycle));
+        return this.run(() -> runLowerArmClosedLoop(m_holdposition));
     }
 
     public CommandBase runLowerArmUp() {
-        return this.run(() -> runLowerArmClosedLoop(m_elbowEncoder.getPosition() + LowerArmConstants.kNudgeCounts));
+        return this.run(() -> runlowerArmOpenLoop(15));
     }
 
     public CommandBase runLowerArmDown() {
-        return this.run(() -> runLowerArmClosedLoop(m_elbowEncoder.getPosition() - LowerArmConstants.kNudgeCounts));
+        return this.run(() -> runlowerArmOpenLoop(-20));
     }
 
     public double getElbowPos() {

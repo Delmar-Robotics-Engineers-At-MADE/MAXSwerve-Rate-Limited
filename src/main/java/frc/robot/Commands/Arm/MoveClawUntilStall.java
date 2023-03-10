@@ -35,6 +35,7 @@ public class MoveClawUntilStall extends CommandBase {
   @Override
   public boolean isFinished() {
     // finish when stalled, so we can transition to holding
+    System.out.println("Stalled " + m_claw.checkStalledCondition());
     if (m_claw.checkStalledCondition()) {
       return true;
     } else {

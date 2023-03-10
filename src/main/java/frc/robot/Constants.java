@@ -179,20 +179,20 @@ public final class Constants {
   }
   public static final class CLAW_CONSTANTS {
     public static final int CLAW_ID = 6;
-    public static final long kInVelocity = 4096;
+    public static final long kInVelocity = -5000;
     public static final long kConeOutVelocity = 2048;
-    public static final long kCubeOutVelocity = 1228;
+    public static final long kCubeOutVelocity = 10000;
     public static final long kShootVelocity = 4096;
     public static final long kStopVelocity = 0;
     public static final long kHoldVelocity = 300;
-    public static final double kStallCurrent = 1.0;
+    public static final double kStallCurrent = -29;
 
     public static int kTimeoutMs;
     public static int kPIDLoopIdx;
     //                                                    kP     kI    kD  kF             Iz     PeakOut 
-    public final static Gains kGains_Velocity = new Gains( 0.25, 0.0, 0.0, 0.08,  300,  1.00);
+    //public final static Gains kGains_Velocity = new Gains( 0.25, 0.0, 0.0, 0.08,  300,  1.00);
     // versa with encoder next to output shaft: 
-    // public final static Gains kGains_Velocity = new Gains( 0.05, 0.0, 0.0, 0.24,  300,  1.00);
+    public final static Gains kGains_Velocity = new Gains( 0.05, 0.0, 0.0, 0.1,  300,  1.00);
   }
 
   public static final class UpperArmConstants {
@@ -214,7 +214,7 @@ public final class Constants {
     public static final double kPotmeterD = 0;
     public static final double kPotmeterTolerance = 0.001;  
 
-    public static final double kHomePotmeterValue = 0.570;
+    public static final double kHomePotmeterValue = 0.560;
     public static final double kHomeEncoderValue = 0.0;
 
     public static final double kMaxFalconPower = 0.60;  // was 0.20 b4 added versa stage
@@ -232,7 +232,7 @@ public final class Constants {
   public static final class LowerArmConstants {
 
     public static final int LOWER_ARM_MOTOR_ID = 7;
-    public static double kP = 10000000000000000000000000000009.0;
+    public static double kP = 300.0;
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double kFF = 0.0;
@@ -242,7 +242,7 @@ public final class Constants {
 
     public static final double kHomePosition = 0.0;
     public static final double kFloorPosition = 30;
-    public static final double kHighPosition = 50;
+    public static final double kHighPosition = 0.7;
     public static final double kShootPosition = 20;
     public static final double kMidPosition = 25;
     public static final double kSSsPosition = 32;

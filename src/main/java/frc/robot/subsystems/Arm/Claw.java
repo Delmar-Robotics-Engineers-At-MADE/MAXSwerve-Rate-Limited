@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Arm;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -58,6 +59,10 @@ public class Claw extends SubsystemBase {
         m_clawMotor.set(ControlMode.Velocity, velocity);
     }
 
+    public void runClawOpenLoop(double speed) {
+        m_clawMotor.set(ControlMode.PercentOutput, speed);
+    }
+
     // Run these from RobotContainer like this:
     //      new JoystickButton(m_driverController, Button.kA.value)
     //          .whileTrue(m_claw.in());
@@ -70,7 +75,8 @@ public class Claw extends SubsystemBase {
         return m_clawMotor.getSupplyCurrent();
     }
     public boolean checkStalledCondition() {
-        return (getClawSupplyCurrent() > CLAW_CONSTANTS.kStallCurrent);
+        return (getClawStatorCurrent() < CLAW_CONSTANTS.kStallCurrent);
+        // return m_clawMotor.getSelectedSensorVelocity() < 0.5;
     }
 
     public void prepareToHold() {
@@ -84,13 +90,15 @@ public class Claw extends SubsystemBase {
     }
 
     public CommandBase in() {
-        return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kInVelocity)); // testing on celestial was with 10000 to 30000
+        //return this.run(()-> runClawOpenLoop(-1)); // testing on celestial was with 10000 to 30000
+        return this.run(() -> runClawClosedLoop(CLAW_CONSTANTS.kInVelocity));
      }
      public CommandBase coneOut() {
          return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kConeOutVelocity));
      }
      public CommandBase cubeOut() {
-         return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity));
+         //return this.run(()-> runClawOpenLoop(1));
+         return this.run(() -> runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity));
      }
      public CommandBase shoot() {
          return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kShootVelocity));

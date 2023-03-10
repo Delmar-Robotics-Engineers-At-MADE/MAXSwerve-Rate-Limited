@@ -33,6 +33,7 @@ import frc.robot.subsystems.Cameras.LimelightSubsystem;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -46,6 +47,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import frc.robot.Commands.Arm.HoldClawGrip;
+import frc.robot.Commands.Arm.HoldLowerArmCommand;
 import frc.robot.Commands.Arm.HomeUpperArmCommand;
 import frc.robot.Commands.Arm.MoveClawUntilStall;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
@@ -110,7 +112,7 @@ public class RobotContainer {
 
   // sequence for running claw to stall and then holding:
   private final SequentialCommandGroup m_moveAndHoldCommand = new SequentialCommandGroup(
-    new MoveClawUntilStall(CLAW_CONSTANTS.kInVelocity, m_claw), 
+    //new MoveClawUntilStall(CLAW_CONSTANTS.kInVelocity, m_claw), 
     new PrepareToHold(m_claw),
     new HoldClawGrip(0.0, m_claw)
   );
@@ -160,8 +162,8 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, DriverConstants.kMidPosition)
     .whileTrue(m_lowerArm.lowerArmMidPosition());
-    new JoystickButton(m_driverController, DriverConstants.kMidPosition)
-    .whileTrue(new MoveUpperArmCommand(UpperArmConstants.kMidPosition, m_upperArm));
+    // new JoystickButton(m_driverController, DriverConstants.kMidPosition)
+    // .whileTrue(new MoveUpperArmCommand(UpperArmConstants.kMidPosition, m_upperArm));
 
     new JoystickButton(m_opperator, OpperatorConstants.kShootCubeHigh)
     .whileTrue(m_lowerArm.lowerArmShootPosition());
@@ -182,7 +184,13 @@ public class RobotContainer {
     new JoystickButton(m_driverController, DriverConstants.kLowerArmDown)
     .whileTrue(m_lowerArm.runLowerArmDown());
 
+    new JoystickButton(m_opperator, OpperatorConstants.kClawOut)
+    .whileTrue(m_claw.cubeOut());
 
+    new JoystickButton(m_opperator, OpperatorConstants.kClawIn)
+    // .toggleOnTrue(m_moveAndHoldCommand);
+    .whileTrue(m_claw.in());
+    
   }
 
   /**
@@ -259,9 +267,11 @@ public class RobotContainer {
     // Why can't we specify dependency on subsystem here???
 
     m_lowerArm.setDefaultCommand(
-      m_lowerArm.lowerArmHoldPosition());
+      new HoldLowerArmCommand(m_lowerArm));
     
     m_blinkin.setDefaultCommand(new DefaultLighting(m_blinkin));
+
+    m_claw.setDefaultCommand(m_moveAndHoldCommand);
 
   }
 
