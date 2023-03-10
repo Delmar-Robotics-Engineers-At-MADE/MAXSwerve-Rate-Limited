@@ -239,6 +239,7 @@ public final class Constants {
     public static double kMinOutput = -1;
     public static double kMaxOutput = 1;
     public static double kNudgeCounts = 0.07;
+    public static double kTolerance = 0.1;
 
     public static final double kHomePosition = 0.0;
     public static final double kFloorPosition = 30;

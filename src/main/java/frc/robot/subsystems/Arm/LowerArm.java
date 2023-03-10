@@ -79,9 +79,10 @@ public class LowerArm extends SubsystemBase {
         System.out.println("holding lower arm  ||  " + m_holdposition);
     }
 
-    private void runlowerArmOpenLoop(double speed) {
+    public void runlowerArmOpenLoop(double speed) {
         m_elbow.set(speed);
         m_holdposition = m_elbowEncoder.getPosition();
+        System.out.println("Elbow open loop power: " + speed);
     }
 
     public CommandBase move() {
