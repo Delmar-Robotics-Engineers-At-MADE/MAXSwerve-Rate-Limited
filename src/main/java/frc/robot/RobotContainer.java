@@ -93,6 +93,7 @@ public class RobotContainer {
   private static final String kDoesItWork = "DoesItWork";
   private static final String kSimpleScore = "SimpleScore";
   private static final String kSimpleDock = "SimpleDock";
+  private static final String kSimpleDockDock = "SimpleDock Dock";
 
   private ShuffleboardTab m_comp;
   private String m_autoSelected;
@@ -163,8 +164,8 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, DriverConstants.kMidPosition)
     .whileTrue(m_lowerArm.lowerArmMidPosition());
-    // new JoystickButton(m_driverController, DriverConstants.kMidPosition)
-    // .whileTrue(new MoveUpperArmCommand(UpperArmConstants.kMidPosition, m_upperArm));
+    new JoystickButton(m_driverController, DriverConstants.kMidPosition)
+    .whileTrue(new MoveUpperArmCommand(UpperArmConstants.kMidPosition, m_upperArm));
 
     new JoystickButton(m_opperator, OpperatorConstants.kShootCubeHigh)
     .whileTrue(m_lowerArm.lowerArmShootPosition());
@@ -213,6 +214,7 @@ public class RobotContainer {
     m_chooser.addOption("Does It Work????????????", kDoesItWork);
     m_chooser.addOption("SimpleScore", kSimpleScore);
     m_chooser.addOption("SimpleDock", kSimpleDock);
+    m_chooser.addOption("Simple Dock That Docks", kSimpleDockDock);
     m_comp.add("Auto", m_chooser);
     m_autoSelected = m_chooser.getSelected();
     System.out.println("Auto selected: " + m_autoSelected);

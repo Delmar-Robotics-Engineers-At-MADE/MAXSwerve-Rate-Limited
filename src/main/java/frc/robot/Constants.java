@@ -179,7 +179,7 @@ public final class Constants {
   }
   public static final class CLAW_CONSTANTS {
     public static final int CLAW_ID = 6;
-    public static final long kInVelocity = -5000;
+    public static final long kInVelocity = -6000;
     public static final long kConeOutVelocity = 2048;
     public static final long kCubeOutVelocity = 10000;
     public static final long kShootVelocity = 4096;
@@ -187,12 +187,14 @@ public final class Constants {
     public static final long kHoldVelocity = 300;
     public static final double kStallCurrent = -29;
 
-    public static int kTimeoutMs;
-    public static int kPIDLoopIdx;
+    public static int kTimeoutMs = 30;
+    public static int kPIDLoopIdx = 0;
+    public static int kPIDPositionIdx = 1;
     //                                                    kP     kI    kD  kF             Iz     PeakOut 
     //public final static Gains kGains_Velocity = new Gains( 0.25, 0.0, 0.0, 0.08,  300,  1.00);
     // versa with encoder next to output shaft: 
     public final static Gains kGains_Velocity = new Gains( 0.05, 0.0, 0.0, 0.1,  300,  1.00);
+    public final static Gains kGains_Position = new Gains( 0.1, 0.0, 0.0, 0.0,  300,  1.00);
   }
 
   public static final class UpperArmConstants {
@@ -214,7 +216,7 @@ public final class Constants {
     public static final double kPotmeterD = 0;
     public static final double kPotmeterTolerance = 0.001;  
 
-    public static final double kHomePotmeterValue = 0.560;
+    public static final double kHomePotmeterValue = 0.544;
     public static final double kHomeEncoderValue = 0.0;
 
     public static final double kMaxFalconPower = 0.60;  // was 0.20 b4 added versa stage
@@ -242,11 +244,11 @@ public final class Constants {
     public static double kTolerance = 0.1;
 
     public static final double kHomePosition = 0.0;
-    public static final double kFloorPosition = 30;
-    public static final double kHighPosition = 0.7;
+    public static final double kFloorPosition = 0.25;
+    public static final double kHighPosition = 0.5;
     public static final double kShootPosition = 20;
-    public static final double kMidPosition = 25;
-    public static final double kSSsPosition = 32;
+    public static final double kMidPosition = 0.15;
+    public static final double kSSsPosition = 0.1;
     public static final double kManualSpeed = 70;
     public static final double minVelocity = 0;
     public static final double maxAccel = 1500;

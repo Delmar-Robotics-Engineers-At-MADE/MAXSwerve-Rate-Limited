@@ -25,6 +25,7 @@ public class Claw extends SubsystemBase {
         m_clawMotor = new TalonSRX(CLAW_CONSTANTS.CLAW_ID);
         m_clawMotor.configFactoryDefault();
         m_clawMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kTimeoutMs);
         m_clawMotor.setSensorPhase(true);
 
         // neutral mode
@@ -42,6 +43,12 @@ public class Claw extends SubsystemBase {
         m_clawMotor.config_kI(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocity.kI, CLAW_CONSTANTS.kTimeoutMs);
         m_clawMotor.config_kD(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocity.kD, CLAW_CONSTANTS.kTimeoutMs);
 
+        /* Config the Posiiton closed loop gains in slot1 */
+        m_clawMotor.config_kF(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Velocity.kF, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.config_kP(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Velocity.kP, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.config_kI(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Velocity.kI, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.config_kD(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Velocity.kD, CLAW_CONSTANTS.kTimeoutMs);
+
         m_clawMotor.setSensorPhase(false); // invert encoder to match motor
 
         ShuffleboardTab shuffTab = Shuffleboard.getTab("Claw");
@@ -57,9 +64,11 @@ public class Claw extends SubsystemBase {
     public void runClawClosedLoop (double velocity) {
         m_holding = false;
         m_clawMotor.set(ControlMode.Velocity, velocity);
+        m_clawMotor.selectProfileSlot(0, 0);
     }
 
     public void runClawOpenLoop(double speed) {
+        m_clawMotor.selectProfileSlot(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kPIDLoopIdx);
         m_clawMotor.set(ControlMode.PercentOutput, speed);
     }
 
@@ -80,7 +89,8 @@ public class Claw extends SubsystemBase {
     }
 
     public void prepareToHold() {
-        m_clawMotor.setSelectedSensorPosition(0.0);
+        m_clawMotor.selectProfileSlot(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kPIDPositionIdx);
+        m_clawMotor.setSelectedSensorPosition(0.0);  // reset encoder to 0
         m_holding = false;
     }
 
