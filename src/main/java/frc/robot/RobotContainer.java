@@ -15,6 +15,7 @@ import frc.robot.Commands.Arm.MoveUpperArmCommand;
 import frc.robot.Commands.Arm.PrepareToHold;
 import frc.robot.Commands.Blinkin.DefaultLighting;
 import frc.robot.Commands.DriveCommands.Balance;
+import frc.robot.Commands.DriveCommands.Balance2;
 import frc.robot.Commands.DriveCommands.DriveToAprilTag;
 import frc.robot.Commands.DriveCommands.TurnToAprilTagProfiled;
 import frc.robot.Constants.AutoConstants;
@@ -133,7 +134,7 @@ public class RobotContainer {
         .whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
     
     new JoystickButton(m_driverController, DriverConstants.kAutoBalance)
-        .toggleOnTrue(m_balance);
+        .toggleOnTrue(new Balance2(0.0, m_robotDrive));
 
     new JoystickButton(m_opperator, OpperatorConstants.kNudgeUp)
     .toggleOnTrue(new InstantCommand(
