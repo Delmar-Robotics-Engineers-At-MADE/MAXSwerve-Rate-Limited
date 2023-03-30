@@ -18,7 +18,7 @@ public class UpdateBestLimelightCommand extends CommandBase {
 
   @Override
   public void execute() {
-    m_limelight.updateBestLimelight(0.0);
+    m_limelight.updateBestLimelight(0.0, true);
   }
 
   // @Override

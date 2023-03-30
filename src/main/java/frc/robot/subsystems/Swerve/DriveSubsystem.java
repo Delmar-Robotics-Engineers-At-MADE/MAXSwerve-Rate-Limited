@@ -74,6 +74,9 @@ public class DriveSubsystem extends SubsystemBase {
     ShuffleboardTab driveBaseTab = Shuffleboard.getTab("Drivebase");
     // Add the gyro
     driveBaseTab.add("Gyro", m_gyro);
+    driveBaseTab.addDouble("Gyro Disp X", () -> m_gyro.getDisplacementX());
+    driveBaseTab.addDouble("Gyro Disp Y", () -> m_gyro.getDisplacementY());
+    driveBaseTab.addDouble("Gyro Disp Z", () -> m_gyro.getDisplacementZ());
   }
 
   @Override
@@ -232,6 +235,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_gyro.reset();
+    m_gyro.resetDisplacement();
   }
 
   /**

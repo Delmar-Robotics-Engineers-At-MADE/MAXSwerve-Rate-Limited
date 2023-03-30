@@ -44,12 +44,13 @@ public class SimpleRobotContainer {
 
   private void configureButtonBindings() {
     new JoystickButton(m_operController, Button.kA.value)
-    .whileTrue(new RepeatCommand(new UpdateBestGamepieceCommand(m_limelight)))
-    .onFalse(new InstantCommand(() -> m_limelight.turnLightOnOrOff(false)));
+    .whileTrue(new RepeatCommand(new UpdateBestGamepieceCommand(m_limelight)));
 
   new JoystickButton(m_operController, Button.kY.value)
-    .whileTrue(new RepeatCommand(new TurnToGamepieceProfiled(m_limelight, m_robotDrive)))
-    .onFalse(new InstantCommand(() -> m_limelight.turnLightOnOrOff(false)));
+    .whileTrue(new RepeatCommand(new TurnToGamepieceProfiled(m_limelight, m_robotDrive)));
+
+  new JoystickButton(m_driverController, 1)
+    .whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
   }
 
@@ -74,4 +75,9 @@ public class SimpleRobotContainer {
     // return something bogus
     return null;//new HomeUpperArmCommand(m_upperArm);
   }
+
+  public void zeroHeading() {
+    m_robotDrive.zeroHeading();
+  }
+
 }

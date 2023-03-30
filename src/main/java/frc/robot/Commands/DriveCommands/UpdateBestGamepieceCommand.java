@@ -19,7 +19,7 @@ public class UpdateBestGamepieceCommand extends CommandBase {
 
   @Override
   public void execute() {
-    m_limelight.updateBestLimelight(CameraConstants.kGamepieceCenterPos);
+    m_limelight.updateBestLimelight(CameraConstants.kGamepieceCenterPos, false);
   }
 
   // @Override

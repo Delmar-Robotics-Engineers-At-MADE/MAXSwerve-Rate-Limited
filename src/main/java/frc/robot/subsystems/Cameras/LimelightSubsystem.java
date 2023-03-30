@@ -33,22 +33,22 @@ public class LimelightSubsystem extends SubsystemBase {
 
   // call this from PID command to turn robot to best target
   public double getBestLimelightYaw() {
-    updateBestLimelight(0.0);
+    updateBestLimelight(0.0, true);
     return m_bestLimelightYaw;
   }
 
   public double getBestGamepieceYaw() {
-    updateBestLimelight(CameraConstants.kGamepieceCenterPos);
+    updateBestLimelight(CameraConstants.kGamepieceCenterPos, false);
     return m_bestLimelightYaw;
   }
 
   public double getBestLimelightDistance() {
-    updateBestLimelight(0.0);
+    updateBestLimelight(0.0, true);
     return m_bestLimelightDistance;
   }
 
-  public void updateBestLimelight(double noTargetFallbackYaw) {
-    turnLightOnOrOff(true);
+  public void updateBestLimelight(double noTargetFallbackYaw, boolean needLight) {
+    if (needLight) {turnLightOnOrOff(true);}
     double targetsSeen = m_limelightTable.getEntry("tv").getDouble(0.0);
     if (targetsSeen > 0) {
       m_bestLimelightYaw = m_limelightTable.getEntry("tx").getDouble(0.0);
