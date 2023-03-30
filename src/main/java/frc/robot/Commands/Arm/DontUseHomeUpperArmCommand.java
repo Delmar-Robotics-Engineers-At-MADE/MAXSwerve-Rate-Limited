@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /** A command that will move the arm to home position using potentiometer or encoder */
-public class HomeUpperArmCommand extends PIDCommand {
+public class DontUseHomeUpperArmCommand extends PIDCommand {
 
   private static PIDController m_PID = new PIDController(
     UpperArmConstants.kPotmeterP,  UpperArmConstants.kPotmeterI, UpperArmConstants.kPotmeterD);
@@ -16,7 +16,7 @@ public class HomeUpperArmCommand extends PIDCommand {
     private static boolean m_shuffleboardLoaded = false;
     private static UpperArmSubsystem m_upperArm;
 
-  public HomeUpperArmCommand(UpperArmSubsystem upperArm) {
+  public DontUseHomeUpperArmCommand(UpperArmSubsystem upperArm) {
     super(
       m_PID,  
         upperArm::potPosition, // Close loop on position

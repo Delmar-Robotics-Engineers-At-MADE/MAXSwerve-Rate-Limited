@@ -50,7 +50,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import frc.robot.Commands.Arm.HoldClawGrip;
 import frc.robot.Commands.Arm.HoldLowerArmCommand;
 import frc.robot.Commands.Arm.HoldLowerWithSoftPID;
-import frc.robot.Commands.Arm.HomeUpperArmCommand;
+// import frc.robot.Commands.Arm.HomeUpperArmCommand;
 import frc.robot.Commands.Arm.MoveClawUntilStall;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
 
@@ -178,8 +178,8 @@ public class RobotContainer {
 
     new JoystickButton(m_opperator, OpperatorConstants.kHomeArms)
     .whileTrue(m_lowerArm.homeLowerArm());
-    new JoystickButton(m_opperator, OpperatorConstants.kHomeArms)
-    .whileTrue(new HomeUpperArmCommand(m_upperArm));
+    // new JoystickButton(m_opperator, OpperatorConstants.kHomeArms)
+    // .whileTrue(new HomeUpperArmCommand(m_upperArm));
 
     new JoystickButton(m_driverController, DriverConstants.kLowerArmUp)
     .whileTrue(m_lowerArm.runLowerArmUp());

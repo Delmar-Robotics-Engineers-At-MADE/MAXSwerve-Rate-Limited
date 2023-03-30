@@ -77,12 +77,12 @@ public final class Constants {
     public static final double CAMERA_PITCH_RADIANS = 0;
     
     // TurnToAprilTagProfiled
-    public static final double kYawP = 0.06;
+    public static final double kYawP = 0.02;
     public static final double kYawI = 0.0;
     public static final double kYawD = 0.0;
-    public static final double kMaxYawRateDegPerS = 25;
-    public static final double kMaxYawAccelerationDegPerSSquared = 300;
-    public static final double kYawToleranceDeg = 1;
+    public static final double kMaxYawRateDegPerS = 7;
+    public static final double kMaxYawAccelerationDegPerSSquared = 20;
+    public static final double kYawToleranceDeg = 3;
     public static final double kYawRateToleranceDegPerS = 10;
 
     // DriveToAprilTag
@@ -91,6 +91,11 @@ public final class Constants {
     public static final double kDriveD = 0;
     public static final double kDriveToleranceDist = 0;
 
+  }
+
+  public static final class CameraConstants {
+    // Turn to Gamepiece
+    public static final double kGamepieceCenterPos = -10.5;
   }
 
   public static final class ModuleConstants {

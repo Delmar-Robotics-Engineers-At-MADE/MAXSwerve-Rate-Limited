@@ -7,6 +7,7 @@ package frc.robot.subsystems.Cameras;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CameraConstants;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
@@ -32,23 +33,28 @@ public class LimelightSubsystem extends SubsystemBase {
 
   // call this from PID command to turn robot to best target
   public double getBestLimelightYaw() {
-    updateBestLimelight();
+    updateBestLimelight(0.0);
+    return m_bestLimelightYaw;
+  }
+
+  public double getBestGamepieceYaw() {
+    updateBestLimelight(CameraConstants.kGamepieceCenterPos);
     return m_bestLimelightYaw;
   }
 
   public double getBestLimelightDistance() {
-    updateBestLimelight();
+    updateBestLimelight(0.0);
     return m_bestLimelightDistance;
   }
 
-  public void updateBestLimelight() {
+  public void updateBestLimelight(double noTargetFallbackYaw) {
     turnLightOnOrOff(true);
     double targetsSeen = m_limelightTable.getEntry("tv").getDouble(0.0);
     if (targetsSeen > 0) {
       m_bestLimelightYaw = m_limelightTable.getEntry("tx").getDouble(0.0);
       m_bestLimelightDistance = 0.0; // try calculating this using AprilTag util
     } else {
-      m_bestLimelightYaw = 0.0;
+      m_bestLimelightYaw = noTargetFallbackYaw;
       m_bestLimelightDistance = 0.0;
     }
   }
