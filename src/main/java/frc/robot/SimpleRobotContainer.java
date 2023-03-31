@@ -10,12 +10,14 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Commands.Arm.HoldClawGrip;
 import frc.robot.Commands.Arm.MoveClawUntilStall;
+import frc.robot.Commands.Arm.MoveUpperArmCommand;
 import frc.robot.Commands.Arm.PrepareToHold;
 import frc.robot.Commands.DriveCommands.MoveToGamepieceProfiled;
 import frc.robot.Commands.DriveCommands.TurnToGamepieceProfiled;
 import frc.robot.Commands.DriveCommands.UpdateBestGamepieceCommand;
 import frc.robot.Constants.CLAW_CONSTANTS;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.UpperArmConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.Arm.Claw;
@@ -55,11 +57,26 @@ public class SimpleRobotContainer {
     new PrepareToHold(m_claw),
     new HoldClawGrip(0.0, m_claw)
   );
+
+  // sequence for summer demo
+  private final SequentialCommandGroup m_summerCollectAndReturn = new SequentialCommandGroup(
+    // upper arm to intake position
+    new MoveUpperArmCommand(UpperArmConstants.kSummerIntakePosition, m_upperArm),
+    // drive forward and rotate toward game piece until collected
+    new MoveToGamepieceProfiled(
+      0.3 * DriveConstants.kCrawlSpeed, m_limelight, m_robotDrive, m_claw),
+    // stop driving
+    new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false)),
+    // upper arm to return position
+    new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm),
+    // return cube
+    new RunCommand(() -> m_claw.runClawClosedLoop(-CLAW_CONSTANTS.kInVelocity))
+  );
   
   private void configureButtonBindings() {
 
-  // new JoystickButton(m_operController, Button.kA.value)
-  //   .whileTrue(new RepeatCommand(new UpdateBestGamepieceCommand(m_limelight)));
+    new JoystickButton(m_driverController, 1)
+    .whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
   new JoystickButton(m_operController, Button.kA.value)
     .toggleOnTrue(m_moveAndHoldCommand)
@@ -67,18 +84,23 @@ public class SimpleRobotContainer {
 
   new JoystickButton(m_operController, Button.kY.value)
     .toggleOnTrue(m_moveAndHoldCommand)
-    .whileTrue(new MoveToGamepieceProfiled(
-      0.3 * DriveConstants.kCrawlSpeed, m_limelight, m_robotDrive, m_claw));
-    // .whileTrue(new RunCommand(
-    //   () -> m_robotDrive.drive(0.3 * DriveConstants.kCrawlSpeed, 0, 0, false, true),
-    //   m_robotDrive));
+    .whileTrue(m_summerCollectAndReturn);
 
-  new JoystickButton(m_driverController, 1)
-    .whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+  new JoystickButton(m_operController, Button.kB.value)
+    .toggleOnTrue(new MoveUpperArmCommand(UpperArmConstants.kSummerIntakePosition, m_upperArm));
 
   new JoystickButton(m_operController, Button.kX.value)
-    .whileTrue(new RunCommand(() -> m_claw.hold(0), m_claw));
+    .toggleOnTrue(new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm));
 
+  new JoystickButton(m_operController, Button.kLeftBumper.value)
+    .toggleOnTrue(new InstantCommand(
+        () -> m_upperArm.nudgeClosedLoopByFalconEnc(true), m_upperArm ));
+
+  new JoystickButton(m_operController, Button.kRightBumper.value)
+    .toggleOnTrue(new InstantCommand(
+        () -> m_upperArm.nudgeClosedLoopByFalconEnc(false), m_upperArm ));
+    
+    
   }
 
   public SimpleRobotContainer() {
