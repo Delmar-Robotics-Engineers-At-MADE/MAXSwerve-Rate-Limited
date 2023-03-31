@@ -19,7 +19,7 @@ import frc.robot.Constants.CLAW_CONSTANTS;
 public class Claw extends SubsystemBase {
     private TalonSRX m_clawMotor;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;  
-    private boolean m_holding = false;
+    public boolean m_holding = false;
     private final Timer m_timer = new Timer();
  
     public Claw() {

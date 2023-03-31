@@ -67,8 +67,8 @@ public class SimpleRobotContainer {
 
   new JoystickButton(m_operController, Button.kY.value)
     .toggleOnTrue(m_moveAndHoldCommand)
-    .whileTrue(new RepeatCommand(new MoveToGamepieceProfiled(
-      0.3 * DriveConstants.kCrawlSpeed, m_limelight, m_robotDrive)));
+    .whileTrue(new MoveToGamepieceProfiled(
+      0.3 * DriveConstants.kCrawlSpeed, m_limelight, m_robotDrive, m_claw));
     // .whileTrue(new RunCommand(
     //   () -> m_robotDrive.drive(0.3 * DriveConstants.kCrawlSpeed, 0, 0, false, true),
     //   m_robotDrive));

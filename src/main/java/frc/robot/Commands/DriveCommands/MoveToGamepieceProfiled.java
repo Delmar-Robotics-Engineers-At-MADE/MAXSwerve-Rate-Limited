@@ -10,6 +10,7 @@ import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
 import frc.robot.subsystems.Cameras.LimelightSubsystem;
+import frc.robot.subsystems.Arm.Claw;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -18,6 +19,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 /** A command that will turn the robot to the specified angle using a motion profile. */
 public class MoveToGamepieceProfiled extends ProfiledPIDCommand {
   
+  private Claw m_claw;
+
   private static ProfiledPIDController m_PID = new ProfiledPIDController(
     DriveConstants.kYawP, DriveConstants.kYawI, DriveConstants.kYawD,
     new TrapezoidProfile.Constraints(
@@ -32,7 +35,7 @@ public class MoveToGamepieceProfiled extends ProfiledPIDCommand {
    * @param drive The drive subsystem to use
    */
   public MoveToGamepieceProfiled(double forwardSpeed,
-                  LimelightSubsystem limelight, DriveSubsystem drive) {
+                  LimelightSubsystem limelight, DriveSubsystem drive, Claw claw) {
     super(
         m_PID,
         // Close loop on heading
@@ -43,6 +46,8 @@ public class MoveToGamepieceProfiled extends ProfiledPIDCommand {
         (output, setpoint) -> drive.drive(forwardSpeed, 0, output, false, true),
         // Require the drive
         drive);
+
+    m_claw = claw;
 
     // Set the controller to be continuous (because it is an angle controller)
     getController().enableContinuousInput(-180, 180);
@@ -65,6 +70,8 @@ public class MoveToGamepieceProfiled extends ProfiledPIDCommand {
   @Override
   public boolean isFinished() {
     // End when the controller is at the reference.
-    return getController().atGoal();
+    // return getController().atGoal();
+    // End when a gamepiece is collected
+    return m_claw.m_holding;
   }
 }
