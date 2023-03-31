@@ -191,15 +191,18 @@ public final class Constants {
     public static final long kStopVelocity = 0;
     public static final long kHoldVelocity = 300;
     public static final double kStallCurrent = -29;
+    public static final long kStallVelocity = 20;
+    public static final int kMotorStartupTime = 1;
 
     public static int kTimeoutMs = 30;
     public static int kPIDLoopIdx = 0;
     public static int kPIDPositionIdx = 1;
+    public static int kPIDPositionTolerance = 10;
     //                                                    kP     kI    kD  kF             Iz     PeakOut 
     //public final static Gains kGains_Velocity = new Gains( 0.25, 0.0, 0.0, 0.08,  300,  1.00);
     // versa with encoder next to output shaft: 
     public final static Gains kGains_Velocity = new Gains( 0.05, 0.0, 0.0, 0.1,  300,  1.00);
-    public final static Gains kGains_Position = new Gains( 0.1, 0.0, 0.0, 0.0,  300,  1.00);
+    public final static Gains kGains_Position = new Gains( 3, 0.0, 0.0, 0.0,  300,  1.00);
   }
 
   public static final class UpperArmConstants {

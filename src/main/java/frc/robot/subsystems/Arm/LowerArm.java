@@ -76,7 +76,7 @@ public class LowerArm extends SubsystemBase {
 
     public void holdLowerArm(){
         m_elbowPIDController.setReference(m_holdposition, CANSparkMax.ControlType.kDutyCycle);
-        System.out.println("holding lower arm  ||  " + m_holdposition);
+        // System.out.println("holding lower arm  ||  " + m_holdposition);
     }
 
     public void runlowerArmOpenLoop(double speed) {

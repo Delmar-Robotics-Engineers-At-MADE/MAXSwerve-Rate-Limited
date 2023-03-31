@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.Timer;
+
 import frc.robot.Constants.CLAW_CONSTANTS;
 
 
@@ -18,9 +20,8 @@ public class Claw extends SubsystemBase {
     private TalonSRX m_clawMotor;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;  
     private boolean m_holding = false;
+    private final Timer m_timer = new Timer();
  
-
-    
     public Claw() {
         m_clawMotor = new TalonSRX(CLAW_CONSTANTS.CLAW_ID);
         m_clawMotor.configFactoryDefault();
@@ -44,10 +45,11 @@ public class Claw extends SubsystemBase {
         m_clawMotor.config_kD(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocity.kD, CLAW_CONSTANTS.kTimeoutMs);
 
         /* Config the Posiiton closed loop gains in slot1 */
-        m_clawMotor.config_kF(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Velocity.kF, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.config_kP(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Velocity.kP, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.config_kI(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Velocity.kI, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.config_kD(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Velocity.kD, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.config_kF(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Position.kF, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.config_kP(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Position.kP, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.config_kI(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Position.kI, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.config_kD(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Position.kD, CLAW_CONSTANTS.kTimeoutMs);
+        m_clawMotor.configAllowableClosedloopError(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kPIDPositionTolerance, CLAW_CONSTANTS.kTimeoutMs);      
 
         m_clawMotor.setSensorPhase(false); // invert encoder to match motor
 
@@ -63,8 +65,8 @@ public class Claw extends SubsystemBase {
 
     public void runClawClosedLoop (double velocity) {
         m_holding = false;
-        m_clawMotor.set(ControlMode.Velocity, velocity);
         m_clawMotor.selectProfileSlot(0, 0);
+        m_clawMotor.set(ControlMode.Velocity, velocity);
     }
 
     public void runClawOpenLoop(double speed) {
@@ -84,17 +86,41 @@ public class Claw extends SubsystemBase {
         return m_clawMotor.getSupplyCurrent();
     }
     public boolean checkStalledCondition() {
-        return (getClawStatorCurrent() < CLAW_CONSTANTS.kStallCurrent);
+        // return (getClawStatorCurrent() < CLAW_CONSTANTS.kStallCurrent);
         // return m_clawMotor.getSelectedSensorVelocity() < 0.5;
+        boolean result = false;
+        // System.out.println ("claw control mode is " + m_clawMotor.getControlMode());
+        // if (m_clawMotor.getControlMode() == ControlMode.Velocity) {
+        //     System.out.println("closed loop target: " + m_clawMotor.getClosedLoopTarget());
+        // }
+        if (m_clawMotor.getControlMode() == ControlMode.Velocity
+        && Math.abs(m_clawMotor.getClosedLoopTarget()) > 0.0) {
+            System.out.println("might be stalled, control mode is velocity");
+            if (Math.abs(m_clawMotor.getSelectedSensorVelocity()) < CLAW_CONSTANTS.kStallVelocity) {
+                // either stalled or just starting up
+                System.out.println("might be stalled, timer: " + m_timer.get());
+                if (m_timer.get() >= CLAW_CONSTANTS.kMotorStartupTime) {
+                    // stopped some time after startup, so report stalled
+                    result = true;
+                }
+            }
+        }
+        return result;
+    }
+
+    public void startStallTimer() {
+        m_timer.reset();
+        m_timer.start();
     }
 
     public void prepareToHold() {
-        m_clawMotor.selectProfileSlot(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kPIDPositionIdx);
+        m_clawMotor.selectProfileSlot(CLAW_CONSTANTS.kPIDPositionIdx, 0);
         m_clawMotor.setSelectedSensorPosition(0.0);  // reset encoder to 0
         m_holding = false;
     }
 
     public void hold(double position) {
+        m_clawMotor.selectProfileSlot(CLAW_CONSTANTS.kPIDPositionIdx, 0);
         m_clawMotor.set(ControlMode.Position, position);
         m_holding = true;
     }

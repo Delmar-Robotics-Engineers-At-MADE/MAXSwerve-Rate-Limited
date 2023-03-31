@@ -8,8 +8,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import frc.robot.Commands.Arm.HoldClawGrip;
+import frc.robot.Commands.Arm.MoveClawUntilStall;
+import frc.robot.Commands.Arm.PrepareToHold;
 import frc.robot.Commands.DriveCommands.TurnToGamepieceProfiled;
 import frc.robot.Commands.DriveCommands.UpdateBestGamepieceCommand;
+import frc.robot.Constants.CLAW_CONSTANTS;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.BlinkinSubsystem;
@@ -23,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
@@ -42,15 +47,27 @@ public class SimpleRobotContainer {
   //The opperator's controller
   XboxController m_operController = new XboxController(OIConstants.kOpperatorControllerPort);
 
+  // sequence for running claw to stall and then holding:
+  private final SequentialCommandGroup m_moveAndHoldCommand = new SequentialCommandGroup(
+    new InstantCommand(() -> m_claw.startStallTimer()),
+    new MoveClawUntilStall(CLAW_CONSTANTS.kInVelocity, m_claw), 
+    new PrepareToHold(m_claw),
+    new HoldClawGrip(0.0, m_claw)
+  );
+  
   private void configureButtonBindings() {
     new JoystickButton(m_operController, Button.kA.value)
     .whileTrue(new RepeatCommand(new UpdateBestGamepieceCommand(m_limelight)));
 
   new JoystickButton(m_operController, Button.kY.value)
+    .toggleOnTrue(m_moveAndHoldCommand)
     .whileTrue(new RepeatCommand(new TurnToGamepieceProfiled(m_limelight, m_robotDrive)));
 
   new JoystickButton(m_driverController, 1)
     .whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+
+  new JoystickButton(m_operController, Button.kX.value)
+    .whileTrue(new RunCommand(() -> m_claw.hold(0), m_claw));
 
   }
 

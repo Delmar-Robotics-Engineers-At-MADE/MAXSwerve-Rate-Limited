@@ -17,6 +17,7 @@ public class HoldClawGrip extends CommandBase {
   @Override
   public void execute() {
     m_claw.hold(m_targetPosition);
+    System.out.println("claw holding position " + m_targetPosition);
     super.execute();
   }
 
