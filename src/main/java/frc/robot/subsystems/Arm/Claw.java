@@ -89,16 +89,10 @@ public class Claw extends SubsystemBase {
         // return (getClawStatorCurrent() < CLAW_CONSTANTS.kStallCurrent);
         // return m_clawMotor.getSelectedSensorVelocity() < 0.5;
         boolean result = false;
-        // System.out.println ("claw control mode is " + m_clawMotor.getControlMode());
-        // if (m_clawMotor.getControlMode() == ControlMode.Velocity) {
-        //     System.out.println("closed loop target: " + m_clawMotor.getClosedLoopTarget());
-        // }
         if (m_clawMotor.getControlMode() == ControlMode.Velocity
         && Math.abs(m_clawMotor.getClosedLoopTarget()) > 0.0) {
-            System.out.println("might be stalled, control mode is velocity");
             if (Math.abs(m_clawMotor.getSelectedSensorVelocity()) < CLAW_CONSTANTS.kStallVelocity) {
                 // either stalled or just starting up
-                System.out.println("might be stalled, timer: " + m_timer.get());
                 if (m_timer.get() >= CLAW_CONSTANTS.kMotorStartupTime) {
                     // stopped some time after startup, so report stalled
                     result = true;

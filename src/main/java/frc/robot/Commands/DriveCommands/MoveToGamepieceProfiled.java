@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 
 /** A command that will turn the robot to the specified angle using a motion profile. */
-public class TurnToGamepieceProfiled extends ProfiledPIDCommand {
+public class MoveToGamepieceProfiled extends ProfiledPIDCommand {
   
   private static ProfiledPIDController m_PID = new ProfiledPIDController(
     DriveConstants.kYawP, DriveConstants.kYawI, DriveConstants.kYawD,
@@ -31,7 +31,8 @@ public class TurnToGamepieceProfiled extends ProfiledPIDCommand {
    * @param targetAngleDegrees The angle to turn to
    * @param drive The drive subsystem to use
    */
-  public TurnToGamepieceProfiled(LimelightSubsystem limelight, DriveSubsystem drive) {
+  public MoveToGamepieceProfiled(double forwardSpeed,
+                  LimelightSubsystem limelight, DriveSubsystem drive) {
     super(
         m_PID,
         // Close loop on heading
@@ -39,7 +40,7 @@ public class TurnToGamepieceProfiled extends ProfiledPIDCommand {
         // Set reference to target
         CameraConstants.kGamepieceCenterPos,
         // Pipe output to turn robot
-        (output, setpoint) -> drive.drive(0, 0, output, true, true),
+        (output, setpoint) -> drive.drive(forwardSpeed, 0, output, false, true),
         // Require the drive
         drive);
 
@@ -53,8 +54,8 @@ public class TurnToGamepieceProfiled extends ProfiledPIDCommand {
         // Add the PID to dashboard
       if (!m_shuffleboardLoaded) {
         ShuffleboardTab turnTab = Shuffleboard.getTab("Drivebase");
-        turnTab.add("Gamepiece PID", m_PID);
-        turnTab.addDouble("Gamepiece error", () -> m_PID.getPositionError());
+        turnTab.add("Gamepiece PID 2", m_PID);
+        turnTab.addDouble("Gamepiece error 2", () -> m_PID.getPositionError());
         m_shuffleboardLoaded = true;  // so we do this only once no matter how many instances are created
       }
       System.out.println("new turn to limelight command created");

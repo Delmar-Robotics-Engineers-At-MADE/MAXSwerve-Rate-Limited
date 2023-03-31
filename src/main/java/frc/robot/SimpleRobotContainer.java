@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Commands.Arm.HoldClawGrip;
 import frc.robot.Commands.Arm.MoveClawUntilStall;
 import frc.robot.Commands.Arm.PrepareToHold;
+import frc.robot.Commands.DriveCommands.MoveToGamepieceProfiled;
 import frc.robot.Commands.DriveCommands.TurnToGamepieceProfiled;
 import frc.robot.Commands.DriveCommands.UpdateBestGamepieceCommand;
 import frc.robot.Constants.CLAW_CONSTANTS;
@@ -56,12 +57,21 @@ public class SimpleRobotContainer {
   );
   
   private void configureButtonBindings() {
-    new JoystickButton(m_operController, Button.kA.value)
-    .whileTrue(new RepeatCommand(new UpdateBestGamepieceCommand(m_limelight)));
+
+  // new JoystickButton(m_operController, Button.kA.value)
+  //   .whileTrue(new RepeatCommand(new UpdateBestGamepieceCommand(m_limelight)));
+
+  new JoystickButton(m_operController, Button.kA.value)
+    .toggleOnTrue(m_moveAndHoldCommand)
+    .whileTrue(new RepeatCommand(new TurnToGamepieceProfiled(m_limelight, m_robotDrive)));
 
   new JoystickButton(m_operController, Button.kY.value)
     .toggleOnTrue(m_moveAndHoldCommand)
-    .whileTrue(new RepeatCommand(new TurnToGamepieceProfiled(m_limelight, m_robotDrive)));
+    .whileTrue(new RepeatCommand(new MoveToGamepieceProfiled(
+      0.3 * DriveConstants.kCrawlSpeed, m_limelight, m_robotDrive)));
+    // .whileTrue(new RunCommand(
+    //   () -> m_robotDrive.drive(0.3 * DriveConstants.kCrawlSpeed, 0, 0, false, true),
+    //   m_robotDrive));
 
   new JoystickButton(m_driverController, 1)
     .whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
