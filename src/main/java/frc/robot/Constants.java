@@ -232,7 +232,7 @@ public final class Constants {
     public static final double kHighPosition = 769.50;
     public static final double kMidPosition = 233.75;
     public static final double kSummerReturnPosition = 571;
-    public static final double kSummerIntakePosition = -90;
+    public static final double kSummerIntakePosition = -10;
 
     // for testing only
     public static final double kFalconClosedLoopTolerance = 100;

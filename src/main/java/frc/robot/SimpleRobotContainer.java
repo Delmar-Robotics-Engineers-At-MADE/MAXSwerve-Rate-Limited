@@ -70,7 +70,18 @@ public class SimpleRobotContainer {
     // upper arm to return position
     new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm),
     // return cube
-    new RunCommand(() -> m_claw.runClawClosedLoop(-CLAW_CONSTANTS.kInVelocity))
+    new RunCommand(() -> m_claw.runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity))
+  );
+
+  private final SequentialCommandGroup m_summerTurnAndReturn = new SequentialCommandGroup(
+    // upper arm to intake position
+    new MoveUpperArmCommand(UpperArmConstants.kSummerIntakePosition, m_upperArm),
+    // drive forward and rotate toward game piece until collected
+    new TurnToGamepieceProfiled(m_limelight, m_robotDrive, m_claw),
+    // upper arm to return position
+    new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm),
+    // return cube
+    new RunCommand(() -> m_claw.runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity))
   );
   
   private void configureButtonBindings() {
@@ -79,12 +90,14 @@ public class SimpleRobotContainer {
     .whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
   new JoystickButton(m_operController, Button.kA.value)
-    .toggleOnTrue(m_moveAndHoldCommand)
-    .whileTrue(new RepeatCommand(new TurnToGamepieceProfiled(m_limelight, m_robotDrive)));
+    .onTrue(m_moveAndHoldCommand)
+    .whileTrue(m_summerTurnAndReturn)
+    .onFalse(new InstantCommand(() -> m_moveAndHoldCommand.cancel()));
 
   new JoystickButton(m_operController, Button.kY.value)
-    .toggleOnTrue(m_moveAndHoldCommand)
-    .whileTrue(m_summerCollectAndReturn);
+    .onTrue(m_moveAndHoldCommand)
+    .whileTrue(m_summerCollectAndReturn)
+    .onFalse(new InstantCommand(() -> m_moveAndHoldCommand.cancel()));
 
   new JoystickButton(m_operController, Button.kB.value)
     .toggleOnTrue(new MoveUpperArmCommand(UpperArmConstants.kSummerIntakePosition, m_upperArm));
