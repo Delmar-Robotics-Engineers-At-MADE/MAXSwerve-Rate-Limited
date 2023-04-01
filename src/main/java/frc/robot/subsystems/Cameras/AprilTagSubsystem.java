@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.Cameras;
 
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.DriveConstants;
@@ -67,6 +68,7 @@ public class AprilTagSubsystem extends SubsystemBase {
       m_bestAprilTagYaw = m_latestPhotonResult.getBestTarget().getYaw();
       m_bestAprilTagPitch = m_latestPhotonResult.getBestTarget().getPitch();
       m_bestAprilTagID = m_latestPhotonResult.getBestTarget().getFiducialId();
+      Transform3d bestCameraToTarget = m_latestPhotonResult.getBestTarget().getBestCameraToTarget();
       m_bestAprilTagDistance = PhotonUtils.calculateDistanceToTargetMeters(
           CameraConstants.CAMERA_HEIGHT_METERS,
           CameraConstants.TARGET_HEIGHT_METERS,

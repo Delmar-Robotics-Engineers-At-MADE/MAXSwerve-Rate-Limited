@@ -74,6 +74,8 @@ public class SimpleRobotContainer {
       0.3 * DriveConstants.kCrawlSpeed, m_limelight, m_robotDrive, m_claw),
     // stop driving
     new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false)),
+    // back up if too close to wall
+    new DriveToAprilTag(CameraConstants.kSummerAprilTagDistanceBackup, m_aprilTags, m_robotDrive),
     // upper arm to return position
     new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm),
     // search for nearest April tag
@@ -95,7 +97,7 @@ public class SimpleRobotContainer {
     new RunCommand(() -> m_claw.runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity))
   );
 
-  CommandBase m_testCommand = new SearchForAprilTagProfiled(m_aprilTags, m_robotDrive).withTimeout(5);
+  CommandBase m_testCommand = new DriveToAprilTag(CameraConstants.kSummerAprilTagDistanceBackup, m_aprilTags, m_robotDrive);
   
   private void configureButtonBindings() {
 

@@ -74,7 +74,7 @@ public final class Constants {
     public static final double kOSlowSpeed = 0.25;
     
     // TurnToAprilTagProfiled
-    public static final double kYawP = 0.01;
+    public static final double kYawP = 0.02;
     public static final double kYawI = 0.0;
     public static final double kYawD = 0.0;
     public static final double kMaxYawRateDegPerS = 7;
@@ -84,9 +84,9 @@ public final class Constants {
 
     // DriveToAprilTag
     public static final double kDriveP = 0.1;
-    public static final double kDriveI = 0.01;
+    public static final double kDriveI = 0.02;
     public static final double kDriveD = 0;
-    public static final double kDriveToleranceDist = 0.1;
+    public static final double kDriveToleranceDist = 0.15;
 
   }
 
@@ -97,7 +97,9 @@ public final class Constants {
     public static final double TARGET_HEIGHT_METERS = 0.31;
     public static final double CAMERA_PITCH_RADIANS = -0.436;
     public static final double kSummerAprilTagDistance = 0.77; // meters
+    public static final double kSummerAprilTagDistanceBackup = 1.5; // meters
     public static final double kSummerSearchForAprilTagYaw = 20; // degrees
+    
   }
 
   public static final class ModuleConstants {
@@ -233,7 +235,7 @@ public final class Constants {
 
     public static final double kHighPosition = 769.50;
     public static final double kMidPosition = 233.75;
-    public static final double kSummerReturnPosition = 571;
+    public static final double kSummerReturnPosition = 620;
     public static final double kSummerIntakePosition = 0;
 
     // for testing only
