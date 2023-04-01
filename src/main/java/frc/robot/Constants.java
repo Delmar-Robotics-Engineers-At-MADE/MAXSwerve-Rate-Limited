@@ -72,12 +72,9 @@ public final class Constants {
     public static final double kCrawlSpeed = 0.3;
     public static final double kODriveSpeed = 0.5;
     public static final double kOSlowSpeed = 0.25;
-    public static final double CAMERA_HEIGHT_METERS = 1.3;
-    public static final double TARGET_HEIGHT_METERS = 0.2;
-    public static final double CAMERA_PITCH_RADIANS = 0;
     
     // TurnToAprilTagProfiled
-    public static final double kYawP = 0.02;
+    public static final double kYawP = 0.01;
     public static final double kYawI = 0.0;
     public static final double kYawD = 0.0;
     public static final double kMaxYawRateDegPerS = 7;
@@ -86,16 +83,21 @@ public final class Constants {
     public static final double kYawRateToleranceDegPerS = 10;
 
     // DriveToAprilTag
-    public static final double kDriveP = 0.2;
-    public static final double kDriveI = 0;
+    public static final double kDriveP = 0.1;
+    public static final double kDriveI = 0.01;
     public static final double kDriveD = 0;
-    public static final double kDriveToleranceDist = 0;
+    public static final double kDriveToleranceDist = 0.1;
 
   }
 
   public static final class CameraConstants {
     // Turn to Gamepiece
     public static final double kGamepieceCenterPos = -10.5;
+    public static final double CAMERA_HEIGHT_METERS = 0.9;
+    public static final double TARGET_HEIGHT_METERS = 0.31;
+    public static final double CAMERA_PITCH_RADIANS = -0.436;
+    public static final double kSummerAprilTagDistance = 0.77; // meters
+    public static final double kSummerSearchForAprilTagYaw = 20; // degrees
   }
 
   public static final class ModuleConstants {
@@ -224,7 +226,7 @@ public final class Constants {
     public static final double kPotmeterD = 0;
     public static final double kPotmeterTolerance = 0.001;  
 
-    public static final double kHomePotmeterValue = 0.462;
+    public static final double kHomePotmeterValue = 0.4605;
     public static final double kHomeEncoderValue = 0.0;
 
     public static final double kMaxFalconPower = 0.60;  // was 0.20 b4 added versa stage
@@ -232,7 +234,7 @@ public final class Constants {
     public static final double kHighPosition = 769.50;
     public static final double kMidPosition = 233.75;
     public static final double kSummerReturnPosition = 571;
-    public static final double kSummerIntakePosition = -10;
+    public static final double kSummerIntakePosition = 0;
 
     // for testing only
     public static final double kFalconClosedLoopTolerance = 100;

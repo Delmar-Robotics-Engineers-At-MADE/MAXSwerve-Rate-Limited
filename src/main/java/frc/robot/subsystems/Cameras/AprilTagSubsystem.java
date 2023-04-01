@@ -5,6 +5,7 @@
 package frc.robot.subsystems.Cameras;
 
 import edu.wpi.first.math.util.Units;
+import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -37,6 +38,19 @@ public class AprilTagSubsystem extends SubsystemBase {
     return m_bestAprilTagYaw;
   }
 
+  // call this from PID command when searching for unseen tag
+  public double getPhantomAprilTagYaw() {
+    updateBestAprilTag();
+    if (m_bestAprilTagYaw == 0.0) {
+      // no april tag seen, so return a yaw that will cause robot to rotate
+      return CameraConstants.kSummerSearchForAprilTagYaw;
+    } else {
+      // tag seen
+      return m_bestAprilTagYaw;
+    }
+  }
+
+  
   public double getBestAprilTagPitch() {
     updateBestAprilTag();
     return m_bestAprilTagPitch;
@@ -54,9 +68,9 @@ public class AprilTagSubsystem extends SubsystemBase {
       m_bestAprilTagPitch = m_latestPhotonResult.getBestTarget().getPitch();
       m_bestAprilTagID = m_latestPhotonResult.getBestTarget().getFiducialId();
       m_bestAprilTagDistance = PhotonUtils.calculateDistanceToTargetMeters(
-          DriveConstants.CAMERA_HEIGHT_METERS,
-          DriveConstants.TARGET_HEIGHT_METERS,
-          DriveConstants.CAMERA_PITCH_RADIANS,
+          CameraConstants.CAMERA_HEIGHT_METERS,
+          CameraConstants.TARGET_HEIGHT_METERS,
+          CameraConstants.CAMERA_PITCH_RADIANS,
           Units.degreesToRadians(m_latestPhotonResult.getBestTarget().getPitch()));
     } else {
       m_bestAprilTagYaw = 0.0;

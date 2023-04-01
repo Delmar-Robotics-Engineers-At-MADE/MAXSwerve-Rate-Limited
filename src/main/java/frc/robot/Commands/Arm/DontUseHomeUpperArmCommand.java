@@ -20,7 +20,7 @@ public class DontUseHomeUpperArmCommand extends PIDCommand {
     super(
       m_PID,  
         upperArm::potPosition, // Close loop on position
-        UpperArmConstants.kHomePotmeterValue,  // Set setpoint to target distance
+        upperArm.m_potHomeValue,  // Set setpoint to target distance
         output -> upperArm.moveOpenLoop(-output), // Pipe output to hood to elevate
         upperArm);  // Require the subsystem
         m_upperArm = upperArm;
@@ -36,12 +36,11 @@ public class DontUseHomeUpperArmCommand extends PIDCommand {
     }
   }
 
-  // @Override
-  // public void execute() {
-  //   // TODO Auto-generated method stub
-  //   super.execute();
-  //   if ()
-  // }
+  @Override
+  public void execute() {
+    m_upperArm.setPotHomeValueFromDash();
+    super.execute();
+  }
 
   @Override
   public boolean isFinished() {

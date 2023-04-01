@@ -23,10 +23,11 @@ public class UpperArmSubsystem extends SubsystemBase {
     private final Encoder m_encoder = new Encoder(0, 1, 
                         true, Encoder.EncodingType.k4X);
     public boolean m_encoderHomed = false;
+    public double m_potHomeValue = Constants.UpperArmConstants.kHomePotmeterValue;
     private ShuffleboardTab m_armTab;
     public GenericEntry m_nudgeDashboardEntry;
     private GenericEntry m_falconPEntry;
-
+    private GenericEntry m_potHomeEntry;
     // Constructor
     public UpperArmSubsystem() {
         m_upperArmMotor.setNeutralMode(NeutralMode.Brake);
@@ -48,6 +49,7 @@ public class UpperArmSubsystem extends SubsystemBase {
         m_armTab.addDouble("Falcon Error", () -> m_upperArmMotor.getClosedLoopError());
         m_nudgeDashboardEntry = m_armTab.add("Nudge Amount", Constants.UpperArmConstants.kFalconTestNudgeAmount).getEntry();
         m_falconPEntry = m_armTab.add("Falcon P", Constants.UpperArmConstants.kFalconP).getEntry();
+        m_potHomeEntry = m_armTab.add("Pot Home Val", m_potHomeValue).getEntry();
     }
 
     public double encoderPosition() {
@@ -77,7 +79,7 @@ public class UpperArmSubsystem extends SubsystemBase {
     }
 
     private void checkEncoderHomed() {
-        if ( Math.abs(potPosition() - Constants.UpperArmConstants.kHomePotmeterValue) 
+        if ( Math.abs(potPosition() - m_potHomeValue) 
                 < Constants.UpperArmConstants.kPotmeterTolerance) {
             setEncoderHomed();
             }
@@ -85,6 +87,7 @@ public class UpperArmSubsystem extends SubsystemBase {
 
     public void nudgeClosedLoopByFalconEnc (boolean up) {
         double nudgeAmount = m_nudgeDashboardEntry.getDouble(0);
+        setPotHomeValueFromDash();
         checkEncoderHomed();
         if (!up) { // going down
             nudgeAmount = -nudgeAmount;
@@ -104,6 +107,10 @@ public class UpperArmSubsystem extends SubsystemBase {
 
     public double getFalconEncPosition () {
         return m_upperArmMotor.getSelectedSensorPosition();
+    }
+
+    public void setPotHomeValueFromDash() {
+        m_potHomeValue = m_potHomeEntry.getDouble(0);
     }
 
 }
