@@ -215,12 +215,12 @@ public final class Constants {
 
     public static final int kRevEncoderLimitLow = -20;
     public static final int kRevEncoderLimitHigh = -200;
-    public static final double kRevEncoderP = 0.009;  // was 0.003 b4 added versa stage
+    public static final double kRevEncoderP = 0.015;  // was 0.003 b4 added versa stage
     public static final double kRevEncoderI = 0;
     public static final double kRevEncoderD = 0.006;  // was 0.002 b4 added versa stage
     public static final double kRevEncoderTolerance = 20; 
-    public static final double kRevEncoderMaxCountsPerS = 750;
-    public static final double kRevEncoderMaxCountsPerSSquared = 1000;
+    public static final double kRevEncoderMaxCountsPerS = 250;
+    public static final double kRevEncoderMaxCountsPerSSquared = 250;
     public static final double kRevEncoderMaxCountsPerSTolerance = 100;
 
     public static final double kPotmeterP = 60; // was 20 b4 added versa stage
