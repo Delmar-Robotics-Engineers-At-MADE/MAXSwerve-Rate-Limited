@@ -24,7 +24,7 @@ public class LowerArm extends SubsystemBase {
     public ShuffleboardTab m_dashboardTab;
 
     public GenericEntry m_positionSettingEntry;
-    public boolean m_lowerArmHomed;
+    // public boolean m_lowerArmHomed;
     private double m_holdposition;
     
 
@@ -46,12 +46,14 @@ public class LowerArm extends SubsystemBase {
         m_elbowPIDController.setOutputRange(LowerArmConstants.kMinOutput, LowerArmConstants.kMaxOutput, 0);
         m_elbow.burnFlash();
 
-        m_lowerArmHomed = false;
+        m_holdposition = m_elbowEncoder.getPosition();
+
+        // m_lowerArmHomed = false;
 
         m_dashboardTab = Shuffleboard.getTab("Arm");
         m_positionSettingEntry = m_dashboardTab.add("Set Lower Arm", m_position).getEntry();
         m_positionSettingEntry.getDouble(m_position);
-        m_dashboardTab.addBoolean("LowerArm Homed", () -> m_lowerArmHomed);
+        // m_dashboardTab.addBoolean("LowerArm Homed", () -> m_lowerArmHomed);
         m_dashboardTab.addDouble("elbow pos", () -> getElbowPos());
         m_dashboardTab.addDouble("elbowHoldPosition", () -> m_holdposition);
         
@@ -64,15 +66,21 @@ public class LowerArm extends SubsystemBase {
      * @param position target lower arm position
      */
     public void runLowerArmClosedLoop(double position) {
-        m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kPosition, 0);
+        m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kDutyCycle, 0);
         // System.out.println("lower arm:" + getElbowPos() +" " + position);
-        checkElbowHomed();
+        // checkElbowHomed();
         m_holdposition = m_elbowEncoder.getPosition();
     }
 
     public void holdLowerArm(){
-        m_elbowPIDController.setReference(m_holdposition, CANSparkMax.ControlType.kPosition, 0);
-        System.out.println("holding lower arm to " + m_holdposition + ", actual: " + m_elbowEncoder.getPosition());
+        // seems to be now way to set tolerance on spark max built-in PID, so do our own
+        double pos = m_elbowEncoder.getPosition();
+        if (Math.abs(m_holdposition - pos) > LowerArmConstants.kTolerance) {
+            m_elbowPIDController.setReference(m_holdposition, CANSparkMax.ControlType.kPosition, 0);
+        } else {
+            m_elbow.set(0);
+        }
+        // System.out.println("holding lower arm to " + m_holdposition + ", actual: " + m_elbowEncoder.getPosition());
     }
 
     public void runlowerArmOpenLoop(double speed) {
@@ -126,15 +134,15 @@ public class LowerArm extends SubsystemBase {
         return m_elbowEncoder.getPosition();
     }
 
-    public boolean setElbowHomed(){
-        return m_lowerArmHomed = true;
-    }
+    // public boolean setElbowHomed(){
+    //     return m_lowerArmHomed = true;
+    // }
 
-    private void checkElbowHomed() {
-        if (getElbowPos() < LowerArmConstants.homeTolerance) {
-            setElbowHomed();
-        }
-    }
+    // private void checkElbowHomed() {
+    //     if (getElbowPos() < LowerArmConstants.homeTolerance) {
+    //         setElbowHomed();
+    //     }
+    // }
 
 }
 

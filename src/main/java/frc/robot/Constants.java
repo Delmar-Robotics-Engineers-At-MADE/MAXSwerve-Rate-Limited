@@ -248,14 +248,14 @@ public final class Constants {
   public static final class LowerArmConstants {
 
     public static final int LOWER_ARM_MOTOR_ID = 7;
-    public static double kP = 300.0;
+    public static double kP = 10.0;
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double kFF = 0.0;
     public static double kMinOutput = -1;
     public static double kMaxOutput = 1;
     public static double kNudgeCounts = 0.07;
-    public static double kTolerance = 0.1;
+    public static double kTolerance = 0.03;
 
     public static final double kHomePosition = 0.0;
     public static final double kFloorPosition = 0.25;
@@ -268,7 +268,7 @@ public final class Constants {
     public static final double maxAccel = 1500;
     public static final double maxVelocity = 5000;
     public static final double allowedErr = 0;
-    public static final double homeTolerance = 0.001;
+    // public static final double homeTolerance = 0.001;
   }
 
   public static final class ControllerConstants {
