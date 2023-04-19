@@ -35,19 +35,15 @@ public class LowerArm extends SubsystemBase {
         m_elbow.setIdleMode(IdleMode.kBrake);
         m_elbow.setInverted(true);
         m_elbowEncoder = m_elbow.getAbsoluteEncoder(Type.kDutyCycle);
-        //m_elbowEncoder.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
-        m_elbowEncoder.setInverted(true);
         m_elbowPIDController = m_elbow.getPIDController();
-        // m_elbowPIDController.setSmartMotionMinOutputVelocity(LowerArmConstants.minVelocity, 0);
-        // m_elbowPIDController.setSmartMotionMaxAccel(LowerArmConstants.maxAccel, 0);
-        // m_elbowPIDController.setSmartMotionMaxVelocity(LowerArmConstants.maxVelocity, 0);
-        // m_elbowPIDController.setSmartMotionAllowedClosedLoopError(LowerArmConstants.allowedErr, 0);
-        
-        m_elbowPIDController.setP(LowerArmConstants.kP);
-        m_elbowPIDController.setI(LowerArmConstants.kI);
-        m_elbowPIDController.setD(LowerArmConstants.kD);
-        m_elbowPIDController.setFF(LowerArmConstants.kFF);
-        m_elbowPIDController.setOutputRange(LowerArmConstants.kMinOutput, LowerArmConstants.kMaxOutput);
+        m_elbowPIDController.setFeedbackDevice(m_elbowEncoder);
+        m_elbowEncoder.setPositionConversionFactor(1);
+        m_elbowEncoder.setInverted(true);
+        m_elbowPIDController.setP(LowerArmConstants.kP, 0);
+        m_elbowPIDController.setI(LowerArmConstants.kI, 0);
+        m_elbowPIDController.setD(LowerArmConstants.kD, 0);
+        m_elbowPIDController.setFF(LowerArmConstants.kFF, 0);
+        m_elbowPIDController.setOutputRange(LowerArmConstants.kMinOutput, LowerArmConstants.kMaxOutput, 0);
         m_elbow.burnFlash();
 
         m_lowerArmHomed = false;
@@ -68,15 +64,15 @@ public class LowerArm extends SubsystemBase {
      * @param position target lower arm position
      */
     public void runLowerArmClosedLoop(double position) {
-        m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kDutyCycle);
-        //System.out.println("lower arm:" + getElbowPos() +" " + position);
+        m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kPosition, 0);
+        // System.out.println("lower arm:" + getElbowPos() +" " + position);
         checkElbowHomed();
         m_holdposition = m_elbowEncoder.getPosition();
     }
 
     public void holdLowerArm(){
-        m_elbowPIDController.setReference(m_holdposition, CANSparkMax.ControlType.kDutyCycle);
-        // System.out.println("holding lower arm  ||  " + m_holdposition);
+        m_elbowPIDController.setReference(m_holdposition, CANSparkMax.ControlType.kPosition, 0);
+        System.out.println("holding lower arm to " + m_holdposition + ", actual: " + m_elbowEncoder.getPosition());
     }
 
     public void runlowerArmOpenLoop(double speed) {

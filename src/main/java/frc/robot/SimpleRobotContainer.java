@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Commands.Arm.HoldClawGrip;
+import frc.robot.Commands.Arm.HoldLowerArmCommand;
 import frc.robot.Commands.Arm.MoveClawUntilStall;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
 import frc.robot.Commands.Arm.PrepareToHold;
@@ -26,6 +27,7 @@ import frc.robot.Constants.UpperArmConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.Arm.Claw;
+import frc.robot.subsystems.Arm.LowerArm;
 import frc.robot.subsystems.Arm.UpperArmSubsystem;
 import frc.robot.subsystems.Cameras.AprilTagSubsystem;
 import frc.robot.subsystems.Cameras.LimelightSubsystem;
@@ -46,6 +48,7 @@ public class SimpleRobotContainer {
   public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
   private static final Claw m_claw = new Claw();
   private static final UpperArmSubsystem m_upperArm = new UpperArmSubsystem();
+  private static final LowerArm m_lowerArm = new LowerArm();
   private static final LimelightSubsystem m_limelight = new LimelightSubsystem();
   private static final AprilTagSubsystem m_aprilTags = new AprilTagSubsystem();
   private static final BlinkinSubsystem m_blinkin = new BlinkinSubsystem();
@@ -97,7 +100,7 @@ public class SimpleRobotContainer {
     new RunCommand(() -> m_claw.runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity))
   );
 
-  CommandBase m_testCommand = new DriveToAprilTag(CameraConstants.kSummerAprilTagDistanceBackup, m_aprilTags, m_robotDrive);
+  CommandBase m_testCommand = m_lowerArm.runLowerArmDown();
   
   private void configureButtonBindings() {
 
@@ -154,6 +157,9 @@ public class SimpleRobotContainer {
         -MathUtil.applyDeadband(DriveConstants.kCrawlSpeed * (m_driverController.getRawAxis(2)), OIConstants.kDriveDeadband),
         true, true),
         m_robotDrive));
+
+    m_lowerArm.setDefaultCommand(new HoldLowerArmCommand(m_lowerArm));
+    
   }
 
 
