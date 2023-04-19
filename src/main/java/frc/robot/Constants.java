@@ -248,6 +248,7 @@ public final class Constants {
   public static final class LowerArmConstants {
 
     public static final int LOWER_ARM_MOTOR_ID = 7;
+    public static final int LOWER_ARM_CHAIN_MOTOR_ID = 8;
     public static double kP = 10.0;
     public static double kI = 0.0;
     public static double kD = 0.0;

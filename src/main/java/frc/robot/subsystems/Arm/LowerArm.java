@@ -18,6 +18,7 @@ import edu.wpi.first.networktables.GenericEntry;
 
 public class LowerArm extends SubsystemBase {
     private final CANSparkMax m_elbow;
+    private final CANSparkMax m_elbowChain;
     private final AbsoluteEncoder m_elbowEncoder;
     private SparkMaxPIDController m_elbowPIDController;
     private double m_position;
@@ -45,6 +46,12 @@ public class LowerArm extends SubsystemBase {
         m_elbowPIDController.setFF(LowerArmConstants.kFF, 0);
         m_elbowPIDController.setOutputRange(LowerArmConstants.kMinOutput, LowerArmConstants.kMaxOutput, 0);
         m_elbow.burnFlash();
+
+        m_elbowChain = new CANSparkMax(LowerArmConstants.LOWER_ARM_CHAIN_MOTOR_ID, MotorType.kBrushless);
+        m_elbowChain.restoreFactoryDefaults();
+        m_elbowChain.setSmartCurrentLimit(40);
+        m_elbowChain.setIdleMode(IdleMode.kBrake);
+        m_elbowChain.follow(m_elbow);
 
         m_holdposition = m_elbowEncoder.getPosition();
 
