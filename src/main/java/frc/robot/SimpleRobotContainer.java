@@ -100,7 +100,7 @@ public class SimpleRobotContainer {
     new RunCommand(() -> m_claw.runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity))
   );
 
-  CommandBase m_testCommand = m_lowerArm.runLowerArmDown();
+  CommandBase m_testCommand = m_lowerArm.lowerArmMidPosition();
   
   private void configureButtonBindings() {
 

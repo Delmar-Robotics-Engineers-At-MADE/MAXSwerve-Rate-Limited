@@ -32,7 +32,7 @@ public class LowerArm extends SubsystemBase {
     public LowerArm() {
         m_elbow = new CANSparkMax(LowerArmConstants.LOWER_ARM_MOTOR_ID, MotorType.kBrushless);
         m_elbow.restoreFactoryDefaults();
-        m_elbow.setSmartCurrentLimit(40);
+        m_elbow.setSmartCurrentLimit(60);
         m_elbow.setIdleMode(IdleMode.kBrake);
         m_elbow.setInverted(true);
         m_elbowEncoder = m_elbow.getAbsoluteEncoder(Type.kDutyCycle);
@@ -44,15 +44,16 @@ public class LowerArm extends SubsystemBase {
         m_elbowPIDController.setI(LowerArmConstants.kI, 0);
         m_elbowPIDController.setD(LowerArmConstants.kD, 0);
         m_elbowPIDController.setFF(LowerArmConstants.kFF, 0);
-        m_elbowPIDController.setOutputRange(LowerArmConstants.kMinOutput, LowerArmConstants.kMaxOutput, 0);
+        //m_elbowPIDController.setOutputRange(LowerArmConstants.kMinOutput, LowerArmConstants.kMaxOutput, 0);
         m_elbow.burnFlash();
 
         m_elbowChain = new CANSparkMax(LowerArmConstants.LOWER_ARM_CHAIN_MOTOR_ID, MotorType.kBrushless);
         m_elbowChain.restoreFactoryDefaults();
-        m_elbowChain.setSmartCurrentLimit(40);
+        m_elbowChain.setSmartCurrentLimit(60);
         m_elbowChain.setIdleMode(IdleMode.kBrake);
-        m_elbowChain.follow(m_elbow);
+        m_elbowChain.follow(m_elbow, true);
 
+        m_elbowPIDController.setReference(0, CANSparkMax.ControlType.kVelocity, 0);
         m_holdposition = m_elbowEncoder.getPosition();
 
         // m_lowerArmHomed = false;
@@ -73,7 +74,9 @@ public class LowerArm extends SubsystemBase {
      * @param position target lower arm position
      */
     public void runLowerArmClosedLoop(double position) {
-        m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kDutyCycle, 0);
+        m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kPosition, 0);
+        System.out.println("Elbow applied output: " + m_elbowChain.getAppliedOutput());
+        System.out.println("Elbow output current: " + m_elbowChain.getOutputCurrent());
         // System.out.println("lower arm:" + getElbowPos() +" " + position);
         // checkElbowHomed();
         m_holdposition = m_elbowEncoder.getPosition();
@@ -83,11 +86,11 @@ public class LowerArm extends SubsystemBase {
         // seems to be now way to set tolerance on spark max built-in PID, so do our own
         double pos = m_elbowEncoder.getPosition();
         if (Math.abs(m_holdposition - pos) > LowerArmConstants.kTolerance) {
-            m_elbowPIDController.setReference(m_holdposition, CANSparkMax.ControlType.kPosition, 0);
+            m_elbowPIDController.setReference(0.15/*m_holdposition*/, CANSparkMax.ControlType.kPosition, 0);
         } else {
             m_elbow.set(0);
         }
-        // System.out.println("holding lower arm to " + m_holdposition + ", actual: " + m_elbowEncoder.getPosition());
+        System.out.println("holding lower arm to " + m_holdposition + ", actual: " + m_elbowEncoder.getPosition());
     }
 
     public void runlowerArmOpenLoop(double speed) {
@@ -130,11 +133,11 @@ public class LowerArm extends SubsystemBase {
     }
 
     public CommandBase runLowerArmUp() {
-        return this.run(() -> runlowerArmOpenLoop(15));
+        return this.run(() -> runlowerArmOpenLoop(-15));
     }
 
     public CommandBase runLowerArmDown() {
-        return this.run(() -> runlowerArmOpenLoop(-20));
+        return this.run(() -> runlowerArmOpenLoop(15));
     }
 
     public double getElbowPos() {
