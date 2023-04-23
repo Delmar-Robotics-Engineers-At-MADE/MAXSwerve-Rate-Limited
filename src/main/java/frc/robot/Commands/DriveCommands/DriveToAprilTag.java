@@ -29,7 +29,7 @@ public class DriveToAprilTag extends PIDCommand {
     super(
         m_PID,
         // Close loop on heading
-        aprilTags::getBestAprilTagDistance,
+        aprilTags::getBestAprilTag3dX,
         // Set reference to target
         targetDistance,
         // Pipe output to turn robot

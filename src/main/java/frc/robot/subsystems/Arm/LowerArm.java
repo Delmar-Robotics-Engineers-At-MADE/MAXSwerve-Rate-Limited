@@ -90,7 +90,7 @@ public class LowerArm extends SubsystemBase {
         } else {
             m_elbow.set(0);
         }
-        System.out.println("holding lower arm to " + m_holdposition + ", actual: " + m_elbowEncoder.getPosition());
+        // System.out.println("holding lower arm to " + m_holdposition + ", actual: " + m_elbowEncoder.getPosition());
     }
 
     public void runlowerArmOpenLoop(double speed) {

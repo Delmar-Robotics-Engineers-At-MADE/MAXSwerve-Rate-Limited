@@ -19,6 +19,7 @@ import frc.robot.Commands.DriveCommands.TurnToGamepieceProfiled;
 import frc.robot.Commands.DriveCommands.UpdateBestAprilTag;
 import frc.robot.Commands.DriveCommands.UpdateBestGamepieceCommand;
 import frc.robot.Commands.DriveCommands.SearchForAprilTagProfiled;
+import frc.robot.Commands.DriveCommands.StrafeToAprilTagProfiled;
 import frc.robot.Commands.DriveCommands.TurnToAprilTagProfiled;
 import frc.robot.Constants.CLAW_CONSTANTS;
 import frc.robot.Constants.CameraConstants;
@@ -67,6 +68,12 @@ public class SimpleRobotContainer {
     new HoldClawGrip(0.0, m_claw)
   );
 
+  // sequence for running claw to stall and then holding:
+  private final SequentialCommandGroup m_driveToAprilTagCommand = new SequentialCommandGroup(
+    new TurnToAprilTagProfiled(0, m_aprilTags, m_robotDrive),
+    new StrafeToAprilTagProfiled(m_aprilTags, m_robotDrive)
+  );
+  
   // sequences for summer demo
 
   private final SequentialCommandGroup m_summerCollectAndReturn = new SequentialCommandGroup(
@@ -78,7 +85,7 @@ public class SimpleRobotContainer {
     // stop driving
     new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false)),
     // back up if too close to wall
-    new DriveToAprilTag(CameraConstants.kSummerAprilTagDistanceBackup, m_aprilTags, m_robotDrive),
+    // new DriveToAprilTag(CameraConstants.kSummerAprilTagDistanceBackup, m_aprilTags, m_robotDrive),
     // upper arm to return position
     new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm),
     // search for nearest April tag
@@ -100,7 +107,8 @@ public class SimpleRobotContainer {
     new RunCommand(() -> m_claw.runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity))
   );
 
-  CommandBase m_testCommand = m_lowerArm.lowerArmMidPosition();
+  // CommandBase m_testCommand = m_driveToAprilTagCommand ; // m_lowerArm.lowerArmMidPosition();
+  CommandBase m_testCommand = new DriveToAprilTag(CameraConstants.kSummerAprilTagDistance, m_aprilTags, m_robotDrive);
   
   private void configureButtonBindings() {
 
@@ -158,7 +166,7 @@ public class SimpleRobotContainer {
         true, true),
         m_robotDrive));
 
-    m_lowerArm.setDefaultCommand(new HoldLowerArmCommand(m_lowerArm));
+    // m_lowerArm.setDefaultCommand(new HoldLowerArmCommand(m_lowerArm));
     
   }
 

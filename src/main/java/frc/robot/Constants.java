@@ -74,10 +74,10 @@ public final class Constants {
     public static final double kOSlowSpeed = 0.25;
     
     // TurnToAprilTagProfiled
-    public static final double kYawP = 0.02;
+    public static final double kYawP = 0.01;
     public static final double kYawI = 0.0;
     public static final double kYawD = 0.0;
-    public static final double kMaxYawRateDegPerS = 7;
+    public static final double kMaxYawRateDegPerS = 2;
     public static final double kMaxYawAccelerationDegPerSSquared = 20;
     public static final double kYawToleranceDeg = 3;
     public static final double kYawRateToleranceDegPerS = 10;
@@ -96,7 +96,7 @@ public final class Constants {
     public static final double CAMERA_HEIGHT_METERS = 0.9;
     public static final double TARGET_HEIGHT_METERS = 0.31;
     public static final double CAMERA_PITCH_RADIANS = -0.436;
-    public static final double kSummerAprilTagDistance = 0.77; // meters
+    public static final double kSummerAprilTagDistance = 1.5; // meters
     public static final double kSummerAprilTagDistanceBackup = 1.5; // meters
     public static final double kSummerSearchForAprilTagYaw = 20; // degrees
     
@@ -228,7 +228,7 @@ public final class Constants {
     public static final double kPotmeterD = 0;
     public static final double kPotmeterTolerance = 0.001;  
 
-    public static final double kHomePotmeterValue = 0.4605;
+    public static final double kHomePotmeterValue = 0.456;
     public static final double kHomeEncoderValue = 0.0;
 
     public static final double kMaxFalconPower = 0.60;  // was 0.20 b4 added versa stage
