@@ -6,6 +6,7 @@ package frc.robot.Commands.DriveCommands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.Commands.PIDBase.ProfiledDoublePIDCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Cameras.AprilTagSubsystem;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
@@ -14,13 +15,22 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /** A command that will turn the robot to the specified angle using a motion profile. */
-public class StrafeToAprilTagProfiled extends ProfiledPIDCommand {
+public class StrafeToAprilTagProfiled extends ProfiledDoublePIDCommand {
   
-  private static ProfiledPIDController m_PID = new ProfiledPIDController(
+  // turn PID
+  private static ProfiledPIDController m_PID1 = new ProfiledPIDController(
+    DriveConstants.kYawP, DriveConstants.kYawI, DriveConstants.kYawD,
+    new TrapezoidProfile.Constraints(
+                DriveConstants.kMaxYawRateDegPerS,
+                DriveConstants.kMaxYawAccelerationDegPerSSquared));
+
+  // strafe PID
+  private static ProfiledPIDController m_PID2 = new ProfiledPIDController(
     DriveConstants.kYawP/2, DriveConstants.kYawI, DriveConstants.kYawD,
     new TrapezoidProfile.Constraints(
                 DriveConstants.kMaxYawRateDegPerS,
                 DriveConstants.kMaxYawAccelerationDegPerSSquared));
+
 
   private AprilTagSubsystem m_aprilTags;
 
@@ -33,27 +43,28 @@ public class StrafeToAprilTagProfiled extends ProfiledPIDCommand {
    */
   public StrafeToAprilTagProfiled(AprilTagSubsystem aprilTags, DriveSubsystem drive) {
     super(
-        m_PID,
-        // Close loop on heading
-        aprilTags::getBestAprilTag3dAngle,
+        m_PID1, m_PID2,
+        // rotate and strafe
+        aprilTags::getBestAprilTagYaw, aprilTags::getBestAprilTag3dAngle,
         // Set reference to target
-        180,
+        0, 180,
         // Pipe output to turn robot
-        (output, setpoint) -> drive.drive(0, -output, 0, false, true),
+        (output, setpoint) -> drive.drive(0, -output.x2, output.x1, false, true),
         // Require the drive
         drive);
 
     // Set the controller to be continuous (because it is an angle controller)
-    getController().enableContinuousInput(-180, 180);
-    // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
-    // setpoint before it is considered as having reached the reference
-    getController()
-        .setTolerance(DriveConstants.kYawToleranceDeg, DriveConstants.kYawRateToleranceDegPerS);
+    getController1().enableContinuousInput(-180, 180);
+    getController2().enableContinuousInput(-180, 180);
+
+    getController1().setTolerance(DriveConstants.kYawToleranceDeg, DriveConstants.kYawRateToleranceDegPerS);
+    getController2().setTolerance(DriveConstants.kYawToleranceDeg, DriveConstants.kYawRateToleranceDegPerS);
       
     // Add the PID to dashboard
     if (!m_shuffleboardLoaded) {
       ShuffleboardTab turnTab = Shuffleboard.getTab("Drivebase");
-      turnTab.add("AprilTag PID4", m_PID);
+      turnTab.add("Double PID 1", m_PID1);
+      turnTab.add("Double PID 2", m_PID2);
       m_shuffleboardLoaded = true;  // so we do this only once no matter how many instances are created
     }
     m_aprilTags = aprilTags;
@@ -63,8 +74,8 @@ public class StrafeToAprilTagProfiled extends ProfiledPIDCommand {
   @Override
   public boolean isFinished() {
     // End when the controller is at the reference.
-    if (getController().atGoal()) {System.out.println("done strafing to April Tag");}
-    return getController().atGoal();
+    if (getController2().atGoal()) {System.out.println("done strafing to April Tag");}
+    return getController1().atGoal() && getController2().atGoal();
   }
 
   @Override
