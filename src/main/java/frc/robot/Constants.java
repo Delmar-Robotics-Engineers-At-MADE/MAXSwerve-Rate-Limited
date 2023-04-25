@@ -74,13 +74,21 @@ public final class Constants {
     public static final double kOSlowSpeed = 0.25;
     
     // TurnToAprilTagProfiled
-    public static final double kYawP = 0.01;
+    public static final double kYawP = 0.015;
     public static final double kYawI = 0.0;
-    public static final double kYawD = 0.0;
-    public static final double kMaxYawRateDegPerS = 2;
+    public static final double kYawD = 0.012;
+    public static final double kMaxYawRateDegPerS = 8;
     public static final double kMaxYawAccelerationDegPerSSquared = 20;
-    public static final double kYawToleranceDeg = 3;
+    public static final double kYawToleranceDeg = 5;
     public static final double kYawRateToleranceDegPerS = 10;
+
+    public static final double kStrafeP = 0.01;
+    public static final double kStrafeI = 0.0;
+    public static final double kStrafeD = 0.0;
+    public static final double kMaxStrafeRateDegPerS = 1;
+    public static final double kMaxStrafeAccelerationDegPerSSquared = 20;
+    public static final double kStrafeToleranceDeg = 20;
+    public static final double kStrafeRateToleranceDegPerS = 10;
 
     // DriveToAprilTag
     public static final double kDriveP = 0.1;

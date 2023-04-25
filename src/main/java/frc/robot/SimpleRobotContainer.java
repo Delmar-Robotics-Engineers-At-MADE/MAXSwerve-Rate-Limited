@@ -108,7 +108,8 @@ public class SimpleRobotContainer {
   );
 
   // CommandBase m_testCommand = m_driveToAprilTagCommand ; // m_lowerArm.lowerArmMidPosition();
-  CommandBase m_testCommand = new DriveToAprilTag(CameraConstants.kSummerAprilTagDistance, m_aprilTags, m_robotDrive);
+  CommandBase m_testCommand = new RepeatCommand(new StrafeToAprilTagProfiled(m_aprilTags, m_robotDrive));
+  // CommandBase m_testCommand = new RepeatCommand(new TurnToAprilTagProfiled(0, m_aprilTags, m_robotDrive));
   
   private void configureButtonBindings() {
 

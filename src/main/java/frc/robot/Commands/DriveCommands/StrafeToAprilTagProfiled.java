@@ -26,10 +26,10 @@ public class StrafeToAprilTagProfiled extends ProfiledDoublePIDCommand {
 
   // strafe PID
   private static ProfiledPIDController m_PID2 = new ProfiledPIDController(
-    DriveConstants.kYawP/2, DriveConstants.kYawI, DriveConstants.kYawD,
+    DriveConstants.kStrafeP, DriveConstants.kStrafeI, DriveConstants.kStrafeD,
     new TrapezoidProfile.Constraints(
-                DriveConstants.kMaxYawRateDegPerS,
-                DriveConstants.kMaxYawAccelerationDegPerSSquared));
+                DriveConstants.kMaxStrafeRateDegPerS,
+                DriveConstants.kMaxStrafeAccelerationDegPerSSquared));
 
 
   private AprilTagSubsystem m_aprilTags;
@@ -53,12 +53,15 @@ public class StrafeToAprilTagProfiled extends ProfiledDoublePIDCommand {
         // Require the drive
         drive);
 
+    // controller1: rotate
+    // controller2: strafe
+
     // Set the controller to be continuous (because it is an angle controller)
     getController1().enableContinuousInput(-180, 180);
-    getController2().enableContinuousInput(-180, 180);
+    getController2().enableContinuousInput(90, 270);
 
     getController1().setTolerance(DriveConstants.kYawToleranceDeg, DriveConstants.kYawRateToleranceDegPerS);
-    getController2().setTolerance(DriveConstants.kYawToleranceDeg, DriveConstants.kYawRateToleranceDegPerS);
+    getController2().setTolerance(DriveConstants.kStrafeToleranceDeg, DriveConstants.kStrafeRateToleranceDegPerS);
       
     // Add the PID to dashboard
     if (!m_shuffleboardLoaded) {
@@ -67,6 +70,7 @@ public class StrafeToAprilTagProfiled extends ProfiledDoublePIDCommand {
       turnTab.add("Double PID 2", m_PID2);
       m_shuffleboardLoaded = true;  // so we do this only once no matter how many instances are created
     }
+
     m_aprilTags = aprilTags;
   
   }

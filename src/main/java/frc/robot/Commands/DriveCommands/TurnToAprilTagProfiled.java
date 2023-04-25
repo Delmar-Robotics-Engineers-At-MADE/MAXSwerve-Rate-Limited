@@ -22,6 +22,8 @@ public class TurnToAprilTagProfiled extends ProfiledPIDCommand {
                 DriveConstants.kMaxYawRateDegPerS,
                 DriveConstants.kMaxYawAccelerationDegPerSSquared));
 
+  private AprilTagSubsystem m_aprilTags;
+
   private static boolean m_shuffleboardLoaded = false;
   /**
    * Turns to robot to the specified angle using a motion profile.
@@ -54,12 +56,14 @@ public class TurnToAprilTagProfiled extends ProfiledPIDCommand {
         turnTab.add("AprilTag PID2", m_PID);
         m_shuffleboardLoaded = true;  // so we do this only once no matter how many instances are created
       }
-  
+
+      m_aprilTags = aprilTags;
+      
   }
 
   @Override
   public boolean isFinished() {
-    // End when the controller is at the reference.
+    System.out.println("Turning to April Tag " + m_aprilTags.getBestAprilTagYaw());
     return getController().atGoal();
   }
 }
