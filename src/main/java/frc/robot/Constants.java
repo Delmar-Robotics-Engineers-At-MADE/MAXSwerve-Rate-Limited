@@ -266,11 +266,12 @@ public final class Constants {
     public static double kNudgeCounts = 0.07;
     public static double kTolerance = 0.03;
 
-    public static final double kHomePosition = 0.0;
+    public static final double kHomePosition = 0.016;
+    public static final double kFullExtension = 0.29;
     public static final double kFloorPosition = 0.25;
     public static final double kHighPosition = 0.5;
     public static final double kShootPosition = 20;
-    public static final double kMidPosition = 0.15;
+    public static final double kMidPosition = 0.21;
     public static final double kSSsPosition = 0.1;
     public static final double kManualSpeed = 70;
     public static final double minVelocity = 0;

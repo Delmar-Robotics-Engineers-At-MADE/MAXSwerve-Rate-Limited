@@ -107,8 +107,9 @@ public class SimpleRobotContainer {
     new RunCommand(() -> m_claw.runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity))
   );
 
+  CommandBase m_testCommand = m_lowerArm.lowerArmMidPosition();
   // CommandBase m_testCommand = m_driveToAprilTagCommand ; // m_lowerArm.lowerArmMidPosition();
-  CommandBase m_testCommand = new RepeatCommand(new StrafeToAprilTagProfiled(m_aprilTags, m_robotDrive));
+  // CommandBase m_testCommand = new RepeatCommand(new StrafeToAprilTagProfiled(m_aprilTags, m_robotDrive));
   // CommandBase m_testCommand = new RepeatCommand(new TurnToAprilTagProfiled(0, m_aprilTags, m_robotDrive));
   
   private void configureButtonBindings() {
@@ -171,7 +172,7 @@ public class SimpleRobotContainer {
     m_lowerArm.setDefaultCommand(
       new RunCommand(
         () -> m_lowerArm.runlowerArmOpenLoop(MathUtil.applyDeadband(
-          m_operController.getLeftTriggerAxis() - m_operController.getRightTriggerAxis(),
+          m_operController.getRightTriggerAxis() - m_operController.getLeftTriggerAxis(),
           OIConstants.kDriveDeadband)), m_lowerArm));
     
   }

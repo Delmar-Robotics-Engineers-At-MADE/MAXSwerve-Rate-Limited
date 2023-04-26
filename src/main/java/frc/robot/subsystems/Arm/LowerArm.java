@@ -34,7 +34,7 @@ public class LowerArm extends SubsystemBase {
         m_elbow.restoreFactoryDefaults();
         m_elbow.setSmartCurrentLimit(60);
         m_elbow.setIdleMode(IdleMode.kBrake);
-        m_elbow.setInverted(true);
+        m_elbow.setInverted(false);
         m_elbowEncoder = m_elbow.getAbsoluteEncoder(Type.kDutyCycle);
         m_elbowPIDController = m_elbow.getPIDController();
         m_elbowPIDController.setFeedbackDevice(m_elbowEncoder);
@@ -94,8 +94,18 @@ public class LowerArm extends SubsystemBase {
     }
 
     public void runlowerArmOpenLoop(double speed) {
+        double elbowPos = m_elbowEncoder.getPosition();
+        if (speed > 0 && elbowPos > LowerArmConstants.kFullExtension) {
+            // at bottom limit
+            System.out.println("Elbow at bottom limit");
+            speed = 0;
+        } else if (speed < 0 && elbowPos < LowerArmConstants.kHomePosition) {
+            // at top limit
+            speed = 0;
+            System.out.println("Elbow at top limit");
+        }
         m_elbow.set(speed);
-        m_holdposition = m_elbowEncoder.getPosition();
+        m_holdposition = elbowPos;
        //System.out.println("Elbow open loop power: " + speed);
     }
 
