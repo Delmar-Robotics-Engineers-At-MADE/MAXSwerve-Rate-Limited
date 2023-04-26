@@ -151,6 +151,7 @@ public class SimpleRobotContainer {
       .toggleOnTrue(new InstantCommand(
           () -> m_upperArm.nudgeClosedLoopByFalconEnc(false), m_upperArm ));
     
+
   }
 
   public SimpleRobotContainer() {
@@ -167,7 +168,11 @@ public class SimpleRobotContainer {
         true, true),
         m_robotDrive));
 
-    // m_lowerArm.setDefaultCommand(new HoldLowerArmCommand(m_lowerArm));
+    m_lowerArm.setDefaultCommand(
+      new RunCommand(
+        () -> m_lowerArm.runlowerArmOpenLoop(MathUtil.applyDeadband(
+          m_operController.getLeftTriggerAxis() - m_operController.getRightTriggerAxis(),
+          OIConstants.kDriveDeadband)), m_lowerArm));
     
   }
 

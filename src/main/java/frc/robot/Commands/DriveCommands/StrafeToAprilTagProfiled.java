@@ -84,7 +84,7 @@ public class StrafeToAprilTagProfiled extends ProfiledDoublePIDCommand {
 
   @Override
   public void execute() {
-    System.out.println("stafing to April Tag " + m_aprilTags.getBestAprilTag3dAngle());
+    // System.out.println("stafing to April Tag " + m_aprilTags.getBestAprilTag3dAngle());
     super.execute();
   }  
 }

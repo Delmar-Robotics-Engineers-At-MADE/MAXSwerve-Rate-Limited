@@ -18,7 +18,7 @@ import edu.wpi.first.networktables.GenericEntry;
 
 public class LowerArm extends SubsystemBase {
     private final CANSparkMax m_elbow;
-    private final CANSparkMax m_elbowChain;
+    // private final CANSparkMax m_elbowChain;
     private final AbsoluteEncoder m_elbowEncoder;
     private SparkMaxPIDController m_elbowPIDController;
     private double m_position;
@@ -47,11 +47,11 @@ public class LowerArm extends SubsystemBase {
         //m_elbowPIDController.setOutputRange(LowerArmConstants.kMinOutput, LowerArmConstants.kMaxOutput, 0);
         m_elbow.burnFlash();
 
-        m_elbowChain = new CANSparkMax(LowerArmConstants.LOWER_ARM_CHAIN_MOTOR_ID, MotorType.kBrushless);
-        m_elbowChain.restoreFactoryDefaults();
-        m_elbowChain.setSmartCurrentLimit(60);
-        m_elbowChain.setIdleMode(IdleMode.kBrake);
-        m_elbowChain.follow(m_elbow, true);
+        // m_elbowChain = new CANSparkMax(LowerArmConstants.LOWER_ARM_CHAIN_MOTOR_ID, MotorType.kBrushless);
+        // m_elbowChain.restoreFactoryDefaults();
+        // m_elbowChain.setSmartCurrentLimit(60);
+        // m_elbowChain.setIdleMode(IdleMode.kBrake);
+        // m_elbowChain.follow(m_elbow, true);
 
         m_elbowPIDController.setReference(0, CANSparkMax.ControlType.kVelocity, 0);
         m_holdposition = m_elbowEncoder.getPosition();
@@ -75,8 +75,8 @@ public class LowerArm extends SubsystemBase {
      */
     public void runLowerArmClosedLoop(double position) {
         m_elbowPIDController.setReference(position, CANSparkMax.ControlType.kPosition, 0);
-        System.out.println("Elbow applied output: " + m_elbowChain.getAppliedOutput());
-        System.out.println("Elbow output current: " + m_elbowChain.getOutputCurrent());
+        // System.out.println("Elbow applied output: " + m_elbowChain.getAppliedOutput());
+        // System.out.println("Elbow output current: " + m_elbowChain.getOutputCurrent());
         // System.out.println("lower arm:" + getElbowPos() +" " + position);
         // checkElbowHomed();
         m_holdposition = m_elbowEncoder.getPosition();
@@ -133,11 +133,11 @@ public class LowerArm extends SubsystemBase {
     }
 
     public CommandBase runLowerArmUp() {
-        return this.run(() -> runlowerArmOpenLoop(-15));
+        return this.run(() -> runlowerArmOpenLoop(-25));
     }
 
     public CommandBase runLowerArmDown() {
-        return this.run(() -> runlowerArmOpenLoop(15));
+        return this.run(() -> runlowerArmOpenLoop(25));
     }
 
     public double getElbowPos() {
