@@ -14,6 +14,7 @@ import frc.robot.Commands.Arm.MoveClawUntilStall;
 import frc.robot.Commands.Arm.MoveLowerArmCommand;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
 import frc.robot.Commands.Arm.PrepareToHold;
+import frc.robot.Commands.Arm.ShootCubeTimed;
 import frc.robot.Commands.DriveCommands.DriveToAprilTag;
 import frc.robot.Commands.DriveCommands.MoveToGamepieceProfiled;
 import frc.robot.Commands.DriveCommands.TurnToGamepieceProfiled;
@@ -104,14 +105,18 @@ public class SimpleRobotContainer {
     // search for nearest April tag
     new SearchForAprilTagProfiled(m_aprilTags, m_robotDrive),
     new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false)),
-    // upper arm to return position
+    // upper and lower arm to return position
     new MoveLowerArmCommand(LowerArmConstants.kFloorPosition, m_lowerArm),
     new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm),
     // drive to April Tag
     new DriveToAprilTag(CameraConstants.kSummerAprilTagDistance, m_aprilTags, m_robotDrive),
     new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false)),
     // return cube
-    new RunCommand(() -> m_claw.runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity))
+    // new RunCommand(() -> m_claw.runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity))
+    new ShootCubeTimed(1, m_claw),
+    // upper and lower arm to stow
+    new MoveUpperArmCommand(UpperArmConstants.kSummerIntakePosition, m_upperArm),
+    new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm)
   );
 
   private final SequentialCommandGroup m_summerTurnAndReturn = new SequentialCommandGroup(
@@ -180,7 +185,7 @@ public class SimpleRobotContainer {
   public SimpleRobotContainer() {
     configureButtonBindings();
 
-    CommandScheduler.getInstance().setDefaultCommand(m_claw, m_claw.stop());
+    // CommandScheduler.getInstance().setDefaultCommand(m_claw, m_claw.stop());
 
     m_robotDrive.setDefaultCommand(
       new RunCommand(

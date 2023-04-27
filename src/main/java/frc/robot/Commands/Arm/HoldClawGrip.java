@@ -23,7 +23,8 @@ public class HoldClawGrip extends CommandBase {
 
   @Override
   public boolean isFinished() {
-      return false;  // run command once and it will continue until interrupted
+      return m_claw.m_holding;  // run command once and it will continue until interrupted
+                         // or m_holding gets cleared
   }
 
 }
