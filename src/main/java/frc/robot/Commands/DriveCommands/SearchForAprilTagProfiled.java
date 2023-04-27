@@ -37,7 +37,7 @@ public class SearchForAprilTagProfiled extends ProfiledPIDCommand {
         // Set reference to target
         0.0,
         // Pipe output to turn robot
-        (output, setpoint) -> drive.drive(0, 0, output, true, true),
+        (output, setpoint) -> drive.drive(0, 0, output, false, true),
         // Require the drive
         drive);
 

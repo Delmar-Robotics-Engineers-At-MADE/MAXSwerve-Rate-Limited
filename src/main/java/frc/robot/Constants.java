@@ -74,7 +74,7 @@ public final class Constants {
     public static final double kOSlowSpeed = 0.25;
     
     // TurnToAprilTagProfiled
-    public static final double kYawP = 0.015;
+    public static final double kYawP = 0.011;
     public static final double kYawI = 0.0;
     public static final double kYawD = 0.012;
     public static final double kMaxYawRateDegPerS = 8;
@@ -104,9 +104,9 @@ public final class Constants {
     public static final double CAMERA_HEIGHT_METERS = 0.9;
     public static final double TARGET_HEIGHT_METERS = 0.31;
     public static final double CAMERA_PITCH_RADIANS = -0.436;
-    public static final double kSummerAprilTagDistance = 1.5; // meters
+    public static final double kSummerAprilTagDistance = 2; // meters
     public static final double kSummerAprilTagDistanceBackup = 1.5; // meters
-    public static final double kSummerSearchForAprilTagYaw = 20; // degrees
+    public static final double kSummerSearchForAprilTagYaw = -10; // degrees
     
   }
 
@@ -236,7 +236,7 @@ public final class Constants {
     public static final double kPotmeterD = 0;
     public static final double kPotmeterTolerance = 0.001;  
 
-    public static final double kHomePotmeterValue = 0.456;
+    public static final double kHomePotmeterValue = 0.457;
     public static final double kHomeEncoderValue = 0.0;
 
     public static final double kMaxFalconPower = 0.60;  // was 0.20 b4 added versa stage
@@ -264,11 +264,11 @@ public final class Constants {
     public static double kMinOutput = -1;
     public static double kMaxOutput = 1;
     public static double kNudgeCounts = 0.07;
-    public static double kTolerance = 0.03;
+    public static double kTolerance = 0.001;
 
     public static final double kHomePosition = 0.016;
     public static final double kFullExtension = 0.29;
-    public static final double kFloorPosition = 0.25;
+    public static final double kFloorPosition = 0.28;
     public static final double kHighPosition = 0.5;
     public static final double kShootPosition = 20;
     public static final double kMidPosition = 0.21;

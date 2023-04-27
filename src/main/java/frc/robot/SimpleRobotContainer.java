@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Commands.Arm.HoldClawGrip;
 import frc.robot.Commands.Arm.HoldLowerArmCommand;
 import frc.robot.Commands.Arm.MoveClawUntilStall;
+import frc.robot.Commands.Arm.MoveLowerArmCommand;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
 import frc.robot.Commands.Arm.PrepareToHold;
 import frc.robot.Commands.DriveCommands.DriveToAprilTag;
@@ -24,6 +25,7 @@ import frc.robot.Commands.DriveCommands.TurnToAprilTagProfiled;
 import frc.robot.Constants.CLAW_CONSTANTS;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.LowerArmConstants;
 import frc.robot.Constants.UpperArmConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.BlinkinSubsystem;
@@ -40,6 +42,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
@@ -68,30 +71,45 @@ public class SimpleRobotContainer {
     new HoldClawGrip(0.0, m_claw)
   );
 
-  // sequence for running claw to stall and then holding:
   private final SequentialCommandGroup m_driveToAprilTagCommand = new SequentialCommandGroup(
     new TurnToAprilTagProfiled(0, m_aprilTags, m_robotDrive),
     new StrafeToAprilTagProfiled(m_aprilTags, m_robotDrive)
   );
-  
+
+  private final SequentialCommandGroup m_armToStowPosition = new SequentialCommandGroup(
+    new MoveLowerArmCommand(LowerArmConstants.kFloorPosition, m_lowerArm),
+    new MoveUpperArmCommand(UpperArmConstants.kSummerIntakePosition, m_upperArm),
+    new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm)
+  );
+
+  private final ParallelCommandGroup m_armToReturnPosition = new ParallelCommandGroup(
+    new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm),
+    new MoveLowerArmCommand(LowerArmConstants.kFloorPosition, m_lowerArm)
+  );
+
   // sequences for summer demo
 
   private final SequentialCommandGroup m_summerCollectAndReturn = new SequentialCommandGroup(
-    // upper arm to intake position
+    // upper and lower arm to intake position
+    new MoveLowerArmCommand(LowerArmConstants.kFloorPosition, m_lowerArm),
     new MoveUpperArmCommand(UpperArmConstants.kSummerIntakePosition, m_upperArm),
     // drive forward and rotate toward game piece until collected
     new MoveToGamepieceProfiled(
       0.3 * DriveConstants.kCrawlSpeed, m_limelight, m_robotDrive, m_claw),
-    // stop driving
     new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false)),
+    // raise lower arm before turning
+    new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm),
     // back up if too close to wall
     // new DriveToAprilTag(CameraConstants.kSummerAprilTagDistanceBackup, m_aprilTags, m_robotDrive),
-    // upper arm to return position
-    new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm),
     // search for nearest April tag
     new SearchForAprilTagProfiled(m_aprilTags, m_robotDrive),
+    new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false)),
+    // upper arm to return position
+    new MoveLowerArmCommand(LowerArmConstants.kFloorPosition, m_lowerArm),
+    new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm),
     // drive to April Tag
     new DriveToAprilTag(CameraConstants.kSummerAprilTagDistance, m_aprilTags, m_robotDrive),
+    new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false)),
     // return cube
     new RunCommand(() -> m_claw.runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity))
   );
@@ -107,7 +125,9 @@ public class SimpleRobotContainer {
     new RunCommand(() -> m_claw.runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity))
   );
 
-  CommandBase m_testCommand = m_lowerArm.lowerArmMidPosition();
+  CommandBase m_testCommand = new SearchForAprilTagProfiled(m_aprilTags, m_robotDrive);
+  // CommandBase m_testCommand = m_armToIntakePosition;
+  // CommandBase m_testCommand = m_lowerArm.lowerArmFloorPosition();
   // CommandBase m_testCommand = m_driveToAprilTagCommand ; // m_lowerArm.lowerArmMidPosition();
   // CommandBase m_testCommand = new RepeatCommand(new StrafeToAprilTagProfiled(m_aprilTags, m_robotDrive));
   // CommandBase m_testCommand = new RepeatCommand(new TurnToAprilTagProfiled(0, m_aprilTags, m_robotDrive));
@@ -139,10 +159,12 @@ public class SimpleRobotContainer {
       .onFalse(new InstantCommand(() -> m_moveAndHoldCommand.cancel()));
 
     new JoystickButton(m_operController, Button.kB.value)
-      .toggleOnTrue(new MoveUpperArmCommand(UpperArmConstants.kSummerIntakePosition, m_upperArm));
+      .toggleOnTrue(m_armToStowPosition);
+      //.toggleOnTrue(new MoveUpperArmCommand(UpperArmConstants.kSummerIntakePosition, m_upperArm));
 
     new JoystickButton(m_operController, Button.kX.value)
-      .toggleOnTrue(new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm));
+      //.toggleOnTrue(new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm));
+      .toggleOnTrue(m_armToReturnPosition);
 
     new JoystickButton(m_operController, Button.kLeftBumper.value)
       .toggleOnTrue(new InstantCommand(
