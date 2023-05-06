@@ -27,7 +27,7 @@ public class Claw extends SubsystemBase {
         m_clawMotor.configFactoryDefault();
         m_clawMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kTimeoutMs);
         m_clawMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.setSensorPhase(true);
+        // redundantly set below m_clawMotor.setSensorPhase(true);
 
         // neutral mode
         m_clawMotor.setNeutralMode(NeutralMode.Brake);
@@ -53,6 +53,8 @@ public class Claw extends SubsystemBase {
 
         m_clawMotor.setSensorPhase(false); // invert encoder to match motor
 
+        m_clawMotor.configContinuousCurrentLimit(10, CLAW_CONSTANTS.kTimeoutMs);
+
         ShuffleboardTab shuffTab = Shuffleboard.getTab("Claw");
         shuffTab.addDouble("Motor V", () -> m_clawMotor.getSelectedSensorVelocity());
         shuffTab.addDouble("Motor Pos", () -> m_clawMotor.getSelectedSensorPosition());
@@ -70,6 +72,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void runClawOpenLoop(double speed) {
+        m_holding = false;
         m_clawMotor.selectProfileSlot(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kPIDLoopIdx);
         m_clawMotor.set(ControlMode.PercentOutput, speed);
     }

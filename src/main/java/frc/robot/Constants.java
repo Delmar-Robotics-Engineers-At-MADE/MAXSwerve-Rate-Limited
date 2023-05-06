@@ -104,7 +104,7 @@ public final class Constants {
     public static final double CAMERA_HEIGHT_METERS = 0.9;
     public static final double TARGET_HEIGHT_METERS = 0.31;
     public static final double CAMERA_PITCH_RADIANS = -0.436;
-    public static final double kSummerAprilTagDistance = 2; // meters
+    public static final double kSummerAprilTagDistance = 2.5; // meters
     public static final double kSummerAprilTagDistanceBackup = 1.5; // meters
     public static final double kSummerSearchForAprilTagYaw = -10; // degrees
     

@@ -28,6 +28,7 @@ public class MoveClawUntilStall extends CommandBase {
 
   @Override
   public void execute() {
+    System.out.println("executing MoveClawUntilStall");
     m_claw.runClawClosedLoop(m_targetSpeed); // testing on celestial was with 10000 to 30000
     super.execute();
   }
@@ -42,5 +43,12 @@ public class MoveClawUntilStall extends CommandBase {
       return false; // run this command only once, and it will run until stalled
     } 
   }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    if (interrupted) {m_claw.runClawClosedLoop(0);}
+    super.end(interrupted);
+  }  
 
 }

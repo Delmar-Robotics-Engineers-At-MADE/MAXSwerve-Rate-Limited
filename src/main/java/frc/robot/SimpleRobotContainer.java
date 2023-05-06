@@ -15,6 +15,7 @@ import frc.robot.Commands.Arm.MoveLowerArmCommand;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
 import frc.robot.Commands.Arm.PrepareToHold;
 import frc.robot.Commands.Arm.ShootCubeTimed;
+import frc.robot.Commands.Blinkin.DefaultLighting;
 import frc.robot.Commands.DriveCommands.DriveToAprilTag;
 import frc.robot.Commands.DriveCommands.MoveToGamepieceProfiled;
 import frc.robot.Commands.DriveCommands.TurnToGamepieceProfiled;
@@ -156,7 +157,8 @@ public class SimpleRobotContainer {
     new JoystickButton(m_operController, Button.kA.value)
       .onTrue(m_moveAndHoldCommand)
       .whileTrue(m_summerTurnAndReturn)
-      .onFalse(new InstantCommand(() -> m_moveAndHoldCommand.cancel()));
+      .onFalse(new InstantCommand(() -> m_moveAndHoldCommand.cancel()))
+      .onFalse(new RunCommand(() -> m_claw.runClawOpenLoop(0), m_claw));
 
     new JoystickButton(m_operController, Button.kY.value)
       .onTrue(m_moveAndHoldCommand)
@@ -202,6 +204,8 @@ public class SimpleRobotContainer {
           m_operController.getRightTriggerAxis() - m_operController.getLeftTriggerAxis(),
           OIConstants.kDriveDeadband)), m_lowerArm));
     
+     m_blinkin.setDefaultCommand(new DefaultLighting(m_blinkin));
+
   }
 
 
