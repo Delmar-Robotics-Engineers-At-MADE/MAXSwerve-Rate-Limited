@@ -91,6 +91,14 @@ public class SimpleRobotContainer {
 
   // sequences for summer demo
 
+  private final SequentialCommandGroup m_summerReturnOnly = new SequentialCommandGroup(
+    // return cube
+    new ShootCubeTimed(1, m_claw),
+    // upper and lower arm to stow
+    new MoveUpperArmCommand(UpperArmConstants.kSummerIntakePosition, m_upperArm),
+    new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm)
+  );
+
   private final SequentialCommandGroup m_summerCollectAndReturn = new SequentialCommandGroup(
     // upper and lower arm to intake position
     new MoveLowerArmCommand(LowerArmConstants.kFloorPosition, m_lowerArm),
@@ -121,17 +129,22 @@ public class SimpleRobotContainer {
   );
 
   private final SequentialCommandGroup m_summerTurnAndReturn = new SequentialCommandGroup(
-    // upper arm to intake position
+    // upper and lower arm to intake position
+    new MoveLowerArmCommand(LowerArmConstants.kFloorPosition, m_lowerArm),
     new MoveUpperArmCommand(UpperArmConstants.kSummerIntakePosition, m_upperArm),
-    // drive forward and rotate toward game piece until collected
+    // rotate toward game piece until collected
     new TurnToGamepieceProfiled(m_limelight, m_robotDrive, m_claw),
     // upper arm to return position
     new MoveUpperArmCommand(UpperArmConstants.kSummerReturnPosition, m_upperArm),
     // return cube
-    new RunCommand(() -> m_claw.runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity))
+    new ShootCubeTimed(1, m_claw),
+    // upper and lower arm to stow
+    new MoveUpperArmCommand(UpperArmConstants.kSummerIntakePosition, m_upperArm),
+    new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm)
   );
 
-  CommandBase m_testCommand = new SearchForAprilTagProfiled(m_aprilTags, m_robotDrive);
+  CommandBase m_testCommand = m_summerReturnOnly;
+  // CommandBase m_testCommand = new SearchForAprilTagProfiled(m_aprilTags, m_robotDrive);
   // CommandBase m_testCommand = m_armToIntakePosition;
   // CommandBase m_testCommand = m_lowerArm.lowerArmFloorPosition();
   // CommandBase m_testCommand = m_driveToAprilTagCommand ; // m_lowerArm.lowerArmMidPosition();

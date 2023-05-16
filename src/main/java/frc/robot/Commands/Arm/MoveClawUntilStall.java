@@ -28,7 +28,7 @@ public class MoveClawUntilStall extends CommandBase {
 
   @Override
   public void execute() {
-    System.out.println("executing MoveClawUntilStall");
+    // System.out.println("executing MoveClawUntilStall");
     m_claw.runClawClosedLoop(m_targetSpeed); // testing on celestial was with 10000 to 30000
     super.execute();
   }
