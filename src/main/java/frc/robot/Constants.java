@@ -265,8 +265,9 @@ public final class Constants {
     public static double kMaxOutput = 1;
     public static double kNudgeCounts = 0.07;
     public static double kTolerance = 0.001;
+    public static double kSlowZone = 0.03;
 
-    public static final double kHomePosition = 0.016;
+    public static final double kHomePosition = 0.022;
     public static final double kFullExtension = 0.29;
     public static final double kFloorPosition = 0.28;
     public static final double kHighPosition = 0.5;
@@ -278,7 +279,6 @@ public final class Constants {
     public static final double maxAccel = 1500;
     public static final double maxVelocity = 5000;
     public static final double allowedErr = 0;
-    // public static final double homeTolerance = 0.001;
   }
 
   public static final class ControllerConstants {

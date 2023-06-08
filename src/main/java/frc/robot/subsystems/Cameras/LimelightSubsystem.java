@@ -30,6 +30,15 @@ public class LimelightSubsystem extends SubsystemBase {
 
   }
 
+  // for summer lightsaber fighting
+  public double getInstantaneousYaw() {
+    return m_limelightTable.getEntry("tx").getDouble(0.0);
+  }
+
+  public double getInstantaneousArea() {
+    return m_limelightTable.getEntry("ta").getDouble(0.0);
+  }
+
 
   // call this from PID command to turn robot to best target
   public double getBestLimelightYaw() {

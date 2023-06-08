@@ -99,14 +99,22 @@ public class LowerArm extends SubsystemBase {
             // at bottom limit
             System.out.println("Elbow at bottom limit");
             speed = 0;
+        } else if (speed > 0 && elbowPos > LowerArmConstants.kFullExtension - LowerArmConstants.kSlowZone) {
+            // NEAR bottom limit
+            System.out.println("Elow near bottom limit");
+            speed *= 0.2;
         } else if (speed < 0 && elbowPos < LowerArmConstants.kHomePosition) {
             // at top limit
             speed = 0;
             System.out.println("Elbow at top limit");
+        } else if (speed < 0 && elbowPos < LowerArmConstants.kHomePosition + LowerArmConstants.kSlowZone) {
+            // NEAR top limit
+            speed *= 0.2;
+            System.out.println("Elbow near top limit");
         }
         m_elbow.set(speed);
         m_holdposition = elbowPos;
-       //System.out.println("Elbow open loop power: " + speed);
+       // System.out.println("Elbow open loop power: " + speed);
     }
 
     public CommandBase move() {

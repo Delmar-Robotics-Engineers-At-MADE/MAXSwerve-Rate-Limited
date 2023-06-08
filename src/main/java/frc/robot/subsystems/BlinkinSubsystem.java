@@ -11,9 +11,12 @@ public class BlinkinSubsystem extends SubsystemBase{
   private final Spark m_blinkinPort = new Spark(0);
   private final Spark m_blinkinStar = new Spark(1);
 
-  public double m_defaultSetting = 0.91;
-  public double m_signalCubes = 0.96;
-  public double m_signalCones = 0.77;
+  public double m_defaultSetting = 0.91; // violet
+  public double m_signalCubes = 0.96; // ??
+  public double m_signalCones = 0.77; // green
+  public double m_signalWhite = 0.93;
+  public double m_signalBlue = 0.87;
+  public double m_signalYellow = 0.69;
 
   // private ShuffleboardTab m_dashboardTab;
   // private GenericEntry m_defaultSettingEntry;
@@ -48,5 +51,28 @@ public class BlinkinSubsystem extends SubsystemBase{
     m_blinkinStar.set(pwmSetting);
     // System.out.println("signaling cones: " + pwmSetting);
   }
+
+  public void signalA() {
+    double pwmSetting = m_signalWhite; // m_cubesSettingEntry.getDouble(m_signalCones);
+    m_blinkinPort.set(pwmSetting);
+    m_blinkinStar.set(pwmSetting);
+    // System.out.println("signaling cones: " + pwmSetting);
+  }
+  
+  public void signalB() {
+    double pwmSetting = m_signalBlue; // m_cubesSettingEntry.getDouble(m_signalCones);
+    m_blinkinPort.set(pwmSetting);
+    m_blinkinStar.set(pwmSetting);
+    // System.out.println("signaling cones: " + pwmSetting);
+  }
+  
+  public void signalC() {
+    double pwmSetting = m_signalYellow; // m_cubesSettingEntry.getDouble(m_signalCones);
+    m_blinkinPort.set(pwmSetting);
+    m_blinkinStar.set(pwmSetting);
+    // System.out.println("signaling cones: " + pwmSetting);
+  }
+  
+
   
 }
