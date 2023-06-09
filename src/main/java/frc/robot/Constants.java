@@ -194,6 +194,17 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+  public static final class SWORD_CONSTANTS {
+    public static final int CLAW_ID = 6;
+    public static int kTimeoutMs = 30;
+    public static int kPIDLoopIdx = 0;
+    public static int kPIDPositionIdx = 1;
+    public static int kPIDPositionTolerance = 10;
+    public final static Gains kGains_Velocity = new Gains( 0.05, 0.0, 0.0, 0.1,  300,  1.00);
+    public final static Gains kGains_Position = new Gains( 0.1, 0.0, 0.07, 0.0,  300,  1.00);
+  }
+
   public static final class CLAW_CONSTANTS {
     public static final int CLAW_ID = 6;
     public static final long kInVelocity = -6000;
@@ -272,7 +283,7 @@ public final class Constants {
     public static final double kFloorPosition = 0.28;
     public static final double kHighPosition = 0.5;
     public static final double kShootPosition = 20;
-    public static final double kMidPosition = 0.21;
+    public static final double kMidPosition = 0.25;
     public static final double kSSsPosition = 0.1;
     public static final double kManualSpeed = 70;
     public static final double minVelocity = 0;

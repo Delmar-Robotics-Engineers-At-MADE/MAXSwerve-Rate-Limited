@@ -9,11 +9,14 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Commands.Arm.MoveLowerArmCommand;
+import frc.robot.Commands.Arm.SwordToLimelightProfiled;
+import frc.robot.Commands.Arm.SwordToPosition;
 import frc.robot.Commands.Blinkin.DefaultLighting;
 import frc.robot.Commands.Blinkin.SignalLightSaber;
 import frc.robot.Constants.LowerArmConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.BlinkinSubsystem;
+import frc.robot.subsystems.Arm.Lightsaber;
 import frc.robot.subsystems.Arm.LowerArm;
 import frc.robot.subsystems.Cameras.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,6 +34,7 @@ public class NoDriveRobotContainer {
   private static final LowerArm m_lowerArm = new LowerArm();
   private static final LimelightSubsystem m_limelight = new LimelightSubsystem();
   private static final BlinkinSubsystem m_blinkin = new BlinkinSubsystem();
+  private static final Lightsaber m_lightsaber = new Lightsaber(m_limelight);
   
   // The driver's controller
   Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -39,19 +43,21 @@ public class NoDriveRobotContainer {
   XboxController m_operController = new XboxController(OIConstants.kOpperatorControllerPort);
 
   private final SequentialCommandGroup m_armToStowPosition = new SequentialCommandGroup(
-    new MoveLowerArmCommand(LowerArmConstants.kFloorPosition, m_lowerArm),
     new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm)
   );
 
-  private final ParallelCommandGroup m_armToReturnPosition = new ParallelCommandGroup(
-    new MoveLowerArmCommand(LowerArmConstants.kFloorPosition, m_lowerArm)
+  private final ParallelCommandGroup m_armToEnGarde = new ParallelCommandGroup(
+    new MoveLowerArmCommand(LowerArmConstants.kMidPosition, m_lowerArm)
   );
 
   // sequences for summer demo
 
-  private final SequentialCommandGroup m_summerReturnOnly = new SequentialCommandGroup(
+  private final SequentialCommandGroup m_waxOn = new SequentialCommandGroup(
     // upper and lower arm to stow
-    new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm)
+    new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm),
+    new SwordToPosition(4180, m_lightsaber),
+    new SwordToPosition(0, m_lightsaber),
+    new InstantCommand(() -> m_lightsaber.hold(0))
   );
 
   private final SequentialCommandGroup m_summerCollectAndReturn = new SequentialCommandGroup(
@@ -72,7 +78,11 @@ public class NoDriveRobotContainer {
     new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm)
   );
 
-  CommandBase m_testCommand = m_summerReturnOnly;
+  CommandBase m_homeCommand = new SwordToLimelightProfiled(m_limelight, m_lightsaber);
+
+  CommandBase m_testCommand = m_waxOn;
+  // CommandBase m_testCommand = new RunCommand(() -> m_lightsaber.runClawOpenLoop(1), m_lightsaber);
+  // CommandBase m_testCommand = m_summerReturnOnly;
   // CommandBase m_testCommand = new SearchForAprilTagProfiled(m_aprilTags, m_robotDrive);
   // CommandBase m_testCommand = m_armToIntakePosition;
   // CommandBase m_testCommand = m_lowerArm.lowerArmFloorPosition();
@@ -94,16 +104,26 @@ public class NoDriveRobotContainer {
     /****************************** Operator *************************** */
 
     new JoystickButton(m_operController, Button.kA.value)
-      .whileTrue(m_summerTurnAndReturn);
-
-    new JoystickButton(m_operController, Button.kY.value)
-      .whileTrue(m_summerCollectAndReturn);
+      .onTrue(m_homeCommand)
+      .onFalse(new InstantCommand(() -> m_homeCommand.cancel()));
 
     new JoystickButton(m_operController, Button.kB.value)
-      .toggleOnTrue(m_armToStowPosition);
+      .onTrue(m_waxOn)
+      .onFalse(new InstantCommand(() -> m_waxOn.cancel()));
 
-    new JoystickButton(m_operController, Button.kX.value)
-      .toggleOnTrue(m_armToReturnPosition);
+    // new JoystickButton(m_operController, Button.kB.value)
+    //   .toggleOnTrue(m_armToStowPosition);
+
+    // new JoystickButton(m_operController, Button.kX.value)
+    //   .toggleOnTrue(m_armToReturnPosition);
+
+    new JoystickButton(m_operController, Button.kLeftBumper.value)
+      .toggleOnTrue(new InstantCommand(
+          () -> m_lightsaber.nudgeClosedLoop(false), m_lightsaber ));
+
+    new JoystickButton(m_operController, Button.kRightBumper.value)
+      .toggleOnTrue(new InstantCommand(
+          () -> m_lightsaber.nudgeClosedLoop(true), m_lightsaber ));
 
   }
 

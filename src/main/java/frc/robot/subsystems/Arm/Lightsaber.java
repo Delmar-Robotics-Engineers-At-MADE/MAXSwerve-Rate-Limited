@@ -12,97 +12,95 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
 
-import frc.robot.Constants.CLAW_CONSTANTS;
+import frc.robot.Constants.SWORD_CONSTANTS;
+import frc.robot.subsystems.Cameras.LimelightSubsystem;
 
 
 
 public class Lightsaber extends SubsystemBase {
-    private TalonSRX m_clawMotor;
+
+    private static final double kLightsaberNudgeAmount = 100;
+    private static final double kYawToleranceDeg = 3;
+    private static final double kLightSaberHomeDeg = 9.5;
+    
+
+    private TalonSRX m_wristMotor;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;  
     public boolean m_holding = false;
     private final Timer m_timer = new Timer();
- 
-    public Lightsaber() {
-        m_clawMotor = new TalonSRX(CLAW_CONSTANTS.CLAW_ID);
-        m_clawMotor.configFactoryDefault();
-        m_clawMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kTimeoutMs);
-        // redundantly set below m_clawMotor.setSensorPhase(true);
+    private boolean m_encoderHomed = false;
+    private LimelightSubsystem m_limelight;
+
+
+    public Lightsaber(LimelightSubsystem limelight) {
+
+        m_limelight = limelight;
+
+        m_wristMotor = new TalonSRX(SWORD_CONSTANTS.CLAW_ID);
+        m_wristMotor.configFactoryDefault();
+        m_wristMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, SWORD_CONSTANTS.kPIDLoopIdx, SWORD_CONSTANTS.kTimeoutMs);
+        m_wristMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, SWORD_CONSTANTS.kPIDPositionIdx, SWORD_CONSTANTS.kTimeoutMs);
+        // redundantly set below m_wristMotor.setSensorPhase(true);
 
         // neutral mode
-        m_clawMotor.setNeutralMode(NeutralMode.Brake);
+        m_wristMotor.setNeutralMode(NeutralMode.Brake);
 
         /* Config the peak and nominal outputs */
-        m_clawMotor.configNominalOutputForward(0, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.configNominalOutputReverse(0, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.configPeakOutputForward(1, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.configPeakOutputReverse(-1, CLAW_CONSTANTS.kTimeoutMs);
+        m_wristMotor.configNominalOutputForward(0, SWORD_CONSTANTS.kTimeoutMs);
+        m_wristMotor.configNominalOutputReverse(0, SWORD_CONSTANTS.kTimeoutMs);
+        m_wristMotor.configPeakOutputForward(0.5, SWORD_CONSTANTS.kTimeoutMs);
+        m_wristMotor.configPeakOutputReverse(-0.5, SWORD_CONSTANTS.kTimeoutMs);
 
         /* Config the Velocity closed loop gains in slot0 */
-        m_clawMotor.config_kF(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocity.kF, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.config_kP(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocity.kP, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.config_kI(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocity.kI, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.config_kD(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kGains_Velocity.kD, CLAW_CONSTANTS.kTimeoutMs);
+        m_wristMotor.config_kF(SWORD_CONSTANTS.kPIDLoopIdx, SWORD_CONSTANTS.kGains_Velocity.kF, SWORD_CONSTANTS.kTimeoutMs);
+        m_wristMotor.config_kP(SWORD_CONSTANTS.kPIDLoopIdx, SWORD_CONSTANTS.kGains_Velocity.kP, SWORD_CONSTANTS.kTimeoutMs);
+        m_wristMotor.config_kI(SWORD_CONSTANTS.kPIDLoopIdx, SWORD_CONSTANTS.kGains_Velocity.kI, SWORD_CONSTANTS.kTimeoutMs);
+        m_wristMotor.config_kD(SWORD_CONSTANTS.kPIDLoopIdx, SWORD_CONSTANTS.kGains_Velocity.kD, SWORD_CONSTANTS.kTimeoutMs);
 
         /* Config the Posiiton closed loop gains in slot1 */
-        m_clawMotor.config_kF(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Position.kF, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.config_kP(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Position.kP, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.config_kI(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Position.kI, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.config_kD(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kGains_Position.kD, CLAW_CONSTANTS.kTimeoutMs);
-        m_clawMotor.configAllowableClosedloopError(CLAW_CONSTANTS.kPIDPositionIdx, CLAW_CONSTANTS.kPIDPositionTolerance, CLAW_CONSTANTS.kTimeoutMs);      
+        m_wristMotor.config_kF(SWORD_CONSTANTS.kPIDPositionIdx, SWORD_CONSTANTS.kGains_Position.kF, SWORD_CONSTANTS.kTimeoutMs);
+        m_wristMotor.config_kP(SWORD_CONSTANTS.kPIDPositionIdx, SWORD_CONSTANTS.kGains_Position.kP, SWORD_CONSTANTS.kTimeoutMs);
+        m_wristMotor.config_kI(SWORD_CONSTANTS.kPIDPositionIdx, SWORD_CONSTANTS.kGains_Position.kI, SWORD_CONSTANTS.kTimeoutMs);
+        m_wristMotor.config_kD(SWORD_CONSTANTS.kPIDPositionIdx, SWORD_CONSTANTS.kGains_Position.kD, SWORD_CONSTANTS.kTimeoutMs);
+        m_wristMotor.configAllowableClosedloopError(SWORD_CONSTANTS.kPIDPositionIdx, SWORD_CONSTANTS.kPIDPositionTolerance, SWORD_CONSTANTS.kTimeoutMs);      
 
-        m_clawMotor.setSensorPhase(false); // invert encoder to match motor
+        m_wristMotor.setSensorPhase(false); // invert encoder to match motor
 
-        m_clawMotor.configContinuousCurrentLimit(10, CLAW_CONSTANTS.kTimeoutMs);
+        m_wristMotor.configContinuousCurrentLimit(10, SWORD_CONSTANTS.kTimeoutMs);
 
         ShuffleboardTab shuffTab = Shuffleboard.getTab("Lightsaber");
-        shuffTab.addDouble("Motor V", () -> m_clawMotor.getSelectedSensorVelocity());
-        shuffTab.addDouble("Motor Pos", () -> m_clawMotor.getSelectedSensorPosition());
-        shuffTab.addDouble("Motor Stator I", () -> getClawStatorCurrent());
-        shuffTab.addDouble("Motor Supply I", () -> getClawSupplyCurrent());
-        shuffTab.addBoolean("Stalled", () -> checkStalledCondition());
+        shuffTab.addDouble("Motor V", () -> m_wristMotor.getSelectedSensorVelocity());
+        shuffTab.addDouble("Motor Pos", () -> m_wristMotor.getSelectedSensorPosition());
+        shuffTab.addDouble("Motor Volt", () -> m_wristMotor.getMotorOutputVoltage());
+        shuffTab.addDouble("Motor Stator I", () -> getSwordStatorCurrent());
+        shuffTab.addDouble("Motor Supply I", () -> getSwordSupplyCurrent());
         shuffTab.addBoolean("Holding", () -> m_holding);
+        shuffTab.addBoolean("Homed", () -> m_encoderHomed);
 
     }
 
-    public void runClawClosedLoop (double velocity) {
+    public void runSwordClosedLoop (double velocity) {
         m_holding = false;
-        m_clawMotor.selectProfileSlot(0, 0);
-        m_clawMotor.set(ControlMode.Velocity, velocity);
+        m_wristMotor.selectProfileSlot(0, 0);
+        m_wristMotor.set(ControlMode.Velocity, velocity);
     }
 
-    public void runClawOpenLoop(double speed) {
+    public void runSwordOpenLoop(double speed) {
         m_holding = false;
-        m_clawMotor.selectProfileSlot(CLAW_CONSTANTS.kPIDLoopIdx, CLAW_CONSTANTS.kPIDLoopIdx);
-        m_clawMotor.set(ControlMode.PercentOutput, speed);
+        m_wristMotor.selectProfileSlot(SWORD_CONSTANTS.kPIDLoopIdx, SWORD_CONSTANTS.kPIDLoopIdx);
+        m_wristMotor.set(ControlMode.PercentOutput, speed);
     }
 
     // Run these from RobotContainer like this:
     //      new JoystickButton(m_driverController, Button.kA.value)
     //          .whileTrue(m_claw.in());
 
-    private double getClawStatorCurrent () {
-        return m_clawMotor.getStatorCurrent();
+    private double getSwordStatorCurrent () {
+        return m_wristMotor.getStatorCurrent();
     }
 
-    private double getClawSupplyCurrent () {
-        return m_clawMotor.getSupplyCurrent();
-    }
-    public boolean checkStalledCondition() {
-        // return (getClawStatorCurrent() < CLAW_CONSTANTS.kStallCurrent);
-        // return m_clawMotor.getSelectedSensorVelocity() < 0.5;
-        boolean result = false;
-        if (m_clawMotor.getControlMode() == ControlMode.Velocity
-        && Math.abs(m_clawMotor.getClosedLoopTarget()) > 0.0) {
-            if (Math.abs(m_clawMotor.getSelectedSensorVelocity()) < CLAW_CONSTANTS.kStallVelocity) {
-                // either stalled or just starting up
-                if (m_timer.get() >= CLAW_CONSTANTS.kMotorStartupTime) {
-                    // stopped some time after startup, so report stalled
-                    result = true;
-                }
-            }
-        }
-        return result;
+    private double getSwordSupplyCurrent () {
+        return m_wristMotor.getSupplyCurrent();
     }
 
     public void startStallTimer() {
@@ -111,38 +109,50 @@ public class Lightsaber extends SubsystemBase {
     }
 
     public void prepareToHold() {
-        m_clawMotor.selectProfileSlot(CLAW_CONSTANTS.kPIDPositionIdx, 0);
-        m_clawMotor.setSelectedSensorPosition(0.0);  // reset encoder to 0
+        m_wristMotor.selectProfileSlot(SWORD_CONSTANTS.kPIDPositionIdx, 0);
+        m_wristMotor.setSelectedSensorPosition(0.0);  // reset encoder to 0
         m_holding = false;
     }
 
     public void hold(double position) {
-        m_clawMotor.selectProfileSlot(CLAW_CONSTANTS.kPIDPositionIdx, 0);
-        m_clawMotor.set(ControlMode.Position, position);
+        m_wristMotor.selectProfileSlot(SWORD_CONSTANTS.kPIDPositionIdx, 0);
+        m_wristMotor.set(ControlMode.Position, position);
         m_holding = true;
     }
 
-    public CommandBase in() {
-        //return this.run(()-> runClawOpenLoop(-1)); // testing on celestial was with 10000 to 30000
-        return this.run(() -> runClawClosedLoop(CLAW_CONSTANTS.kInVelocity));
-     }
-     public CommandBase coneOut() {
-         return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kConeOutVelocity));
-     }
-     public CommandBase cubeOut() {
-         //return this.run(()-> runClawOpenLoop(1));
-         return this.run(() -> runClawClosedLoop(CLAW_CONSTANTS.kCubeOutVelocity));
-     }
-     public CommandBase shoot() {
-         return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kShootVelocity));
-     }
-     public CommandBase stop() {
-         return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kStopVelocity));
-     }
-    //  public CommandBase hold() {
-    //      return this.run(()-> runClawClosedLoop(CLAW_CONSTANTS.kHoldVelocity));
-    //  }
+    public void setEncoderHomed() {
+        m_encoderHomed = true;
+        m_wristMotor.setSelectedSensorPosition(0.0);  // reset encoder to 0
+    }
 
+    public void checkEncoderHomed() {
+        double target = m_limelight.getBestLimelightYaw();
+        if (Math.abs(target - kLightSaberHomeDeg) < kYawToleranceDeg) {
+            setEncoderHomed();
+        }
+    }
 
+    public void nudgeClosedLoop (boolean clockwise) {
+        double nudgeAmount = kLightsaberNudgeAmount;
+        if (!clockwise) { 
+            nudgeAmount = -nudgeAmount;
+        }
+        m_wristMotor.selectProfileSlot(SWORD_CONSTANTS.kPIDPositionIdx, 0);
+        double currentPosition = m_wristMotor.getSelectedSensorPosition(0);
+        System.out.println("setting target enc position to " + currentPosition + " + " + nudgeAmount);
+        hold(currentPosition + nudgeAmount);
+        // m_wristMotor.set(ControlMode.Position, currentPosition + nudgeAmount);
+    }
+
+    public boolean atClosedLoopTarget() {
+        // return Math.abs(m_wristMotor.getClosedLoopError()) < 100;
+        // return Math.abs(m_sword.getClosedLoopSensorValue() - m_target) < SWORD_CONSTANTS.kPIDPositionTolerance;
+        // m_sword.getSelectedSensorVelocity() < 
+        return Math.abs(m_wristMotor.getMotorOutputVoltage()) < 0.1;
+    }
+
+    // public double getClosedLoopSensorValue() {
+    //     return m_wristMotor.getSelectedSensorPosition(0);
+    // }
  
 }

@@ -143,7 +143,8 @@ public class SimpleRobotContainer {
     new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm)
   );
 
-  CommandBase m_testCommand = m_summerReturnOnly;
+  CommandBase m_testCommand = new RunCommand(() -> m_claw.runClawOpenLoop(1), m_claw);
+  // CommandBase m_testCommand = m_summerReturnOnly;
   // CommandBase m_testCommand = new SearchForAprilTagProfiled(m_aprilTags, m_robotDrive);
   // CommandBase m_testCommand = m_armToIntakePosition;
   // CommandBase m_testCommand = m_lowerArm.lowerArmFloorPosition();
