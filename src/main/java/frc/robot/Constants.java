@@ -268,14 +268,14 @@ public final class Constants {
 
     public static final int LOWER_ARM_MOTOR_ID = 7;
     // public static final int LOWER_ARM_CHAIN_MOTOR_ID = 8;
-    public static double kP = 20.0;
+    public static double kP = 5.0;
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double kFF = 0.0;
-    public static double kMinOutput = -1;
-    public static double kMaxOutput = 1;
+    public static double kMinOutput = -0.3;
+    public static double kMaxOutput = 0.3;
     public static double kNudgeCounts = 0.07;
-    public static double kTolerance = 0.001;
+    public static double kTolerance = 0.005;
     public static double kSlowZone = 0.03;
 
     public static final double kHomePosition = 0.022;
@@ -283,7 +283,7 @@ public final class Constants {
     public static final double kFloorPosition = 0.28;
     public static final double kHighPosition = 0.5;
     public static final double kShootPosition = 20;
-    public static final double kMidPosition = 0.25;
+    public static final double kMidPosition = 0.106;
     public static final double kSSsPosition = 0.1;
     public static final double kManualSpeed = 70;
     public static final double minVelocity = 0;

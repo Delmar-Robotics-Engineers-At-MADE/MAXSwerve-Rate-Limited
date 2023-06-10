@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 // import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 
-public class SwordToLimelightProfiled extends ProfiledPIDCommand {
+public class SwordHomeByLimelight extends ProfiledPIDCommand {
   
   private LimelightSubsystem m_limelight;
   private Lightsaber m_sword;
@@ -27,7 +27,7 @@ public class SwordToLimelightProfiled extends ProfiledPIDCommand {
 
   // private static boolean m_shuffleboardLoaded = false;
 
-  public SwordToLimelightProfiled(LimelightSubsystem limelight, Lightsaber sword) {
+  public SwordHomeByLimelight(LimelightSubsystem limelight, Lightsaber sword) {
     super(
         m_PID,
         // Close loop on heading
@@ -61,7 +61,7 @@ public class SwordToLimelightProfiled extends ProfiledPIDCommand {
   @Override
   public boolean isFinished() {
     // End when the controller is at the reference.
-    return getController().atGoal();
+    return m_sword.m_encoderHomed || getController().atGoal();
   }
 
   // Called once the command ends or is interrupted.

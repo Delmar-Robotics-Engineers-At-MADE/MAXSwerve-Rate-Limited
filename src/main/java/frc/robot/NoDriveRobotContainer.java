@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Commands.Arm.MoveLowerArmCommand;
-import frc.robot.Commands.Arm.SwordToLimelightProfiled;
+import frc.robot.Commands.Arm.SwordHomeByLimelight;
 import frc.robot.Commands.Arm.SwordToPosition;
 import frc.robot.Commands.Blinkin.DefaultLighting;
 import frc.robot.Commands.Blinkin.SignalLightSaber;
@@ -60,25 +60,24 @@ public class NoDriveRobotContainer {
     new InstantCommand(() -> m_lightsaber.hold(0))
   );
 
-  private final SequentialCommandGroup m_summerCollectAndReturn = new SequentialCommandGroup(
-    // upper and lower arm to intake position
-    new MoveLowerArmCommand(LowerArmConstants.kFloorPosition, m_lowerArm),
-    // raise lower arm before turning
+  private final SequentialCommandGroup m_waxOff = new SequentialCommandGroup(
+    // upper and lower arm to stow
     new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm),
-    // upper and lower arm to return position
-    new MoveLowerArmCommand(LowerArmConstants.kFloorPosition, m_lowerArm),
-    // upper and lower arm to stow
-    new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm)
+    new SwordToPosition(-3000, m_lightsaber),
+    new SwordToPosition(0, m_lightsaber),
+    new InstantCommand(() -> m_lightsaber.hold(0))
   );
 
-  private final SequentialCommandGroup m_summerTurnAndReturn = new SequentialCommandGroup(
-    // upper and lower arm to intake position
-    new MoveLowerArmCommand(LowerArmConstants.kFloorPosition, m_lowerArm),
+  private final SequentialCommandGroup m_homeCommand = new SequentialCommandGroup(
     // upper and lower arm to stow
-    new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm)
+    new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm),
+    new SwordHomeByLimelight(m_limelight, m_lightsaber),
+    new InstantCommand(() -> m_lightsaber.hold(0))
   );
 
-  CommandBase m_homeCommand = new SwordToLimelightProfiled(m_limelight, m_lightsaber);
+  private final SequentialCommandGroup m_swordFight = new SequentialCommandGroup(
+    new MoveLowerArmCommand(LowerArmConstants.kMidPosition, m_lowerArm)
+  );
 
   CommandBase m_testCommand = m_waxOn;
   // CommandBase m_testCommand = new RunCommand(() -> m_lightsaber.runClawOpenLoop(1), m_lightsaber);
@@ -107,15 +106,17 @@ public class NoDriveRobotContainer {
       .onTrue(m_homeCommand)
       .onFalse(new InstantCommand(() -> m_homeCommand.cancel()));
 
-    new JoystickButton(m_operController, Button.kB.value)
+      new JoystickButton(m_operController, Button.kY.value)
+      .onTrue(m_swordFight)
+      .onFalse(new InstantCommand(() -> m_swordFight.cancel()));
+
+      new JoystickButton(m_operController, Button.kB.value)
       .onTrue(m_waxOn)
       .onFalse(new InstantCommand(() -> m_waxOn.cancel()));
 
-    // new JoystickButton(m_operController, Button.kB.value)
-    //   .toggleOnTrue(m_armToStowPosition);
-
-    // new JoystickButton(m_operController, Button.kX.value)
-    //   .toggleOnTrue(m_armToReturnPosition);
+      new JoystickButton(m_operController, Button.kX.value)
+      .onTrue(m_waxOff)
+      .onFalse(new InstantCommand(() -> m_waxOff.cancel()));
 
     new JoystickButton(m_operController, Button.kLeftBumper.value)
       .toggleOnTrue(new InstantCommand(

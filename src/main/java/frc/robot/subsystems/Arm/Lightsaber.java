@@ -28,7 +28,7 @@ public class Lightsaber extends SubsystemBase {
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;  
     public boolean m_holding = false;
     private final Timer m_timer = new Timer();
-    private boolean m_encoderHomed = false;
+    public boolean m_encoderHomed = false;
     private LimelightSubsystem m_limelight;
 
 
@@ -122,8 +122,12 @@ public class Lightsaber extends SubsystemBase {
     }
 
     public void setEncoderHomed() {
-        m_encoderHomed = true;
-        m_wristMotor.setSelectedSensorPosition(0.0);  // reset encoder to 0
+        if (m_encoderHomed) {
+            // alread homed; don't change home position
+        } else {
+            m_encoderHomed = true;
+            m_wristMotor.setSelectedSensorPosition(0.0);  // reset encoder to 0
+        }
     }
 
     public void checkEncoderHomed() {
