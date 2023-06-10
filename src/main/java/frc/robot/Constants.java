@@ -203,6 +203,18 @@ public final class Constants {
     public static int kPIDPositionTolerance = 40;
     public final static Gains kGains_Velocity = new Gains( 0.05, 0.0, 0.0, 0.1,  300,  1.00);
     public final static Gains kGains_Position = new Gains( 5, 0.0, 0.7, 0.0,  300,  1.00);
+
+    public static final double kYawP = 0.012;
+    public static final double kYawI = 0.001;
+    public static final double kYawD = 0.003;
+    public static final double kMaxYawRateDegPerS = 8;
+    public static final double kMaxYawAccelerationDegPerSSquared = 20;
+    public static final double kYawToleranceDeg = 1;
+    public static final double kYawRateToleranceDegPerS = 10;
+
+    public static int kWaxMove = 3000;
+    public static int kParryLeft = 637;
+    public static int kParryRight = -637;
   }
 
   public static final class CLAW_CONSTANTS {

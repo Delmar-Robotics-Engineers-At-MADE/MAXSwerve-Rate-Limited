@@ -6,7 +6,7 @@ package frc.robot.Commands.Arm;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.SWORD_CONSTANTS;
 import frc.robot.subsystems.Arm.Lightsaber;
 import frc.robot.subsystems.Cameras.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
@@ -20,10 +20,10 @@ public class SwordHomeByLimelight extends ProfiledPIDCommand {
   private Lightsaber m_sword;
 
   private static ProfiledPIDController m_PID = new ProfiledPIDController(
-    DriveConstants.kYawP, DriveConstants.kYawI, DriveConstants.kYawD,
+    SWORD_CONSTANTS.kYawP, SWORD_CONSTANTS.kYawI, SWORD_CONSTANTS.kYawD,
     new TrapezoidProfile.Constraints(
-                DriveConstants.kMaxYawRateDegPerS,
-                DriveConstants.kMaxYawAccelerationDegPerSSquared));
+      SWORD_CONSTANTS.kMaxYawRateDegPerS,
+      SWORD_CONSTANTS.kMaxYawAccelerationDegPerSSquared));
 
   // private static boolean m_shuffleboardLoaded = false;
 
@@ -33,7 +33,7 @@ public class SwordHomeByLimelight extends ProfiledPIDCommand {
         // Close loop on heading
         limelight::getBestLimelightYaw,
         // Set reference to target
-        -30,
+        -9,
         // Pipe output to move lightsaber
         (output, setpoint) ->  sword.runSwordOpenLoop(-output),
         // Require the drive
@@ -44,7 +44,7 @@ public class SwordHomeByLimelight extends ProfiledPIDCommand {
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
     getController()
-        .setTolerance(DriveConstants.kMaxYawRateDegPerS, DriveConstants.kMaxYawAccelerationDegPerSSquared);
+        .setTolerance(SWORD_CONSTANTS.kYawToleranceDeg, SWORD_CONSTANTS.kYawRateToleranceDegPerS);
       
         // Add the PID to dashboard
       // if (!m_shuffleboardLoaded) {
@@ -60,16 +60,15 @@ public class SwordHomeByLimelight extends ProfiledPIDCommand {
 
   @Override
   public boolean isFinished() {
-    // End when the controller is at the reference.
-    return m_sword.m_encoderHomed || getController().atGoal();
+    boolean result = getController().atGoal();
+    if (result == true) {m_sword.setEncoderHomed();}
+    return result;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_limelight.turnLightOnOrOff(false);
-    m_sword.runSwordOpenLoop(0);
-    m_sword.setEncoderHomed();
     super.end(interrupted);
   }  
 

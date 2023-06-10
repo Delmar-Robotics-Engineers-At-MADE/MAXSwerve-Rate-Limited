@@ -15,7 +15,7 @@ public class MoveLowerArmCommand extends CommandBase {
     m_target = pos;
     m_lowerArm = lowerArm;
     addRequirements(lowerArm);
-    System.out.println("lower arm command taget: " + m_target);
+    System.out.println("lower arm command target: " + m_target);
   }
 
   @Override

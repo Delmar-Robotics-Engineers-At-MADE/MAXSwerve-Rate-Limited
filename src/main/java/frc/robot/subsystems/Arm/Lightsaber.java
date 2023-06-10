@@ -109,25 +109,29 @@ public class Lightsaber extends SubsystemBase {
         m_timer.start();
     }
 
-    public void prepareToHold() {
-        m_wristMotor.selectProfileSlot(SWORD_CONSTANTS.kPIDPositionIdx, 0);
-        m_wristMotor.setSelectedSensorPosition(0.0);  // reset encoder to 0
-        m_holding = false;
-    }
+    // public void prepareToHold() {
+    //     m_wristMotor.selectProfileSlot(SWORD_CONSTANTS.kPIDPositionIdx, 0);
+    //     m_wristMotor.setSelectedSensorPosition(0.0);  // reset encoder to 0
+    //     m_holding = false;
+    // }
 
     public void hold(double position) {
-        m_wristMotor.selectProfileSlot(SWORD_CONSTANTS.kPIDPositionIdx, 0);
-        m_wristMotor.set(ControlMode.Position, position);
-        m_holding = true;
+        if (m_encoderHomed) {
+            m_wristMotor.selectProfileSlot(SWORD_CONSTANTS.kPIDPositionIdx, 0);
+            m_wristMotor.set(ControlMode.Position, position);
+            m_holding = true;
+        } else {
+            System.out.println("*** Ignoring attemt at position control of wrist; not homed ***");
+        }
     }
 
     public void setEncoderHomed() {
-        if (m_encoderHomed) {
-            // alread homed; don't change home position
-        } else {
+        // if (m_encoderHomed) {
+        //     // alread homed; don't change home position
+        // } else {
             m_encoderHomed = true;
             m_wristMotor.setSelectedSensorPosition(0.0);  // reset encoder to 0
-        }
+        // }
     }
 
     public void checkEncoderHomed() {

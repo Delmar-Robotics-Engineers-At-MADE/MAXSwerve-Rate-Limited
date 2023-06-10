@@ -9,12 +9,14 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Commands.Arm.MoveLowerArmCommand;
+import frc.robot.Commands.Arm.SwordFight;
 import frc.robot.Commands.Arm.SwordHomeByLimelight;
 import frc.robot.Commands.Arm.SwordToPosition;
 import frc.robot.Commands.Blinkin.DefaultLighting;
 import frc.robot.Commands.Blinkin.SignalLightSaber;
 import frc.robot.Constants.LowerArmConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.SWORD_CONSTANTS;
 import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.Arm.Lightsaber;
 import frc.robot.subsystems.Arm.LowerArm;
@@ -55,7 +57,7 @@ public class NoDriveRobotContainer {
   private final SequentialCommandGroup m_waxOn = new SequentialCommandGroup(
     // upper and lower arm to stow
     new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm),
-    new SwordToPosition(3000, m_lightsaber),
+    new SwordToPosition(SWORD_CONSTANTS.kWaxMove, m_lightsaber),
     new SwordToPosition(0, m_lightsaber),
     new InstantCommand(() -> m_lightsaber.hold(0))
   );
@@ -70,13 +72,16 @@ public class NoDriveRobotContainer {
 
   private final SequentialCommandGroup m_homeCommand = new SequentialCommandGroup(
     // upper and lower arm to stow
+    new InstantCommand(() -> m_lightsaber.hold(0)),
     new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm),
     new SwordHomeByLimelight(m_limelight, m_lightsaber),
     new InstantCommand(() -> m_lightsaber.hold(0))
   );
 
   private final SequentialCommandGroup m_swordFight = new SequentialCommandGroup(
-    new MoveLowerArmCommand(LowerArmConstants.kMidPosition, m_lowerArm)
+    new InstantCommand(() -> m_lightsaber.hold(0)),
+    new MoveLowerArmCommand(LowerArmConstants.kMidPosition, m_lowerArm),
+    new SwordFight(m_lightsaber, m_limelight, m_blinkin)
   );
 
   CommandBase m_testCommand = m_waxOn;
@@ -137,7 +142,7 @@ public class NoDriveRobotContainer {
           m_operController.getRightTriggerAxis() - m_operController.getLeftTriggerAxis(),
           OIConstants.kDriveDeadband)), m_lowerArm));
     
-     m_blinkin.setDefaultCommand(new SignalLightSaber(m_limelight, m_blinkin));
+    //  m_blinkin.setDefaultCommand(new SignalLightSaber(m_limelight, m_blinkin));
 
   }
 
