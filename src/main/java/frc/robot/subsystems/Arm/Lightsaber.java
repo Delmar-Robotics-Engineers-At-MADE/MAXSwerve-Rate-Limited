@@ -69,8 +69,9 @@ public class Lightsaber extends SubsystemBase {
         m_wristMotor.configContinuousCurrentLimit(10, SWORD_CONSTANTS.kTimeoutMs);
 
         ShuffleboardTab shuffTab = Shuffleboard.getTab("Lightsaber");
-        shuffTab.addDouble("Motor V", () -> m_wristMotor.getSelectedSensorVelocity());
-        shuffTab.addDouble("Motor Pos", () -> m_wristMotor.getSelectedSensorPosition());
+        shuffTab.addDouble("Motor V", () -> m_wristMotor.getSelectedSensorVelocity(0));
+        shuffTab.addDouble("Motor Pos", () -> m_wristMotor.getSelectedSensorPosition(0));
+        shuffTab.addDouble("Motor Err", () -> m_wristMotor.getClosedLoopError(0));
         shuffTab.addDouble("Motor Volt", () -> m_wristMotor.getMotorOutputVoltage());
         shuffTab.addDouble("Motor Stator I", () -> getSwordStatorCurrent());
         shuffTab.addDouble("Motor Supply I", () -> getSwordSupplyCurrent());
@@ -148,7 +149,9 @@ public class Lightsaber extends SubsystemBase {
         // return Math.abs(m_wristMotor.getClosedLoopError()) < 100;
         // return Math.abs(m_sword.getClosedLoopSensorValue() - m_target) < SWORD_CONSTANTS.kPIDPositionTolerance;
         // m_sword.getSelectedSensorVelocity() < 
-        return Math.abs(m_wristMotor.getMotorOutputVoltage()) < 0.1;
+        return (Math.abs(m_wristMotor.getMotorOutputVoltage()) < 1000)
+            && (Math.abs(m_wristMotor.getSelectedSensorPosition(0) - m_wristMotor.getClosedLoopTarget(0)) 
+                < SWORD_CONSTANTS.kPIDPositionTolerance * 3);
     }
 
     // public double getClosedLoopSensorValue() {

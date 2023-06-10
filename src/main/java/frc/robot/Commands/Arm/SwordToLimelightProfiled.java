@@ -33,7 +33,7 @@ public class SwordToLimelightProfiled extends ProfiledPIDCommand {
         // Close loop on heading
         limelight::getBestLimelightYaw,
         // Set reference to target
-        -5,
+        -30,
         // Pipe output to move lightsaber
         (output, setpoint) ->  sword.runSwordOpenLoop(-output),
         // Require the drive

@@ -55,7 +55,7 @@ public class NoDriveRobotContainer {
   private final SequentialCommandGroup m_waxOn = new SequentialCommandGroup(
     // upper and lower arm to stow
     new MoveLowerArmCommand(LowerArmConstants.kHomePosition, m_lowerArm),
-    new SwordToPosition(4180, m_lightsaber),
+    new SwordToPosition(3000, m_lightsaber),
     new SwordToPosition(0, m_lightsaber),
     new InstantCommand(() -> m_lightsaber.hold(0))
   );
