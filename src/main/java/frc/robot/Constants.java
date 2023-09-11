@@ -191,6 +191,31 @@ public final class Constants {
 
   }
 
+  public static final class EverybotConstants {
+        /**
+     * How many amps the intake can use while picking up
+     */
+    public static final int INTAKE_CURRENT_LIMIT_A = 25;
+
+    /**
+     * How many amps the intake can use while holding
+     */
+    public static final int INTAKE_HOLD_CURRENT_LIMIT_A = 5;
+
+    /**
+     * Percent output for intaking
+     */
+    public static final double INTAKE_OUTPUT_POWER = 1.0;
+
+    /**
+     * Percent output for holding
+     */
+    public static final double INTAKE_HOLD_POWER = 0.07;
+
+    public static final  int INTAKE_ID = 5;
+
+  }
+
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }

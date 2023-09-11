@@ -21,12 +21,14 @@ import frc.robot.Commands.DriveCommands.TurnToAprilTagProfiled;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.CLAW_CONSTANTS;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.EverybotConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.UpperArmConstants;
 import frc.robot.Constants.ControllerConstants.DriverConstants;
 import frc.robot.Constants.ControllerConstants.OpperatorConstants;
 import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.Arm.Claw;
+import frc.robot.subsystems.Arm.Everybot;
 import frc.robot.subsystems.Arm.LowerArm;
 import frc.robot.subsystems.Arm.UpperArmSubsystem;
 import frc.robot.subsystems.Cameras.AprilTagSubsystem;
@@ -47,6 +49,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import frc.robot.Commands.RunIntake;
 import frc.robot.Commands.Arm.HoldClawGrip;
 import frc.robot.Commands.Arm.HoldLowerArmCommand;
 import frc.robot.Commands.Arm.HoldLowerWithSoftPID;
@@ -70,7 +73,7 @@ public class RobotContainer {
   private static final LimelightSubsystem m_limelight = new LimelightSubsystem();
   private static final AprilTagSubsystem m_aprilTags = new AprilTagSubsystem();
   private static final BlinkinSubsystem m_blinkin = new BlinkinSubsystem();
-
+  private static final Everybot m_intake = new Everybot();
   
 
   // The driver's controller
@@ -119,6 +122,8 @@ public class RobotContainer {
     new PrepareToHold(m_claw),
     new HoldClawGrip(0.0, m_claw)
   );
+
+ 
 
   /* use the claw sequence with a toggle, like this:
    * new JoystickButton(m_driverController, Button.kA.value).toggleOnTrue(m_moveAndHoldCommand);
@@ -279,6 +284,8 @@ public class RobotContainer {
 
     m_claw.setDefaultCommand(m_moveAndHoldCommand);
 
+    m_intake.setDefaultCommand(new RunIntake(m_intake, false, EverybotConstants.INTAKE_HOLD_POWER, EverybotConstants.INTAKE_HOLD_CURRENT_LIMIT_A));
+    
   }
 
 
