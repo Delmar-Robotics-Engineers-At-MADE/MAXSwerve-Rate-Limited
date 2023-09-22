@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -88,6 +89,8 @@ public class RobotContainer {
   JoystickButton m_OSlow = new JoystickButton(m_opperator, OpperatorConstants.kOSlow);
   Trigger m_lowerArmUp = new JoystickButton(m_opperator, 5);
   Trigger m_lowerArmDown = new JoystickButton(m_opperator, 6);
+
+  XboxController m_diagnosticsController = new XboxController(3);
 
   // Autonomous options
   private static final String kDock = "Dock";
@@ -200,7 +203,10 @@ public class RobotContainer {
     // .toggleOnTrue(m_moveAndHoldCommand);
     .whileTrue(m_claw.in());
 
-    
+    new RunCommand(
+      () -> m_lowerArm.runlowerArmOpenLoop(MathUtil.applyDeadband(
+        m_diagnosticsController.getRightTriggerAxis() - m_diagnosticsController.getLeftTriggerAxis(),
+        OIConstants.kDriveDeadband)), m_lowerArm);
   }
 
   /**
