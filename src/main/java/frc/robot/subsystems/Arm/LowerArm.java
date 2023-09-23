@@ -86,7 +86,7 @@ public class LowerArm extends SubsystemBase {
         // seems to be now way to set tolerance on spark max built-in PID, so do our own
         double pos = m_elbowEncoder.getPosition();
         if (Math.abs(m_holdposition - pos) > LowerArmConstants.kTolerance) {
-            m_elbowPIDController.setReference(0.15/*m_holdposition*/, CANSparkMax.ControlType.kPosition, 0);
+            m_elbowPIDController.setReference(m_holdposition, CANSparkMax.ControlType.kPosition, 0);
         } else {
             m_elbow.set(0);
         }

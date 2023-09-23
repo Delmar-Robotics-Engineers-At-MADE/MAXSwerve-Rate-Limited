@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Commands.Arm.MoveUpperArmCommand;
 import frc.robot.Commands.Arm.PrepareToHold;
 import frc.robot.Commands.Blinkin.DefaultLighting;
+import frc.robot.Commands.Blinkin.SignalCones;
+import frc.robot.Commands.Blinkin.SignalCubes;
 import frc.robot.Commands.DriveCommands.Balance;
 import frc.robot.Commands.DriveCommands.Balance2;
 import frc.robot.Commands.DriveCommands.DriveToAprilTag;
@@ -43,6 +45,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.HashMap;
@@ -92,6 +95,8 @@ public class RobotContainer {
   Trigger m_reverser = new JoystickButton(m_opperator, OpperatorConstants.kReverseIntake);
   Trigger m_cone = new JoystickButton(m_opperator, OpperatorConstants.kCone);
   Trigger m_cube = new JoystickButton(m_opperator, OpperatorConstants.kCube);
+  Trigger coneMode = new POVButton(m_opperator, 0);
+  Trigger cubeMode = new POVButton(m_opperator, 180);
 
   XboxController m_diagnosticsController = new XboxController(3);
 
@@ -136,6 +141,7 @@ public class RobotContainer {
    */
 
   private void configureButtonBindings() {
+
     new JoystickButton(m_driverController, DriverConstants.X_MODE)
         .toggleOnTrue(new RunCommand(
             () -> m_robotDrive.setX(),
@@ -208,26 +214,20 @@ public class RobotContainer {
     // // .toggleOnTrue(m_moveAndHoldCommand);
     // .whileTrue(m_claw.in());
 
-    if (m_reverser.getAsBoolean() && m_cone.getAsBoolean()){
-      new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
-    }
-    else if (m_cone.getAsBoolean()){
-      new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
-    }
-
     new RunCommand(
       () -> m_lowerArm.runlowerArmOpenLoop(MathUtil.applyDeadband(
         m_diagnosticsController.getRightTriggerAxis() - m_diagnosticsController.getLeftTriggerAxis(),
         OIConstants.kDriveDeadband)), m_lowerArm);
+
+    coneMode.toggleOnTrue(new SignalCones(m_blinkin));
+    coneMode.toggleOnTrue(new RunIntake(m_intake, false, EverybotConstants.INTAKE_HOLD_POWER, EverybotConstants.INTAKE_HOLD_CURRENT_LIMIT_A));
+
+    cubeMode.toggleOnTrue(new SignalCubes(m_blinkin));
+    cubeMode.toggleOnTrue(new RunIntake(m_intake, true, EverybotConstants.INTAKE_HOLD_POWER, EverybotConstants.INTAKE_HOLD_CURRENT_LIMIT_A));
+  }
     
     
-    if (m_reverser.getAsBoolean() && m_cube.getAsBoolean()){
-      new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
-    }
-    else if (m_cube.getAsBoolean()){
-      new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
-      }
-    }
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -303,14 +303,27 @@ public class RobotContainer {
 
     // Why can't we specify dependency on subsystem here???
 
-    m_lowerArm.setDefaultCommand(
-      new HoldLowerArmCommand(m_lowerArm));
+    // m_lowerArm.setDefaultCommand(
+    //   new HoldLowerArmCommand(m_lowerArm));
+    if (m_reverser.getAsBoolean() && m_cube.getAsBoolean()){
+      new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
+    }
+    else if (m_cube.getAsBoolean()){
+      new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
+      }
+
+    if (m_reverser.getAsBoolean() && m_cone.getAsBoolean()){
+      new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
+    }
+    else if (m_cone.getAsBoolean()){
+      new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
+    }
     
     m_blinkin.setDefaultCommand(new DefaultLighting(m_blinkin));
 
     m_claw.setDefaultCommand(m_moveAndHoldCommand);
 
-    m_intake.setDefaultCommand(new RunIntake(m_intake, false, EverybotConstants.INTAKE_HOLD_POWER, EverybotConstants.INTAKE_HOLD_CURRENT_LIMIT_A));
+    
     
   }
 
