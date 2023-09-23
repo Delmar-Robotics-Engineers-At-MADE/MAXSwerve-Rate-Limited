@@ -81,14 +81,17 @@ public class RobotContainer {
   Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
   JoystickButton m_turoButton = new JoystickButton(m_driverController, DriverConstants.TURBO);
   JoystickButton m_crawlButton = new JoystickButton(m_driverController, DriverConstants.CRAWL);
-  JoystickButton m_autoBalance = new JoystickButton(m_driverController, DriverConstants.kAutoBalance);
+  //JoystickButton m_autoBalance = new JoystickButton(m_driverController, DriverConstants.kAutoBalance);
 
   //The opperator's controller
   Joystick m_opperator = new Joystick(OIConstants.kOpperatorControllerPort);
   JoystickButton m_ODrive = new JoystickButton(m_opperator, OpperatorConstants.PRIORITY_LEFT);
-  JoystickButton m_OSlow = new JoystickButton(m_opperator, OpperatorConstants.kOSlow);
-  Trigger m_lowerArmUp = new JoystickButton(m_opperator, 5);
-  Trigger m_lowerArmDown = new JoystickButton(m_opperator, 6);
+  //JoystickButton m_OSlow = new JoystickButton(m_opperator, OpperatorConstants.kOSlow);
+  // Trigger m_lowerArmUp = new JoystickButton(m_opperator, 5);
+  // Trigger m_lowerArmDown = new JoystickButton(m_opperator, 6);
+  Trigger m_reverser = new JoystickButton(m_opperator, OpperatorConstants.kReverseIntake);
+  Trigger m_cone = new JoystickButton(m_opperator, OpperatorConstants.kCone);
+  Trigger m_cube = new JoystickButton(m_opperator, OpperatorConstants.kCube);
 
   XboxController m_diagnosticsController = new XboxController(3);
 
@@ -138,11 +141,13 @@ public class RobotContainer {
             () -> m_robotDrive.setX(),
             m_robotDrive));
     
-    new JoystickButton(m_driverController, DriverConstants.ZERO_HEADING)
-        .whileTrue(new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+
+    if (m_crawlButton.getAsBoolean() && new JoystickButton(m_driverController, DriverConstants.kAutoCubeHigh).getAsBoolean()){
+      new RunCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive);
+    }
     
-    new JoystickButton(m_driverController, DriverConstants.kAutoBalance)
-        .toggleOnTrue(new Balance2(0.0, m_robotDrive));
+    // new JoystickButton(m_driverController, DriverConstants.kAutoBalance)
+    //     .toggleOnTrue(new Balance2(0.0, m_robotDrive));
 
     new JoystickButton(m_opperator, OpperatorConstants.kNudgeUp)
     .toggleOnTrue(new InstantCommand(
@@ -155,59 +160,74 @@ public class RobotContainer {
     // new JoystickButton(m_opperator, OpperatorConstants.kMoveUpperArmToTarget)
     // .toggleOnTrue(new MoveUpperArmCommand(200, m_upperArm));
 
-    new JoystickButton(m_driverController, DriverConstants.kTurnToTag)
-    .toggleOnTrue(new TurnToAprilTagProfiled(0, m_aprilTags, m_robotDrive));
+    // new JoystickButton(m_driverController, DriverConstants.kTurnToTag)
+    // .toggleOnTrue(new TurnToAprilTagProfiled(0, m_aprilTags, m_robotDrive));
 
-    new JoystickButton(m_driverController, DriverConstants.kDriveToTag)
-    .toggleOnTrue(new DriveToAprilTag(0.5, m_aprilTags, m_robotDrive));
+    // new JoystickButton(m_driverController, DriverConstants.kDriveToTag)
+    // .toggleOnTrue(new DriveToAprilTag(0.5, m_aprilTags, m_robotDrive));
 
     new JoystickButton(m_opperator, OpperatorConstants.kFloorMode)
     .whileTrue(m_lowerArm.lowerArmFloorPosition());
-    // new JoystickButton(m_opperator, OpperatorConstants.kFloorMode)
-    // .whileTrue(new HomeUpperArmCommand(m_upperArm));
-
-    new JoystickButton(m_opperator, OpperatorConstants.kHighPosition)
-    .whileTrue(m_lowerArm.lowerArmHighPosition());
-    new JoystickButton(m_opperator, OpperatorConstants.kHighPosition)
+    new JoystickButton(m_opperator, OpperatorConstants.kFloorMode)
     .whileTrue(new MoveUpperArmCommand(UpperArmConstants.kHighPosition, m_upperArm));
 
-    new JoystickButton(m_driverController, DriverConstants.kMidPosition)
+    new JoystickButton(m_opperator, OpperatorConstants.kHigh)
+    .whileTrue(m_lowerArm.lowerArmHighPosition());
+    new JoystickButton(m_opperator, OpperatorConstants.kHigh)
+    .whileTrue(new MoveUpperArmCommand(UpperArmConstants.kHighPosition, m_upperArm));
+
+    new JoystickButton(m_driverController, OpperatorConstants.kMid)
     .whileTrue(m_lowerArm.lowerArmMidPosition());
-    new JoystickButton(m_driverController, DriverConstants.kMidPosition)
+    new JoystickButton(m_driverController, OpperatorConstants.kMid)
     .whileTrue(new MoveUpperArmCommand(UpperArmConstants.kMidPosition, m_upperArm));
 
-    new JoystickButton(m_opperator, OpperatorConstants.kShootCubeHigh)
-    .whileTrue(m_lowerArm.lowerArmShootPosition());
+    // new JoystickButton(m_opperator, OpperatorConstants.kShootCubeHigh)
+    // .whileTrue(m_lowerArm.lowerArmShootPosition());
     // new JoystickButton(m_opperator, OpperatorConstants.kShootCubeHigh)
     // .whileTrue(new HomeUpperArmCommand(m_upperArm));
 
-    new JoystickButton(m_opperator, DriverConstants.kSingleSubstation)
-    .whileTrue(m_lowerArm.lowerArmSSsPosition());
+    // new JoystickButton(m_opperator, OpperatorConstants.k)
+    // .whileTrue(m_lowerArm.lowerArmSSsPosition());
 
     new JoystickButton(m_opperator, OpperatorConstants.kHomeArms)
     .whileTrue(m_lowerArm.homeLowerArm());
-    // new JoystickButton(m_opperator, OpperatorConstants.kHomeArms)
-    // .whileTrue(new HomeUpperArmCommand(m_upperArm));
+    new JoystickButton(m_opperator, OpperatorConstants.kHomeArms)
+    .whileTrue(new MoveUpperArmCommand(UpperArmConstants.kHomeEncoderValue, m_upperArm));
 
-    new JoystickButton(m_driverController, DriverConstants.kLowerArmUp)
-    .whileTrue(m_lowerArm.runLowerArmUp());
+    // new JoystickButton(m_driverController, DriverConstants.kLowerArmUp)
+    // .whileTrue(m_lowerArm.runLowerArmUp());
     // .onFalse(new RepeatCommand(new HoldLowerWithSoftPID(m_lowerArm.getElbowPos(), m_lowerArm)));
 
-    new JoystickButton(m_driverController, DriverConstants.kLowerArmDown)
-    .whileTrue(m_lowerArm.runLowerArmDown());
+    // new JoystickButton(m_driverController, DriverConstants.kLowerArmDown)
+    // .whileTrue(m_lowerArm.runLowerArmDown());
 
-    new JoystickButton(m_opperator, OpperatorConstants.kClawOut)
-    .whileTrue(m_claw.cubeOut());
+    // new JoystickButton(m_opperator, OpperatorConstants.kClawOut)
+    // .whileTrue(m_claw.cubeOut());
 
-    new JoystickButton(m_opperator, OpperatorConstants.kClawIn)
-    // .toggleOnTrue(m_moveAndHoldCommand);
-    .whileTrue(m_claw.in());
+    // new JoystickButton(m_opperator, OpperatorConstants.kClawIn)
+    // // .toggleOnTrue(m_moveAndHoldCommand);
+    // .whileTrue(m_claw.in());
+
+    if (m_reverser.getAsBoolean() && m_cone.getAsBoolean()){
+      new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
+    }
+    else if (m_cone.getAsBoolean()){
+      new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
+    }
 
     new RunCommand(
       () -> m_lowerArm.runlowerArmOpenLoop(MathUtil.applyDeadband(
         m_diagnosticsController.getRightTriggerAxis() - m_diagnosticsController.getLeftTriggerAxis(),
         OIConstants.kDriveDeadband)), m_lowerArm);
-  }
+    
+    
+    if (m_reverser.getAsBoolean() && m_cube.getAsBoolean()){
+      new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
+    }
+    else if (m_cube.getAsBoolean()){
+      new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
+      }
+    }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -269,17 +289,17 @@ public class RobotContainer {
         false, true),
     m_robotDrive));
 
-    m_OSlow.whileTrue(new RunCommand(
-      () -> m_robotDrive.drive(
-      -MathUtil.applyDeadband((DriveConstants.kOSlowSpeed * m_opperator.getRawAxis(1)), OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband((DriveConstants.kOSlowSpeed * m_opperator.getRawAxis(0)), OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(DriveConstants.kOSlowSpeed * (m_opperator.getRawAxis(2)), OIConstants.kDriveDeadband),
-      false, true),
-    m_robotDrive));
+    //m_OSlow.whileTrue(new RunCommand(
+    //   () -> m_robotDrive.drive(
+    //   -MathUtil.applyDeadband((DriveConstants.kOSlowSpeed * m_opperator.getRawAxis(1)), OIConstants.kDriveDeadband),
+    //   -MathUtil.applyDeadband((DriveConstants.kOSlowSpeed * m_opperator.getRawAxis(0)), OIConstants.kDriveDeadband),
+    //   -MathUtil.applyDeadband(DriveConstants.kOSlowSpeed * (m_opperator.getRawAxis(2)), OIConstants.kDriveDeadband),
+    //   false, true),
+    // m_robotDrive));
 
     
 
-    m_autoBalance.toggleOnTrue(new Balance());
+    //m_autoBalance.toggleOnTrue(new Balance());
 
     // Why can't we specify dependency on subsystem here???
 

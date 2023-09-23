@@ -334,23 +334,26 @@ public final class Constants {
     public static final class DriverConstants {
       public static final int X_MODE = 3;
       public static final int TURBO = 2;
-      public static final int ZERO_HEADING = 6;
+      //public static final int ZERO_HEADING = 6;
       public static final int CRAWL = 1;
-      public static final int kTurnToTag = 7;
-      public static final int kDriveToTag = 8;
-      public static final int kAutoBalance = 12;
-      public static final int kSingleSubstation = 4;
-      public static final int kMidPosition = 5;
-      public static final int kLowerArmUp = 10;
-      public static final int kLowerArmDown = 9;
+      public static final int kHomeArms = 5;
+      public static final int kAutoCubeMid = 4;
+      public static final int kAutoCubeHigh = 6;
+      // public static final int kDriveToTag = 8;
+      // public static final int kAutoBalance = 12;
+      // public static final int kSingleSubstation = 4;
+      // public static final int kMidPosition = 5;
+      // public static final int kLowerArmUp = 10;
+      // public static final int kLowerArmDown = 9;
+
     }
     public static final class OpperatorConstants {
-      public static final int PRIORITY_LEFT = 3;
+      public static final int PRIORITY_LEFT = 9;
       //public static final int kUpperArmManual = 12;
-      public static final int kFloorMode = 2;
-      public static final int kOSlow = 4;
-      public static final int kShootCubeHigh = 8;
-      public static final int kShootCubeMid = 7;
+      public static final int kFloorMode = 3;
+      public static final int kReverseIntake = 5;
+      public static final int kHigh = 6;
+      public static final int kMid = 4;
       //public static final int kClawTest = 1;
       public static final int kHomeArms = 10;
       //public static final int ksetUpperArm = 7;
@@ -358,10 +361,11 @@ public final class Constants {
       public static final int kNudgeDown = 11;
       //public static final int kMoveUpperArmToTarget = 5;
       //public static final int kShootPosition = 1;
-      public static final int kHighPosition = 6;
+      //public static final int kHighPosition = 6;
       //public static final int kMidPosition = 8;
-      public static final int kClawIn = 5;
-      public static final int kClawOut = 1;
+      //public static final int kClawIn = 5;
+      public static final int kCube = 1;
+      public static final int kCone = 2;
     }
   }
 }
