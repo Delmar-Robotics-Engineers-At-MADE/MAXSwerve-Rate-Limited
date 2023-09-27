@@ -24,6 +24,6 @@ public class SignalCones extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return true; //  run only while button is held down
+    return false; //  run only while button is held down
   }
 }

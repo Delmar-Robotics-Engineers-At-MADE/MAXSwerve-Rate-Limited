@@ -41,8 +41,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -70,7 +72,7 @@ import frc.robot.Commands.Arm.MoveUpperArmCommand;
 public class RobotContainer {
 // The robot's subsystems
   public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private static final Claw m_claw = new Claw();
+  //private static final Claw m_claw = new Claw();
   private static final UpperArmSubsystem m_upperArm = new UpperArmSubsystem();
   private static final LowerArm m_lowerArm = new LowerArm();
   private static final Balance m_balance = new Balance();
@@ -128,13 +130,15 @@ public class RobotContainer {
    */
 
   // sequence for running claw to stall and then holding:
-  private final SequentialCommandGroup m_moveAndHoldCommand = new SequentialCommandGroup(
-    //new MoveClawUntilStall(CLAW_CONSTANTS.kInVelocity, m_claw), 
-    new PrepareToHold(m_claw),
-    new HoldClawGrip(0.0, m_claw)
-  );
+  // private final SequentialCommandGroup m_moveAndHoldCommand = new SequentialCommandGroup(
+  //   //new MoveClawUntilStall(CLAW_CONSTANTS.kInVelocity, m_claw), 
+  //   new PrepareToHold(m_claw),
+  //   new HoldClawGrip(0.0, m_claw)
+  // );
 
- 
+
+
+  
 
   /* use the claw sequence with a toggle, like this:
    * new JoystickButton(m_driverController, Button.kA.value).toggleOnTrue(m_moveAndHoldCommand);
@@ -143,7 +147,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     new JoystickButton(m_driverController, DriverConstants.X_MODE)
-        .toggleOnTrue(new RunCommand(
+        .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
     
@@ -252,7 +256,7 @@ public class RobotContainer {
     System.out.println("Auto selected: " + m_autoSelected);
 
     // Configure default commands
-    CommandScheduler.getInstance().setDefaultCommand(m_claw, m_claw.stop());
+    //CommandScheduler.getInstance().setDefaultCommand(m_claw, m_claw.stop());
 
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -305,23 +309,31 @@ public class RobotContainer {
 
     // m_lowerArm.setDefaultCommand(
     //   new HoldLowerArmCommand(m_lowerArm));
-    if (m_reverser.getAsBoolean() && m_cube.getAsBoolean()){
-      new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
-    }
-    else if (m_cube.getAsBoolean()){
-      new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
-      }
+    // if (m_reverser.getAsBoolean() && m_cube.getAsBoolean()){
+    //   new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
+    // }
+    // else if (m_cube.getAsBoolean()){
+    //   new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
+    //   }
 
-    if (m_reverser.getAsBoolean() && m_cone.getAsBoolean()){
-      new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
-    }
-    else if (m_cone.getAsBoolean()){
-      new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
-    }
+    m_reverser.and(m_cube).whileTrue((new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A)));
+    m_cube.whileTrue(new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A));
+
+    m_reverser.and(m_cone).whileTrue(new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A));
+    m_cone.whileTrue(new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A));
+
+    // if (m_reverser.getAsBoolean() && m_cone.getAsBoolean()){
+    //   new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
+    // }
+    // else if (m_cone.getAsBoolean()){
+    //   new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
+    // }
+
+    m_intake.setDefaultCommand(new RunIntake(m_intake, false, 0, 5));
     
-    m_blinkin.setDefaultCommand(new DefaultLighting(m_blinkin));
+    //m_blinkin.setDefaultCommand(new DefaultLighting(m_blinkin));
 
-    m_claw.setDefaultCommand(m_moveAndHoldCommand);
+    //m_claw.setDefaultCommand(m_moveAndHoldCommand);
 
     
     

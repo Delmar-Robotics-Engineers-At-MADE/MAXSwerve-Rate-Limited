@@ -29,7 +29,12 @@ public class RunIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    everybotIntake.setIntakeMotor(speed, amps);
+    if (isReverse) {
+      everybotIntake.setIntakeMotor(-1*speed, amps);
+    }
+    else {
+      everybotIntake.setIntakeMotor(speed, amps);
+    }
   }
 
   // Called once the command ends or is interrupted.

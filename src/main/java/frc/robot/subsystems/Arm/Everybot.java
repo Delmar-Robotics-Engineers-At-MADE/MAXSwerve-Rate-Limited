@@ -14,7 +14,6 @@ public class Everybot extends SubsystemBase {
 
     public Everybot() {
         intake = new CANSparkMax(EverybotConstants.INTAKE_ID, MotorType.kBrushless);
-        intake.setInverted(false);
         intake.setIdleMode(IdleMode.kBrake);
     
     }

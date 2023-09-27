@@ -205,7 +205,7 @@ public final class Constants {
     /**
      * Percent output for intaking
      */
-    public static final double INTAKE_OUTPUT_POWER = 1.0;
+    public static final double INTAKE_OUTPUT_POWER = 0.3;
 
     /**
      * Percent output for holding
