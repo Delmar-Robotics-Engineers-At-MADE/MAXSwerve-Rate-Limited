@@ -5,19 +5,14 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.EverybotConstants;
 import frc.robot.subsystems.Arm.Everybot;
 
-public class RunIntake extends CommandBase {
+public class RunIntakeOut extends CommandBase {
   Everybot everybotIntake;
-  boolean isReverse;
-  double speed;
-  int amps;
   /** Creates a new RunIntake. */
-  public RunIntake(Everybot intake, boolean reversed, double percent, int current) {
+  public RunIntakeOut(Everybot intake, boolean reversed, double percent, int current) {
     everybotIntake = intake;
-    isReverse = reversed;
-    speed = percent;
-    amps = current;
     addRequirements(intake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -29,11 +24,11 @@ public class RunIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (isReverse) {
-      everybotIntake.setIntakeMotor(-1*speed, amps);
+    if(everybotIntake.getMode() == "cone"){
+      everybotIntake.setIntakeMotor(-1*EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
     }
-    else {
-      everybotIntake.setIntakeMotor(speed, amps);
+    else if (everybotIntake.getMode() == "cube"){
+      everybotIntake.setIntakeMotor(EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
     }
   }
 

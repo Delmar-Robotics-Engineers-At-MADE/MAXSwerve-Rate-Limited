@@ -11,11 +11,20 @@ import frc.robot.Constants.EverybotConstants;
 public class Everybot extends SubsystemBase {
     
     private CANSparkMax intake;
-
+    String mode;
     public Everybot() {
         intake = new CANSparkMax(EverybotConstants.INTAKE_ID, MotorType.kBrushless);
         intake.setIdleMode(IdleMode.kBrake);
-    
+        mode = "cube";
+    }
+
+    // mode can only be 'cube' or 'cone'
+    public void setMode(String inMode) {
+        mode = inMode;
+    }
+
+    public String getMode() {
+        return mode;
     }
 
     public void setIntakeMotor(double percent, int amps) {
