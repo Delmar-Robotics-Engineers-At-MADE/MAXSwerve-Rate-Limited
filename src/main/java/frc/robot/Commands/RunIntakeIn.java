@@ -11,7 +11,7 @@ import frc.robot.subsystems.Arm.Everybot;
 public class RunIntakeIn extends CommandBase {
   Everybot everybotIntake;
   /** Creates a new RunIntake. */
-  public RunIntakeIn(Everybot intake, boolean reversed, double percent, int current) {
+  public RunIntakeIn(Everybot intake) {
     everybotIntake = intake;
     addRequirements(intake);
     // Use addRequirements() here to declare subsystem dependencies.

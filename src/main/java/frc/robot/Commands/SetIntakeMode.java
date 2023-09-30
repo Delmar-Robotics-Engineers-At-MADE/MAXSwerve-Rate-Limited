@@ -5,16 +5,19 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.Arm.Everybot;
 
 public class SetIntakeMode extends CommandBase {
   Everybot everybotIntake;
+  BlinkinSubsystem lights;
   String mode;
   /** Creates a new SetIntakeMode. */
-  public SetIntakeMode(String inMode, Everybot intake) {
+  public SetIntakeMode(String inMode, Everybot intake, BlinkinSubsystem blinkin) {
     everybotIntake = intake;
+    lights = blinkin;
     mode = inMode;
-    addRequirements(intake);
+    addRequirements(intake, blinkin);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -22,6 +25,12 @@ public class SetIntakeMode extends CommandBase {
   @Override
   public void initialize() {
     everybotIntake.setMode(mode);
+    if(everybotIntake.getMode()=="cone"){
+      lights.signalCones();
+    }
+    else{
+      lights.signalCubes();
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

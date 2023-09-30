@@ -39,6 +39,7 @@ import frc.robot.subsystems.Cameras.LimelightSubsystem;
 import frc.robot.subsystems.Swerve.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -55,7 +56,10 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
-import frc.robot.Commands.RunIntake;
+import frc.robot.Commands.HoldIntake;
+import frc.robot.Commands.RunIntakeIn;
+import frc.robot.Commands.RunIntakeOut;
+import frc.robot.Commands.SetIntakeMode;
 import frc.robot.Commands.Arm.HoldClawGrip;
 import frc.robot.Commands.Arm.HoldLowerArmCommand;
 import frc.robot.Commands.Arm.HoldLowerWithSoftPID;
@@ -95,8 +99,8 @@ public class RobotContainer {
   // Trigger m_lowerArmUp = new JoystickButton(m_opperator, 5);
   // Trigger m_lowerArmDown = new JoystickButton(m_opperator, 6);
   Trigger m_reverser = new JoystickButton(m_opperator, OpperatorConstants.kReverseIntake);
-  Trigger m_cone = new JoystickButton(m_opperator, OpperatorConstants.kCone);
-  Trigger m_cube = new JoystickButton(m_opperator, OpperatorConstants.kCube);
+  Trigger m_in = new JoystickButton(m_opperator, OpperatorConstants.kCone);
+  Trigger m_out = new JoystickButton(m_opperator, OpperatorConstants.kCube);
   Trigger coneMode = new POVButton(m_opperator, 0);
   Trigger cubeMode = new POVButton(m_opperator, 180);
 
@@ -134,11 +138,7 @@ public class RobotContainer {
   //   //new MoveClawUntilStall(CLAW_CONSTANTS.kInVelocity, m_claw), 
   //   new PrepareToHold(m_claw),
   //   new HoldClawGrip(0.0, m_claw)
-  // );
-
-
-
-  
+  // );  
 
   /* use the claw sequence with a toggle, like this:
    * new JoystickButton(m_driverController, Button.kA.value).toggleOnTrue(m_moveAndHoldCommand);
@@ -223,14 +223,12 @@ public class RobotContainer {
         m_diagnosticsController.getRightTriggerAxis() - m_diagnosticsController.getLeftTriggerAxis(),
         OIConstants.kDriveDeadband)), m_lowerArm);
 
-    coneMode.toggleOnTrue(new SignalCones(m_blinkin));
-    coneMode.toggleOnTrue(new RunIntake(m_intake, false, EverybotConstants.INTAKE_HOLD_POWER, EverybotConstants.INTAKE_HOLD_CURRENT_LIMIT_A));
+    coneMode.onTrue(new SetIntakeMode("cone", m_intake, m_blinkin));
 
-    cubeMode.toggleOnTrue(new SignalCubes(m_blinkin));
-    cubeMode.toggleOnTrue(new RunIntake(m_intake, true, EverybotConstants.INTAKE_HOLD_POWER, EverybotConstants.INTAKE_HOLD_CURRENT_LIMIT_A));
+    cubeMode.onTrue(new SetIntakeMode("cube", m_intake, m_blinkin));
   }
     
-    
+  
 
 
   /**
@@ -316,11 +314,9 @@ public class RobotContainer {
     //   new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
     //   }
 
-    m_reverser.and(m_cube).whileTrue((new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A)));
-    m_cube.whileTrue(new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A));
-
-    m_reverser.and(m_cone).whileTrue(new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A));
-    m_cone.whileTrue(new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A));
+    m_in.whileTrue(new RunIntakeIn(m_intake));
+    
+    m_out.whileTrue(new RunIntakeOut(m_intake));
 
     // if (m_reverser.getAsBoolean() && m_cone.getAsBoolean()){
     //   new RunIntake(m_intake, false, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
@@ -329,7 +325,7 @@ public class RobotContainer {
     //   new RunIntake(m_intake, true, EverybotConstants.INTAKE_OUTPUT_POWER, EverybotConstants.INTAKE_CURRENT_LIMIT_A);
     // }
 
-    m_intake.setDefaultCommand(new RunIntake(m_intake, false, 0, 5));
+    m_intake.setDefaultCommand(new HoldIntake(m_intake));
     
     //m_blinkin.setDefaultCommand(new DefaultLighting(m_blinkin));
 
